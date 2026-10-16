@@ -22,6 +22,7 @@
     "release:check-env": "tsx scripts/check-release-env.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1152.0",
     "better-auth": "^1.7.8",
     "drizzle-orm": "^0.45.4",
     "next": "16.4.1",

@@ -15,6 +15,15 @@ describe("resolveDatabaseUrl", () => {
     expect(resolveDatabaseUrl({ POSTGRES_URL: " postgres://neon/db " })).toBe("postgres://neon/db");
   });
 
+  it("prefers Neon’s direct URL over the pooled POSTGRES_URL", () => {
+    expect(
+      resolveDatabaseUrl({
+        POSTGRES_URL: "postgres://pooled/db",
+        POSTGRES_URL_NON_POOLING: "postgres://direct/db",
+      }),
+    ).toBe("postgres://direct/db");
+  });
+
   it("returns undefined when nothing is set", () => {
     expect(resolveDatabaseUrl({})).toBeUndefined();
   });

@@ -99,20 +99,32 @@ Bunlar operatör kararıdır. Karar verilince bu belge somut hostname ve secret 
 
 ## Vercel (operatör seçtiyse)
 
-Vercel `VERCEL=1` iken `output: "standalone"` üretilmez. Public `next build` Postgres URL’si olmadan da tamamlanır (boş site). Canlı içerik ve panel için URL yine gerekir.
+Vercel `VERCEL=1` iken `output: "standalone"` üretilmez. Public `next build` Postgres URL’si olmadan da tamamlanır (boş site). Canlı içerik, panel ve formlar çalışma anında Postgres ister.
 
-1. Neon, Supabase veya Vercel Postgres ile bir PostgreSQL oluşturun (üretimde `npm run db:local` kullanılmaz).
-2. Bağlantı dizesine `sslmode=require` ekleyin.
-3. Vercel: **Project → Settings → Environment Variables**
-   - `DATABASE_URL` (veya Neon entegrasyonunun yazdığı `POSTGRES_URL`) — Production, Preview **ve** Development
-   - `BETTER_AUTH_SECRET` (≥ 32 karakter)
-   - `SITE_URL` = Vercel HTTPS adresi (ör. `https://….vercel.app`)
-   - `SITE_ENV=production`
+Preview ve Production **ayrı env kümeleridir**. Neon Preview branch kullanıyorsanız Preview URL’si Production’dan farklı bir veritabanına bakabilir; yöneticiyi Production URL’sine yazın.
+
+1. Neon (veya eşdeğer) PostgreSQL oluşturun. `npm run db:local` üretimde kullanılmaz.
+2. Direct / non-pooling bağlantı dizesine `sslmode=require` ekleyin.
+3. Vercel: **Project → Settings → Environment Variables** (Production, Preview ve Development):
+   - `DATABASE_URL` (veya Neon `POSTGRES_URL_NON_POOLING`)
+   - `BETTER_AUTH_SECRET` (≥ 32 karakter, ortam başına ayrı)
+   - `SITE_URL` = tarayıcıdaki HTTPS köken (ör. `https://….vercel.app`)
    - `BETTER_AUTH_URL` = `SITE_URL`
-4. Değişkeni kaydettikten sonra **Redeploy** (önbelleksiz).
-5. İlk kurulumda migrate’i veritabanına uygulayın (`npm run db:migrate` sırların yüklü olduğu bir ortamda). Sonra `npm run db:seed` ve `npm run admin:create`.
+   - `SITE_ENV=production`
+   - `AUTH_IP_HEADER=x-forwarded-for`
+4. Kalıcı medya (R2/S3/MinIO), sunucu tarafı:
+   - `MEDIA_S3_BUCKET`
+   - `MEDIA_S3_ACCESS_KEY_ID`
+   - `MEDIA_S3_SECRET_ACCESS_KEY`
+   - `MEDIA_S3_ENDPOINT` (R2/MinIO)
+   - `MEDIA_S3_REGION` (AWS için bölge; R2’de `auto`)
+5. Değişkenleri kaydettikten sonra **Redeploy** (önbelleksiz).
+6. Bilgisayarınızda, Vercel Production’daki **aynı** connection string ile (sırlar loga yazılmaz):
+   - `npm run db:migrate` — bekleyen migration; drop/reset yok
+   - `npm run db:seed` — yalnızca eksik uzmanlık yuvaları ve boş kurumsal sayfalar; mevcut satırlara dokunmaz. `db:seed:demo` Production’da reddedilir.
+   - `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` ile `npm run admin:create` — sonra bu üç değişkeni silin. E-posta zaten varsa parola değiştirilmez.
 
-Vercel diski geçicidir: panelden yüklenen medya bir sonraki dağıtımda kaybolabilir. Kalıcı medya için volume veya nesne depo henüz kodda yok.
+Vercel diski geçicidir. Nesne depo yokken panel yüklemesi reddedilir (sessiz kayıp yok). Demo görseller (`content/demo/`) Git’tedir; `SITE_ENV=production` iken public’te gösterilmez.
 
 ## Go-live’dan önce içerik
 

@@ -7,9 +7,10 @@ export function resolveDatabaseUrl(
 ): string | undefined {
   const candidates = [
     env.DATABASE_URL,
+    // node-postgres needs a direct connection; Neon/Vercel pooler URLs break prepared statements.
+    env.POSTGRES_URL_NON_POOLING,
     env.POSTGRES_URL,
     env.POSTGRES_PRISMA_URL,
-    env.POSTGRES_URL_NON_POOLING,
   ];
   for (const value of candidates) {
     const trimmed = value?.trim();

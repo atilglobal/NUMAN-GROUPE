@@ -42,4 +42,9 @@ describe("assessProductionEnv", () => {
     expect(result.ready).toBe(false);
     expect(result.warnings.some((item) => item.includes("https"))).toBe(true);
   });
+
+  it("warns when Vercel has no object store", () => {
+    const result = assessProductionEnv({ ...complete, VERCEL: "1", MEDIA_STORAGE_DIR: undefined });
+    expect(result.warnings.some((item) => item.includes("MEDIA_S3_BUCKET"))).toBe(true);
+  });
 });

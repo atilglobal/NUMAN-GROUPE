@@ -4,6 +4,7 @@
  */
 
 import { resolveDatabaseUrl } from "../db/url";
+import { isObjectStorageConfigured } from "../media/object-store";
 
 const SECRET_MIN = 32;
 
@@ -35,7 +36,13 @@ export function assessProductionEnv(
     warnings.push("SITE_ENV is not production; demo rows stay hidden only if ALLOW_DEMO_CONTENT is false or NODE_ENV is production.");
   }
 
-  if (!env.MEDIA_STORAGE_DIR?.trim()) {
+  if (isObjectStorageConfigured(env)) {
+    /* durable object store; local MEDIA_STORAGE_DIR is unused */
+  } else if (env.VERCEL === "1") {
+    warnings.push(
+      "Vercel disk is ephemeral; set MEDIA_S3_BUCKET, MEDIA_S3_ACCESS_KEY_ID and MEDIA_S3_SECRET_ACCESS_KEY (plus MEDIA_S3_ENDPOINT for R2/MinIO).",
+    );
+  } else if (!env.MEDIA_STORAGE_DIR?.trim()) {
     warnings.push(
       "MEDIA_STORAGE_DIR is unset; uploads default to .data/media and will be lost on an ephemeral filesystem.",
     );

@@ -17,7 +17,28 @@ type AuthEnv = {
   SITE_URL?: string;
   NODE_ENV?: string;
   AUTH_IP_HEADER?: string;
+  VERCEL_URL?: string;
+  VERCEL_PROJECT_PRODUCTION_URL?: string;
 };
+
+export function authTrustedOrigins(env: AuthEnv = process.env): string[] {
+  const origins = new Set<string>();
+  const add = (raw?: string) => {
+    const value = raw?.trim();
+    if (!value) return;
+    try {
+      const url = value.includes("://") ? new URL(value) : new URL(`https://${value}`);
+      origins.add(url.origin);
+    } catch {
+      /* skip invalid */
+    }
+  };
+  add(env.BETTER_AUTH_URL);
+  add(env.SITE_URL);
+  add(env.VERCEL_URL);
+  add(env.VERCEL_PROJECT_PRODUCTION_URL);
+  return [...origins];
+}
 
 export function authSecret(env: AuthEnv = process.env): string {
   const secret = env.BETTER_AUTH_SECRET;
@@ -35,9 +56,11 @@ export function authSecret(env: AuthEnv = process.env): string {
  * Server Actions calling `auth.api`, so the only entry points are ours.
  */
 export function createAuth(db: Database, plugins: BetterAuthPlugin[] = [], env: AuthEnv = process.env) {
+  const baseURL = env.BETTER_AUTH_URL ?? env.SITE_URL ?? "http://localhost:3000";
   return betterAuth({
     secret: authSecret(env),
-    baseURL: env.BETTER_AUTH_URL ?? env.SITE_URL ?? "http://localhost:3000",
+    baseURL,
+    trustedOrigins: authTrustedOrigins({ ...env, SITE_URL: env.SITE_URL ?? baseURL }),
     database: drizzleAdapter(db, {
       provider: "pg",
       schema: { users, sessions, accounts, verifications },

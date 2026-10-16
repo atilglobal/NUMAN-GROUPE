@@ -1,7 +1,9 @@
 import { createInterface } from "node:readline/promises";
 import { stdin, stdout } from "node:process";
+import { eq } from "drizzle-orm";
 import { AdminRuleError, createUserWithPassword, hasAnyAdmin } from "../src/admin/users";
 import { createUserSchema, fieldErrors } from "../src/admin/validation";
+import { users } from "../src/db/schema";
 import { withDb } from "./with-db";
 
 /*
@@ -56,12 +58,22 @@ function askHidden(question: string): Promise<string> {
 }
 
 void withDb(async (db) => {
+  const name = process.env.ADMIN_NAME ?? (await ask("Ad soyad: "));
+  const email = process.env.ADMIN_EMAIL ?? (await ask("E-posta: "));
+  const normalised = email.trim().toLowerCase();
+  const [existing] = await db
+    .select({ id: users.id, role: users.role, disabledAt: users.disabledAt })
+    .from(users)
+    .where(eq(users.email, normalised));
+  if (existing) {
+    throw new Error(
+      `Bu e-posta zaten kayıtlı (rol: ${existing.role}${existing.disabledAt ? ", devre dışı" : ""}). Parola ve rol değiştirilmedi.`,
+    );
+  }
   if (await hasAnyAdmin(db)) {
     throw new Error("Bir yönetici zaten var. Yeni kullanıcıları yönetim panelinden oluşturun.");
   }
 
-  const name = process.env.ADMIN_NAME ?? (await ask("Ad soyad: "));
-  const email = process.env.ADMIN_EMAIL ?? (await ask("E-posta: "));
   let password = process.env.ADMIN_PASSWORD;
   if (!password) {
     password = await askHidden("Parola (en az 12 karakter): ");

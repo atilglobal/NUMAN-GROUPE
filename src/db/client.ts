@@ -1,6 +1,7 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import type { PgDatabase, PgQueryResultHKT } from "drizzle-orm/pg-core";
 import { Pool } from "pg";
+import { postgresPoolConfig } from "./pool";
 import * as schema from "./schema";
 import { missingDatabaseUrlMessage, resolveDatabaseUrl } from "./url";
 
@@ -26,14 +27,7 @@ export function getDb(): Database {
     throw new Error(missingDatabaseUrlMessage());
   }
 
-  const poolMax = Number(process.env.DATABASE_POOL_MAX ?? (process.env.VERCEL ? 1 : 5));
-  const hosted =
-    Boolean(process.env.VERCEL) || /neon\.tech|supabase\.co|pooler\.supabase|vercel-storage/i.test(connectionString);
-  const pool = new Pool({
-    connectionString,
-    max: Number.isFinite(poolMax) && poolMax > 0 ? poolMax : 5,
-    ssl: hosted ? { rejectUnauthorized: false } : undefined,
-  });
+  const pool = new Pool(postgresPoolConfig(connectionString));
   globalForDb.numanDb = drizzle({ client: pool, schema });
   return globalForDb.numanDb;
 }

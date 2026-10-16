@@ -47,7 +47,7 @@ Boş iletişim alanı public HTML’de bağlantı üretmez. Logo yoksa yer tutuc
 
 ## Medya
 
-Dosyalar uygulama paketinde değil, `MEDIA_STORAGE_DIR` volume’unda durur. Kullanımdaki görsel silinince kapaklar boşalır; public URL bilinçli olarak kırılır. Demo görseller üretimde hem listeden hem `/media/demo/...` yolundan çıkar.
+Dosyalar uygulama paketinde değil; yerelde `MEDIA_STORAGE_DIR` volume’unda, Vercel’de S3 uyumlu nesne depoda (`MEDIA_S3_*`) durur. Kullanımdaki görsel silinince kapaklar boşalır; public URL bilinçli olarak kırılır. Demo görseller üretimde hem listeden hem `/media/demo/...` yolundan çıkar.
 
 ## İletişim formu
 
