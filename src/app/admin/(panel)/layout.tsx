@@ -7,6 +7,8 @@ import { buttonClass } from "@/components/admin/button-styles";
 import { MobileNav, SidebarNav, type NavItem } from "@/components/admin/PanelNav";
 import { PanelSkeleton } from "@/components/admin/ui";
 
+export const instant = false;
+
 const navigation: (NavItem & { permission?: Permission })[] = [
   { href: "/admin", label: "Gösterge paneli" },
   { href: "/admin/uzmanliklar", label: "Uzmanlık alanları", permission: "content:write" },
@@ -68,7 +70,7 @@ async function PanelShell({ children }: { children: ReactNode }) {
           </div>
         </header>
         <main id="main" className="flex-1 p-4 sm:p-6 lg:p-8">
-          {children}
+          <Suspense fallback={<PanelSkeleton />}>{children}</Suspense>
         </main>
       </div>
     </div>

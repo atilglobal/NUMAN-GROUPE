@@ -29,8 +29,9 @@ export type PanelUser = { id: string; name: string; email: string; role: UserRol
 
 /** Session plus a fresh users row, so role changes and disabling apply at once. */
 export const getCurrentUser = cache(async (): Promise<PanelUser | null> => {
+  const requestHeaders = await headers();
   if (!isDatabaseConfigured()) return null;
-  const session = await getAuth().api.getSession({ headers: await headers() });
+  const session = await getAuth().api.getSession({ headers: requestHeaders });
   if (!session) return null;
   const [user] = await getDb()
     .select({ id: users.id, name: users.name, email: users.email, role: users.role })

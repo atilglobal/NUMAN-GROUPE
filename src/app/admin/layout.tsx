@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { connection } from "next/server";
 import "../globals.css";
 
 const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter", display: "swap" });
@@ -10,9 +9,11 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+/** Session, cookies and Postgres are per-request; do not require an instant static shell. */
+export const instant = false;
+
 /** Separate root layout: the panel is Turkish and shares nothing with the public chrome. */
-export default async function AdminRootLayout({ children }: LayoutProps<"/admin">) {
-  await connection();
+export default function AdminRootLayout({ children }: LayoutProps<"/admin">) {
   return (
     <html lang="tr" className={`${inter.variable} h-full`}>
       <body className="min-h-full bg-paper-2/60 text-ink antialiased">{children}</body>
