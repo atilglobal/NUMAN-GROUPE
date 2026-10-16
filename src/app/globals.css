@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy-950: #0c111b;
+  --color-navy-900: #121a28;
+  --color-navy-800: #1b2434;
+  --color-navy-700: #2a3548;
+  --color-paper: #f7f3ec;
+  --color-paper-2: #efe8dc;
+  --color-line: #ddd3c3;
+  --color-ink: #1b202a;
+  --color-muted: #555b66;
+  --color-on-dark-muted: #b9bfca;
+  --color-gold-300: #e2c99b;
+  --color-gold-400: #d1b07a;
+  --color-gold-500: #c19b5f;
+  --color-gold-700: #7a5a28;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-display), ui-serif, Georgia, serif;
+
+  --container-site: 77.5rem;
+}
+
+@layer base {
+  :root {
+    --focus-ring: var(--color-navy-900);
+    --header-height: 4.75rem;
+    color-scheme: light;
+  }
+
+  .on-dark {
+    --focus-ring: var(--color-gold-300);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: var(--color-gold-300);
+    color: var(--color-navy-950);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

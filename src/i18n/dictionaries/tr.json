@@ -1,0 +1,225 @@
+{
+  "meta": {
+    "siteName": "NUMAN GROUPE",
+    "homeTitle": "NUMAN GROUPE — İnşaat ve mühendislik",
+    "description": "NUMAN GROUPE, uluslararası inşaat ve mühendislik firması: stadyumlar, hastaneler, spor köyleri ve lojmanlar."
+  },
+  "a11y": {
+    "skipToContent": "Ana içeriğe geç",
+    "mainNav": "Ana menü",
+    "mobileNav": "Gezinme menüsü",
+    "openMenu": "Menüyü aç",
+    "closeMenu": "Menüyü kapat",
+    "languageSwitcher": "Dil seçimi",
+    "breadcrumbs": "Sayfa yolu",
+    "home": "NUMAN GROUPE ana sayfa",
+    "logoPlaceholder": "Geçici logo: resmî logo henüz sağlanmadı"
+  },
+  "nav": {
+    "group": "Grup",
+    "expertises": "Uzmanlıklar",
+    "projects": "Projeler",
+    "visits": "Resmî Ziyaretler",
+    "team": "Kadromuz",
+    "contact": "İletişim",
+    "home": "Ana sayfa",
+    "privacy": "Gizlilik",
+    "legal": "Yasal bilgilendirme",
+    "cookies": "Çerezler"
+  },
+  "languages": {
+    "fr": "Français",
+    "en": "English",
+    "tr": "Türkçe"
+  },
+  "hero": {
+    "eyebrow": "İnşaat · Mühendislik · Kalkınma",
+    "title": "Geleceğin altyapısını inşa ediyoruz.",
+    "description": "Stadyumlar, hastaneler, spor köyleri ve lojmanlar: inşaat ve mühendislikte uluslararası bir yaklaşım.",
+    "primaryCta": "Projelerimizi keşfedin",
+    "secondaryCta": "Projenizi konuşalım"
+  },
+  "intro": {
+    "eyebrow": "Grup",
+    "title": "Uluslararası bir inşaat ve mühendislik firması.",
+    "body": "NUMAN GROUPE kamu tesisleri ve konut yerleşkeleri tasarlar ve inşa eder. Çalışma alanlarımız stadyumları, hastaneleri, spor köylerini ve lojmanları kapsar.",
+    "cta": "Grubu tanıyın"
+  },
+  "expertises": {
+    "eyebrow": "Uzmanlık alanlarımız",
+    "title": "Hedeflerinize yakışır projeler.",
+    "description": "Projelerimizle birlikte genişleyen çalışma alanları.",
+    "viewAll": "Tüm uzmanlık alanları",
+    "openLabel": "Uzmanlık alanını keşfedin",
+    "empty": "Uzmanlık alanları yakında yayımlanacak.",
+    "relatedProjects": "İlgili projeler",
+    "contactCta": "Projenizi konuşalım",
+    "scopePending": "Bu uzmanlık alanının ayrıntısı yakında tamamlanacak.",
+    "noProjects": "Bu uzmanlık alanına bağlı yayımlanmış proje henüz yok."
+  },
+  "projects": {
+    "eyebrow": "Projelerimiz",
+    "title": "Vizyondan uygulamaya.",
+    "description": "Tamamlanan ve devam eden projelerden bir seçki.",
+    "filterLabel": "Projeleri duruma göre filtrele",
+    "filterAll": "Tüm projeler",
+    "filterCompleted": "Tamamlanan",
+    "filterInProgress": "Devam eden",
+    "viewAll": "Tüm projeleri görün",
+    "empty": "İlk projeler yakında yayımlanacak.",
+    "emptyFilter": "Bu filtrelere uyan proje bulunamadı.",
+    "filterStatus": "Durum",
+    "filterExpertise": "Uzmanlık alanı",
+    "filterCountry": "Ülke",
+    "filterAllExpertises": "Tüm uzmanlık alanları",
+    "filterAllCountries": "Tüm ülkeler",
+    "applyFilters": "Filtreleri uygula",
+    "pagination": "Proje sayfalama",
+    "prevPage": "Önceki sayfa",
+    "nextPage": "Sonraki sayfa",
+    "pageOf": "Sayfa {page} / {total}",
+    "related": "İlgili projeler",
+    "requestCta": "Proje talebi",
+    "status": {
+      "completed": "Tamamlandı",
+      "in_progress": "Yapım aşamasında"
+    }
+  },
+  "visits": {
+    "eyebrow": "Resmî Ziyaretler",
+    "title": "Bilgilendirme amacıyla sunulan görüşme ve ziyaretler.",
+    "description": "Kurumlara yapılan ziyaretler ziyaret olarak kaydedilir. Ortaklık, devlet desteği veya ihale kazanımı anlamına gelmez.",
+    "viewAll": "Tüm ziyaretler",
+    "empty": "Şu anda yayımlanmış ziyaret yok.",
+    "emptyFilter": "Bu filtrelere uyan ziyaret bulunamadı.",
+    "filterCountry": "Ülke",
+    "filterYear": "Yıl",
+    "filterAllCountries": "Tüm ülkeler",
+    "filterAllYears": "Tüm yıllar",
+    "applyFilters": "Filtreleri uygula",
+    "pagination": "Ziyaret sayfalama",
+    "prevPage": "Önceki sayfa",
+    "nextPage": "Sonraki sayfa",
+    "pageOf": "Sayfa {page} / {total}",
+    "related": "Diğer ziyaretler",
+    "disclaimer": "Ziyaret ziyarettir: ittifak, sipariş veya onay değildir.",
+    "purpose": "Ziyaretin amacı"
+  },
+  "team": {
+    "eyebrow": "Kadromuz",
+    "title": "Ortak bir hedef etrafında buluşan yetkinlikler.",
+    "description": "Projelerimizi yürüten yönetim ve ekipler.",
+    "viewAll": "Kadromuzu tanıyın",
+    "empty": "Kadro tanıtımı yakında yayımlanacak.",
+    "portraitPending": "Fotoğraf yakında",
+    "bioToggle": "Biyografi"
+  },
+  "contact": {
+    "email": "E-posta",
+    "phone": "Telefon",
+    "address": "Adres",
+    "whatsapp": "WhatsApp",
+    "social": "Sosyal medya"
+  },
+  "callToAction": {
+    "title": "Bir sonraki büyük projenizi birlikte inşa edelim.",
+    "description": "Projenizi bize anlatın; ekiplerimiz size dönüş yapsın.",
+    "button": "Projenizi konuşalım"
+  },
+  "footer": {
+    "tagline": "İnşaat ve mühendislik",
+    "navigation": "Gezinme",
+    "legal": "Bilgilendirme",
+    "languages": "Diller",
+    "rights": "Tüm hakları saklıdır."
+  },
+  "demo": {
+    "badge": "Demo",
+    "imageBadge": "Demo görsel",
+    "banner": "Demo modu: “Demo” olarak işaretlenen projeler, ziyaretler, profiller ve görseller örnektir; NUMAN GROUPE'un gerçek çalışmalarını temsil etmez.",
+    "sectionNote": "Demo örnekler — gerçek çalışmaları temsil etmez."
+  },
+  "detail": {
+    "facts": "Temel bilgiler",
+    "expertise": "Uzmanlık",
+    "status": "Durum",
+    "location": "Konum",
+    "started": "Başlangıç",
+    "completed": "Tamamlanma",
+    "date": "Tarih",
+    "host": "Kurum",
+    "participants": "Katılımcılar",
+    "technical": "Teknik bilgiler",
+    "gallery": "Galeri",
+    "video": "Video",
+    "watchVideo": "Videoyu izle",
+    "progress": "İlerleme"
+  },
+  "placeholder": {
+    "status": "Hazırlanıyor",
+    "title": "Bu sayfa hazırlanıyor.",
+    "body": "İçeriği yakında yayımlanacak. Onaylanmamış hiçbir bilgi gösterilmez.",
+    "contactBody": "İletişim ve proje talep formu yakında kullanıma açılacak.",
+    "detailBody": "Ayrıntılı sayfa yakında yayımlanacak.",
+    "legalStatus": "Hukuki metin yok",
+    "legalTitle": "Bu sayfa yayımlanmış bir hukuki belge değildir.",
+    "legalBody": "Onaylanmış bir metin gösterilmez. Gizlilik politikası veya yasal bilgilendirme, canlıya çıkmadan önce yetkili bir hukuk danışmanı tarafından yazılmalı, panelde kaydedilmeli ve yayımlanmalıdır. Bu boş durum hukuki belge yerine geçmez.",
+    "backHome": "Ana sayfaya dön"
+  },
+  "notFound": {
+    "eyebrow": "Hata 404",
+    "title": "Sayfa bulunamadı.",
+    "body": "İstediğiniz sayfa mevcut değil veya bu dilde yayımlanmamış.",
+    "backHome": "Ana sayfaya dön"
+  },
+  "forms": {
+    "required": "zorunlu",
+    "optional": "isteğe bağlı"
+  },
+  "inquiry": {
+    "title": "NUMAN GROUPE ile iletişim",
+    "lead": "Talebinizi yazın. Mesaj kaydedilir; onay yalnızca kayıt gerçekten başarılıysa gösterilir.",
+    "type": "Konu",
+    "typeContact": "Genel iletişim",
+    "typeProject": "Proje talebi",
+    "fullName": "Ad soyad",
+    "organization": "Kurum",
+    "email": "E-posta",
+    "phone": "Telefon",
+    "country": "Ülke",
+    "countryEmpty": "Ülke seçin",
+    "projectType": "Proje türü",
+    "projectTypeEmpty": "Belirtilmedi",
+    "message": "Mesaj",
+    "privacy": "Kişisel verilerin işlenmesine ilişkin metni okudum ve bu talebin kaydedilmesini kabul ediyorum.",
+    "privacyLink": "Gizlilik",
+    "preference": "Bu talep hakkında yeniden iletişime geçebilirsiniz (isteğe bağlı).",
+    "submit": "Gönder",
+    "pending": "Gönderiliyor…",
+    "success": "Talebiniz kaydedildi. Belirttiğiniz adrese dönüş yapılacaktır.",
+    "errors": {
+      "generic": "Gönderim tamamlanamadı. Lütfen daha sonra yeniden deneyin.",
+      "invalid": "İşaretlenen alanları düzeltin.",
+      "type": "Mesajın konusunu seçin.",
+      "fullName": "Adınızı yazın (2–160 karakter).",
+      "organization": "Kurum adını girin (2–160 karakter).",
+      "email": "Geçerli bir e-posta adresi girin.",
+      "phone": "Telefon numarası kullanılamaz.",
+      "country": "Listeden bir ülke seçin.",
+      "projectType": "Proje türü geçersiz.",
+      "message": "Mesaj 20 ile 4.000 karakter arasında olmalıdır.",
+      "privacy": "Talebin kaydı için onayınız gerekir.",
+      "rateLimit": "Çok fazla mesaj gönderildi. On beş dakika sonra yeniden deneyin."
+    }
+  },
+  "gallery": {
+    "prev": "Önceki görsel",
+    "next": "Sonraki görsel",
+    "close": "Galeriyi kapat",
+    "counter": "{current} / {total}"
+  },
+  "i18n": {
+    "unavailable": "Bu sayfa henüz bu dilde yayımlanmadı.",
+    "unavailableHome": "Ana sayfaya dön"
+  }
+}

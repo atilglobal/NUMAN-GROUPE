@@ -1,0 +1,225 @@
+{
+  "meta": {
+    "siteName": "NUMAN GROUPE",
+    "homeTitle": "NUMAN GROUPE — Construction et ingénierie",
+    "description": "NUMAN GROUPE, entreprise internationale de construction et d'ingénierie : stades, hôpitaux, villages sportifs et logements."
+  },
+  "a11y": {
+    "skipToContent": "Aller au contenu principal",
+    "mainNav": "Navigation principale",
+    "mobileNav": "Menu de navigation",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "languageSwitcher": "Choix de la langue",
+    "breadcrumbs": "Fil d'Ariane",
+    "home": "Accueil NUMAN GROUPE",
+    "logoPlaceholder": "Logo provisoire : le logo officiel n'a pas encore été fourni"
+  },
+  "nav": {
+    "group": "Le Groupe",
+    "expertises": "Expertises",
+    "projects": "Projets",
+    "visits": "Visites institutionnelles",
+    "team": "Notre équipe",
+    "contact": "Contact",
+    "home": "Accueil",
+    "privacy": "Confidentialité",
+    "legal": "Mentions légales",
+    "cookies": "Cookies"
+  },
+  "languages": {
+    "fr": "Français",
+    "en": "English",
+    "tr": "Türkçe"
+  },
+  "hero": {
+    "eyebrow": "Construction · Ingénierie · Développement",
+    "title": "Construire les infrastructures de demain.",
+    "description": "Stades, hôpitaux, villages sportifs et logements : une approche internationale de la construction et de l'ingénierie.",
+    "primaryCta": "Découvrir nos projets",
+    "secondaryCta": "Parlons de votre projet"
+  },
+  "intro": {
+    "eyebrow": "Le Groupe",
+    "title": "Une entreprise internationale de construction et d'ingénierie.",
+    "body": "NUMAN GROUPE conçoit et réalise des équipements publics et des ensembles résidentiels. Nos domaines d'intervention couvrent les stades, les hôpitaux, les villages sportifs et les logements.",
+    "cta": "Découvrir le Groupe"
+  },
+  "expertises": {
+    "eyebrow": "Nos expertises",
+    "title": "Des projets à la hauteur de vos ambitions.",
+    "description": "Des domaines d'intervention que nous élargissons au fil de nos réalisations.",
+    "viewAll": "Toutes nos expertises",
+    "openLabel": "Découvrir l'expertise",
+    "empty": "Les expertises seront publiées prochainement.",
+    "relatedProjects": "Projets associés",
+    "contactCta": "Parler de votre projet",
+    "scopePending": "Le détail de cette expertise sera complété prochainement.",
+    "noProjects": "Aucun projet publié n'est encore associé à cette expertise."
+  },
+  "projects": {
+    "eyebrow": "Nos projets",
+    "title": "De la vision à la réalisation.",
+    "description": "Une sélection de projets terminés et en cours.",
+    "filterLabel": "Filtrer les projets par état",
+    "filterAll": "Tous les projets",
+    "filterCompleted": "Terminés",
+    "filterInProgress": "En cours",
+    "viewAll": "Voir tous les projets",
+    "empty": "Les premiers projets seront publiés prochainement.",
+    "emptyFilter": "Aucun projet ne correspond à ces filtres.",
+    "filterStatus": "État",
+    "filterExpertise": "Expertise",
+    "filterCountry": "Pays",
+    "filterAllExpertises": "Toutes les expertises",
+    "filterAllCountries": "Tous les pays",
+    "applyFilters": "Appliquer les filtres",
+    "pagination": "Pagination des projets",
+    "prevPage": "Page précédente",
+    "nextPage": "Page suivante",
+    "pageOf": "Page {page} sur {total}",
+    "related": "Projets similaires",
+    "requestCta": "Demander un projet",
+    "status": {
+      "completed": "Terminé",
+      "in_progress": "En cours"
+    }
+  },
+  "visits": {
+    "eyebrow": "Visites institutionnelles",
+    "title": "Rencontres et visites, présentées à titre informatif.",
+    "description": "Des visites auprès d'institutions, relatées comme telles. Elles n'indiquent ni partenariat, ni soutien de l'État, ni attribution de marché.",
+    "viewAll": "Toutes les visites",
+    "empty": "Aucune visite n'est publiée pour le moment.",
+    "emptyFilter": "Aucune visite ne correspond à ces filtres.",
+    "filterCountry": "Pays",
+    "filterYear": "Année",
+    "filterAllCountries": "Tous les pays",
+    "filterAllYears": "Toutes les années",
+    "applyFilters": "Appliquer les filtres",
+    "pagination": "Pagination des visites",
+    "prevPage": "Page précédente",
+    "nextPage": "Page suivante",
+    "pageOf": "Page {page} sur {total}",
+    "related": "Autres visites",
+    "disclaimer": "Une visite reste une visite : ce n'est ni une alliance, ni une commande, ni une homologation.",
+    "purpose": "Objet de la visite"
+  },
+  "team": {
+    "eyebrow": "Notre équipe",
+    "title": "Des compétences réunies autour d'une même ambition.",
+    "description": "La direction et les équipes qui portent nos projets.",
+    "viewAll": "Découvrir l'équipe",
+    "empty": "La présentation de l'équipe sera publiée prochainement.",
+    "portraitPending": "Portrait à venir",
+    "bioToggle": "Biographie"
+  },
+  "contact": {
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "address": "Adresse",
+    "whatsapp": "WhatsApp",
+    "social": "Réseaux"
+  },
+  "callToAction": {
+    "title": "Construisons votre prochain grand projet.",
+    "description": "Présentez-nous votre projet : nos équipes reviendront vers vous.",
+    "button": "Parlons de votre projet"
+  },
+  "footer": {
+    "tagline": "Construction et ingénierie",
+    "navigation": "Navigation",
+    "legal": "Informations",
+    "languages": "Langues",
+    "rights": "Tous droits réservés."
+  },
+  "demo": {
+    "badge": "Démo",
+    "imageBadge": "Visuel de démonstration",
+    "banner": "Mode démonstration : les projets, visites, profils et visuels marqués « Démo » sont des exemples et ne représentent pas des réalisations de NUMAN GROUPE.",
+    "sectionNote": "Exemples de démonstration — non représentatifs de réalisations réelles."
+  },
+  "detail": {
+    "facts": "Informations clés",
+    "expertise": "Expertise",
+    "status": "État",
+    "location": "Lieu",
+    "started": "Début",
+    "completed": "Achèvement",
+    "date": "Date",
+    "host": "Institution",
+    "participants": "Participants",
+    "technical": "Informations techniques",
+    "gallery": "Galerie",
+    "video": "Vidéo",
+    "watchVideo": "Voir la vidéo",
+    "progress": "Avancement"
+  },
+  "placeholder": {
+    "status": "En préparation",
+    "title": "Cette page est en cours de préparation.",
+    "body": "Son contenu sera publié prochainement. Aucune information n'est affichée tant qu'elle n'a pas été validée.",
+    "contactBody": "Le formulaire de contact et de demande de projet sera disponible prochainement.",
+    "detailBody": "La fiche détaillée sera publiée prochainement.",
+    "legalStatus": "Texte juridique manquant",
+    "legalTitle": "Cette page n'est pas un document juridique publié.",
+    "legalBody": "Aucun texte validé n'est affiché. Une politique de confidentialité ou des mentions légales doivent être rédigées par un conseil juridique, enregistrées dans le panneau et publiées avant une mise en ligne. Cet état vide ne tient pas lieu de document légal.",
+    "backHome": "Retour à l'accueil"
+  },
+  "notFound": {
+    "eyebrow": "Erreur 404",
+    "title": "Page introuvable.",
+    "body": "La page demandée n'existe pas ou n'est pas disponible dans cette langue.",
+    "backHome": "Retour à l'accueil"
+  },
+  "forms": {
+    "required": "obligatoire",
+    "optional": "facultatif"
+  },
+  "inquiry": {
+    "title": "Écrire à NUMAN GROUPE",
+    "lead": "Décrivez votre besoin. Le message est enregistré ; une confirmation n'apparaît que si l'enregistrement a réussi.",
+    "type": "Objet",
+    "typeContact": "Prise de contact",
+    "typeProject": "Demande de projet",
+    "fullName": "Nom et prénom",
+    "organization": "Organisation",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "country": "Pays",
+    "countryEmpty": "Choisir un pays",
+    "projectType": "Type de projet",
+    "projectTypeEmpty": "Non précisé",
+    "message": "Message",
+    "privacy": "J'ai lu les informations sur le traitement des données et j'accepte l'enregistrement de cette demande.",
+    "privacyLink": "Confidentialité",
+    "preference": "Vous pouvez me recontacter au sujet de cette demande (facultatif).",
+    "submit": "Envoyer",
+    "pending": "Envoi en cours…",
+    "success": "Votre demande a bien été enregistrée. Nous y répondrons à l'adresse indiquée.",
+    "errors": {
+      "generic": "L'envoi n'a pas pu aboutir. Réessayez plus tard.",
+      "invalid": "Veuillez corriger les champs indiqués.",
+      "type": "Choisissez l'objet du message.",
+      "fullName": "Indiquez votre nom (2 à 160 caractères).",
+      "organization": "Indiquez le nom de l'organisation (2 à 160 caractères).",
+      "email": "Indiquez une adresse e-mail valide.",
+      "phone": "Le numéro de téléphone n'est pas utilisable.",
+      "country": "Choisissez un pays dans la liste.",
+      "projectType": "Le type de projet n'est pas valide.",
+      "message": "Le message doit compter entre 20 et 4 000 caractères.",
+      "privacy": "L'enregistrement de la demande nécessite votre accord.",
+      "rateLimit": "Trop de messages ont été envoyés. Réessayez dans quinze minutes."
+    }
+  },
+  "gallery": {
+    "prev": "Image précédente",
+    "next": "Image suivante",
+    "close": "Fermer la galerie",
+    "counter": "{current} / {total}"
+  },
+  "i18n": {
+    "unavailable": "Cette page n'est pas encore publiée dans cette langue.",
+    "unavailableHome": "Retour à l'accueil"
+  }
+}

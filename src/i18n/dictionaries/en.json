@@ -1,0 +1,225 @@
+{
+  "meta": {
+    "siteName": "NUMAN GROUPE",
+    "homeTitle": "NUMAN GROUPE — Construction and engineering",
+    "description": "NUMAN GROUPE, an international construction and engineering company: stadiums, hospitals, sports villages and housing."
+  },
+  "a11y": {
+    "skipToContent": "Skip to main content",
+    "mainNav": "Main navigation",
+    "mobileNav": "Navigation menu",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "languageSwitcher": "Language selection",
+    "breadcrumbs": "Breadcrumb",
+    "home": "NUMAN GROUPE home",
+    "logoPlaceholder": "Temporary logo: the official logo has not been provided yet"
+  },
+  "nav": {
+    "group": "The Group",
+    "expertises": "Expertise",
+    "projects": "Projects",
+    "visits": "Institutional Visits",
+    "team": "Our team",
+    "contact": "Contact",
+    "home": "Home",
+    "privacy": "Privacy",
+    "legal": "Legal notice",
+    "cookies": "Cookies"
+  },
+  "languages": {
+    "fr": "Français",
+    "en": "English",
+    "tr": "Türkçe"
+  },
+  "hero": {
+    "eyebrow": "Construction · Engineering · Development",
+    "title": "Building tomorrow's infrastructure.",
+    "description": "Stadiums, hospitals, sports villages and housing: an international approach to construction and engineering.",
+    "primaryCta": "Discover our projects",
+    "secondaryCta": "Let's talk about your project"
+  },
+  "intro": {
+    "eyebrow": "The Group",
+    "title": "An international construction and engineering company.",
+    "body": "NUMAN GROUPE designs and builds public facilities and residential developments. Our fields of work cover stadiums, hospitals, sports villages and housing.",
+    "cta": "Discover the Group"
+  },
+  "expertises": {
+    "eyebrow": "Our expertise",
+    "title": "Projects that match your ambitions.",
+    "description": "Fields of work that we expand as our projects develop.",
+    "viewAll": "All our expertise",
+    "openLabel": "Discover this expertise",
+    "empty": "Expertise pages will be published soon.",
+    "relatedProjects": "Related projects",
+    "contactCta": "Talk about your project",
+    "scopePending": "The detail of this expertise will be completed soon.",
+    "noProjects": "No published project is linked to this expertise yet."
+  },
+  "projects": {
+    "eyebrow": "Our projects",
+    "title": "From vision to delivery.",
+    "description": "A selection of completed and ongoing projects.",
+    "filterLabel": "Filter projects by status",
+    "filterAll": "All projects",
+    "filterCompleted": "Completed",
+    "filterInProgress": "In progress",
+    "viewAll": "See all projects",
+    "empty": "The first projects will be published soon.",
+    "emptyFilter": "No projects match these filters.",
+    "filterStatus": "Status",
+    "filterExpertise": "Expertise",
+    "filterCountry": "Country",
+    "filterAllExpertises": "All expertise",
+    "filterAllCountries": "All countries",
+    "applyFilters": "Apply filters",
+    "pagination": "Project pagination",
+    "prevPage": "Previous page",
+    "nextPage": "Next page",
+    "pageOf": "Page {page} of {total}",
+    "related": "Related projects",
+    "requestCta": "Request a project",
+    "status": {
+      "completed": "Completed",
+      "in_progress": "In progress"
+    }
+  },
+  "visits": {
+    "eyebrow": "Institutional Visits",
+    "title": "Meetings and visits, presented for information.",
+    "description": "Visits to institutions, recorded as visits. They do not indicate a partnership, state support or the award of a contract.",
+    "viewAll": "All visits",
+    "empty": "No visits are published at the moment.",
+    "emptyFilter": "No visits match these filters.",
+    "filterCountry": "Country",
+    "filterYear": "Year",
+    "filterAllCountries": "All countries",
+    "filterAllYears": "All years",
+    "applyFilters": "Apply filters",
+    "pagination": "Visit pagination",
+    "prevPage": "Previous page",
+    "nextPage": "Next page",
+    "pageOf": "Page {page} of {total}",
+    "related": "Other visits",
+    "disclaimer": "A visit remains a visit: it is not an alliance, a commission or an endorsement.",
+    "purpose": "Purpose of the visit"
+  },
+  "team": {
+    "eyebrow": "Our team",
+    "title": "Skills brought together around a shared ambition.",
+    "description": "The management and the teams behind our projects.",
+    "viewAll": "Meet the team",
+    "empty": "The team presentation will be published soon.",
+    "portraitPending": "Portrait coming soon",
+    "bioToggle": "Biography"
+  },
+  "contact": {
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "whatsapp": "WhatsApp",
+    "social": "Social"
+  },
+  "callToAction": {
+    "title": "Let's build your next major project.",
+    "description": "Tell us about your project and our teams will get back to you.",
+    "button": "Let's talk about your project"
+  },
+  "footer": {
+    "tagline": "Construction and engineering",
+    "navigation": "Navigation",
+    "legal": "Information",
+    "languages": "Languages",
+    "rights": "All rights reserved."
+  },
+  "demo": {
+    "badge": "Demo",
+    "imageBadge": "Demonstration visual",
+    "banner": "Demo mode: projects, visits, profiles and visuals marked “Demo” are examples and do not represent work by NUMAN GROUPE.",
+    "sectionNote": "Demonstration examples — not representative of actual work."
+  },
+  "detail": {
+    "facts": "Key facts",
+    "expertise": "Expertise",
+    "status": "Status",
+    "location": "Location",
+    "started": "Start",
+    "completed": "Completion",
+    "date": "Date",
+    "host": "Institution",
+    "participants": "Participants",
+    "technical": "Technical information",
+    "gallery": "Gallery",
+    "video": "Video",
+    "watchVideo": "Watch the video",
+    "progress": "Progress"
+  },
+  "placeholder": {
+    "status": "In preparation",
+    "title": "This page is being prepared.",
+    "body": "Its content will be published soon. No information is shown until it has been approved.",
+    "contactBody": "The contact and project request form will be available soon.",
+    "detailBody": "The detailed page will be published soon.",
+    "legalStatus": "Legal text missing",
+    "legalTitle": "This page is not a published legal document.",
+    "legalBody": "No approved text is shown. A privacy policy or legal notice must be written by qualified counsel, saved in the admin panel and published before go-live. This empty state is not a legal document.",
+    "backHome": "Back to home"
+  },
+  "notFound": {
+    "eyebrow": "Error 404",
+    "title": "Page not found.",
+    "body": "The page you requested does not exist or is not available in this language.",
+    "backHome": "Back to home"
+  },
+  "forms": {
+    "required": "required",
+    "optional": "optional"
+  },
+  "inquiry": {
+    "title": "Write to NUMAN GROUPE",
+    "lead": "Describe your request. The message is stored; a confirmation appears only after a successful save.",
+    "type": "Subject",
+    "typeContact": "General enquiry",
+    "typeProject": "Project request",
+    "fullName": "Full name",
+    "organization": "Organisation",
+    "email": "Email",
+    "phone": "Phone",
+    "country": "Country",
+    "countryEmpty": "Choose a country",
+    "projectType": "Project type",
+    "projectTypeEmpty": "Not specified",
+    "message": "Message",
+    "privacy": "I have read the information on data processing and I agree to this request being stored.",
+    "privacyLink": "Privacy",
+    "preference": "You may contact me again about this request (optional).",
+    "submit": "Send",
+    "pending": "Sending…",
+    "success": "Your request has been recorded. We will reply to the address you provided.",
+    "errors": {
+      "generic": "The message could not be sent. Please try again later.",
+      "invalid": "Please correct the highlighted fields.",
+      "type": "Choose the subject of your message.",
+      "fullName": "Enter your name (2 to 160 characters).",
+      "organization": "Enter the organisation name (2 to 160 characters).",
+      "email": "Enter a valid email address.",
+      "phone": "The phone number cannot be used.",
+      "country": "Choose a country from the list.",
+      "projectType": "The project type is not valid.",
+      "message": "The message must be between 20 and 4,000 characters.",
+      "privacy": "Storing the request requires your agreement.",
+      "rateLimit": "Too many messages were sent. Please try again in fifteen minutes."
+    }
+  },
+  "gallery": {
+    "prev": "Previous image",
+    "next": "Next image",
+    "close": "Close gallery",
+    "counter": "{current} / {total}"
+  },
+  "i18n": {
+    "unavailable": "This page is not published in this language yet.",
+    "unavailableHome": "Back to home"
+  }
+}

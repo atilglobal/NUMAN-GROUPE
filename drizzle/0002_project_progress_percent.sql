@@ -1,0 +1,2 @@
+ALTER TABLE "projects" ADD COLUMN "progress_percent" smallint;--> statement-breakpoint
+ALTER TABLE "projects" ADD CONSTRAINT "projects_progress_percent" CHECK ("projects"."progress_percent" is null or ("projects"."progress_percent" between 0 and 100));

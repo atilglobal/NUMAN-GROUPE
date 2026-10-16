@@ -1,0 +1,51 @@
+{
+  "name": "numan-groupe",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build && tsx scripts/prepare-standalone.ts",
+    "start": "tsx scripts/start-standalone.ts",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "db:local": "tsx scripts/db-local.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:seed": "tsx scripts/db-seed.ts",
+    "db:seed:demo": "tsx scripts/db-seed-demo.ts",
+    "db:demo:clear": "tsx scripts/db-seed-demo.ts --clear",
+    "admin:create": "tsx scripts/admin-create.ts",
+    "release:check-env": "tsx scripts/check-release-env.ts"
+  },
+  "dependencies": {
+    "better-auth": "^1.7.8",
+    "drizzle-orm": "^0.45.4",
+    "next": "16.4.1",
+    "pg": "^8.23.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "sharp": "^0.35.5",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.10",
+    "@next/env": "^16.4.1",
+    "@tailwindcss/turbopack": "^4",
+    "@types/node": "^24.19.2",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "drizzle-kit": "^0.31.11",
+    "embedded-postgres": "^18.4.0-beta.17",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.1",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.15",
+    "typescript": "^5",
+    "vitest": "^5.0.4"
+  }
+}
