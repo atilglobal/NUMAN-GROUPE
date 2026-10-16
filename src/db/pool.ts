@@ -7,7 +7,6 @@ export function postgresPoolConfig(
 ): PoolConfig {
   const poolMax = Number(env.DATABASE_POOL_MAX ?? (env.VERCEL ? 1 : 5));
   const hosted =
-    Boolean(env.VERCEL) ||
     /sslmode=require/i.test(connectionString) ||
     /neon\.tech|supabase\.co|pooler\.supabase|vercel-storage/i.test(connectionString);
   return {
