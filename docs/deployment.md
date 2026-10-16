@@ -9,7 +9,7 @@ Canlıya dağıtım, açık bir yayın talimatı olmadan yapılmaz.
 | Konu | Durum |
 | --- | --- |
 | Node.js çalışma yöntemi | Next.js 16.4.1 App Router, `next start` veya `output: "standalone"` ile **uzun ömürlü Node süreci**. `engines.node`: `>=20.9.0` (hedef 24 LTS). Statik export yok; Server Action, oturum ve `next/image` süreç ister. |
-| Veritabanı | PostgreSQL + `DATABASE_URL` + `pg`. `next build` yayımlanmış içeriği okur; **build ortamının veritabanına ağ erişimi gerekir.** Yerel `npm run db:local` (`embedded-postgres`) **yalnızca geliştirmedir; üretimde kullanılmaz.** Sağlayıcı (Neon, RDS, aynı VPS, vs.) seçilmemiştir. |
+| Veritabanı | PostgreSQL + `DATABASE_URL` / `POSTGRES_URL` + `pg`. Public `next build` URL yokken boş içerikle tamamlanır; **canlı içerik, panel ve formlar çalışma anında Postgres ister.** Yerel `npm run db:local` (`embedded-postgres`) **yalnızca geliştirmedir; üretimde kullanılmaz.** Sağlayıcı (Neon, RDS, aynı VPS, vs.) seçilmemiştir. |
 | Kalıcı medya | Byte’lar `MEDIA_STORAGE_DIR` (varsayılan `.data/media`) içindedir; `GET /media/[...key]`. S3/R2 **uygulanmamıştır.** Geçici dosya sistemine yazılan yüklemeler dağıtımda kaybolur. |
 | Domain ve HTTPS | `SITE_URL` / `BETTER_AUTH_URL` boş bırakılabilir (yerel). Kanonik bağlantı ve dolu sitemap için https köken gerekir. DNS kaydı, sertifika ve alan adı **yoktur.** Üretimde oturum çerezi `Secure` olur (`NODE_ENV=production`). |
 | E-posta | İsteğe bağlı Resend (`RESEND_API_KEY`, `INQUIRY_NOTIFY_TO` / sitedeki iletişim e-postası, `INQUIRY_NOTIFY_FROM`). Yoksa talep yine kaydedilir; bildirim `skipped`. Parola sıfırlama e-postası yoktur (panel yönetici parolayı sıfırlar). Gönderen domain / SPF / DKIM **yoktur.** |
@@ -24,7 +24,7 @@ Bu yığın **şu anda** şu hedeflerde “çalışır” diye kurulamaz:
 
 1. **Yalnızca PHP/statik FTP hosting** — Node süreci yok.
 2. **Ephemeral diskli serverless (ör. varsayılan Vercel dosya sistemi) nesne depolama olmadan** — yüklenen medya kalıcı değildir. S3 uyumlu `MediaStorage` henüz yok; Vercel’e “şimdi yayın” talimatı yazılmaz.
-3. **Veritabanına erişemeyen build** — `next build` başarısız olur veya boş içerik üretir.
+3. **Veritabanı olmayan çalışma anı** — public sayfalar boş kalır; yönetim paneli, oturum ve talep formu Postgres olmadan işlemez.
 4. **`embedded-postgres` / `npm run db:local` üretimde** — geliştirme ikilisi; yedekleme ve yüksek erişilebilirlik yok.
 
 Uygulanabilir çözüm (sağlayıcı adı kilitlenmeden): **kalıcı diskli bir Node süreci** (VPS, VM veya volume’lu konteyner) + **yönetilen veya aynı makinedeki PostgreSQL** + **ters vekil ile TLS** + **`MEDIA_STORAGE_DIR` volume**. Nesne depolama istenirse önce kodda S3 uyumlu depo uygulanmalı, sonra ephemeral platform değerlendirilmelidir.
@@ -99,19 +99,18 @@ Bunlar operatör kararıdır. Karar verilince bu belge somut hostname ve secret 
 
 ## Vercel (operatör seçtiyse)
 
-Bu uygulama Vercel’de **yalnızca PostgreSQL URL’si build ortamında varsa** derlenir. `next build` yayımlanmış sayfaları veritabanından okur; `DATABASE_URL` yoksa derleme `src/db/client.ts` ile durur.
+Vercel `VERCEL=1` iken `output: "standalone"` üretilmez. Public `next build` Postgres URL’si olmadan da tamamlanır (boş site). Canlı içerik ve panel için URL yine gerekir.
 
 1. Neon, Supabase veya Vercel Postgres ile bir PostgreSQL oluşturun (üretimde `npm run db:local` kullanılmaz).
 2. Bağlantı dizesine `sslmode=require` ekleyin.
 3. Vercel: **Project → Settings → Environment Variables**
-   - `DATABASE_URL` (veya Neon entegrasyonunun yazdığı `POSTGRES_URL`)
+   - `DATABASE_URL` (veya Neon entegrasyonunun yazdığı `POSTGRES_URL`) — Production, Preview **ve** Development
    - `BETTER_AUTH_SECRET` (≥ 32 karakter)
    - `SITE_URL` = Vercel HTTPS adresi (ör. `https://….vercel.app`)
    - `SITE_ENV=production`
    - `BETTER_AUTH_URL` = `SITE_URL`
-4. Üç ortamı da işaretleyin: **Production, Preview, Development**. Yalnızca Production işaretliyse derleme yine `DATABASE_URL is not set` verir.
-5. Değişkeni kaydettikten sonra **Redeploy** (önbelleksiz).
-6. İlk kurulumda migrate’i veritabanına uygulayın (`npm run db:migrate` sırların yüklü olduğu bir ortamda). Boş şemada derleme bağlanır ama içerik boş kalır.
+4. Değişkeni kaydettikten sonra **Redeploy** (önbelleksiz).
+5. İlk kurulumda migrate’i veritabanına uygulayın (`npm run db:migrate` sırların yüklü olduğu bir ortamda). Sonra `npm run db:seed` ve `npm run admin:create`.
 
 Vercel diski geçicidir: panelden yüklenen medya bir sonraki dağıtımda kaybolabilir. Kalıcı medya için volume veya nesne depo henüz kodda yok.
 

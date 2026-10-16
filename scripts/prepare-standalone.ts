@@ -10,6 +10,10 @@ const root = process.cwd();
 const standalone = path.join(root, ".next", "standalone");
 
 if (!existsSync(standalone)) {
+  if (process.env.VERCEL) {
+    console.log("Skipping standalone copy on Vercel.");
+    process.exit(0);
+  }
   console.error("No .next/standalone output. Run npm run build first.");
   process.exit(1);
 }

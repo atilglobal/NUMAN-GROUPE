@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Minimal Node process for a durable host (VPS/container). Not a hosting-provider lock.
-  output: "standalone",
+  // Vercel bundles Next itself; standalone is for a durable Node/VPS host.
+  ...(process.env.VERCEL ? {} : { output: "standalone" as const }),
   poweredByHeader: false,
   cacheComponents: true,
   partialPrefetching: true,

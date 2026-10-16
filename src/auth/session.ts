@@ -3,7 +3,7 @@ import { and, eq, isNull } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
-import { getDb } from "@/db/client";
+import { getDb, isDatabaseConfigured } from "@/db/client";
 import { users, type UserRole } from "@/db/schema";
 import { clientIpFrom } from "./client-ip";
 import { createAuth, type Auth } from "./config";
@@ -29,6 +29,7 @@ export type PanelUser = { id: string; name: string; email: string; role: UserRol
 
 /** Session plus a fresh users row, so role changes and disabling apply at once. */
 export const getCurrentUser = cache(async (): Promise<PanelUser | null> => {
+  if (!isDatabaseConfigured()) return null;
   const session = await getAuth().api.getSession({ headers: await headers() });
   if (!session) return null;
   const [user] = await getDb()

@@ -9,6 +9,15 @@ export type Database = PgDatabase<PgQueryResultHKT, typeof schema>;
 
 const globalForDb = globalThis as unknown as { numanDb?: Database };
 
+export function isDatabaseConfigured(): boolean {
+  return Boolean(resolveDatabaseUrl());
+}
+
+/** Public prerender/build may run before Postgres env is attached. */
+export function tryGetDb(): Database | null {
+  return isDatabaseConfigured() ? getDb() : null;
+}
+
 export function getDb(): Database {
   if (globalForDb.numanDb) return globalForDb.numanDb;
 
@@ -18,7 +27,13 @@ export function getDb(): Database {
   }
 
   const poolMax = Number(process.env.DATABASE_POOL_MAX ?? (process.env.VERCEL ? 1 : 5));
-  const pool = new Pool({ connectionString, max: Number.isFinite(poolMax) && poolMax > 0 ? poolMax : 5 });
+  const hosted =
+    Boolean(process.env.VERCEL) || /neon\.tech|supabase\.co|pooler\.supabase|vercel-storage/i.test(connectionString);
+  const pool = new Pool({
+    connectionString,
+    max: Number.isFinite(poolMax) && poolMax > 0 ? poolMax : 5,
+    ssl: hosted ? { rejectUnauthorized: false } : undefined,
+  });
   globalForDb.numanDb = drizzle({ client: pool, schema });
   return globalForDb.numanDb;
 }
