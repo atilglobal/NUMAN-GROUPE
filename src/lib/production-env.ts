@@ -3,6 +3,8 @@
  * before a real HTTPS go-live; they do not imply a specific vendor.
  */
 
+import { resolveDatabaseUrl } from "../db/url";
+
 const SECRET_MIN = 32;
 
 export type ProductionAssessment = {
@@ -18,7 +20,7 @@ export function assessProductionEnv(
   const missing: string[] = [];
   const warnings: string[] = [];
 
-  if (!env.DATABASE_URL?.trim()) missing.push("DATABASE_URL");
+  if (!resolveDatabaseUrl(env)) missing.push("DATABASE_URL");
 
   const secret = env.BETTER_AUTH_SECRET ?? "";
   if (secret.length < SECRET_MIN) missing.push("BETTER_AUTH_SECRET");

@@ -21,6 +21,15 @@ describe("assessProductionEnv", () => {
     expect(result.ready).toBe(true);
   });
 
+  it("treats POSTGRES_URL as a database URL", () => {
+    const result = assessProductionEnv({
+      ...complete,
+      DATABASE_URL: undefined,
+      POSTGRES_URL: "postgres://user:pass@db.internal:5432/numan",
+    });
+    expect(result.missing).not.toContain("DATABASE_URL");
+  });
+
   it("lists missing secrets without echoing their values", () => {
     const result = assessProductionEnv({});
     expect(result.missing).toEqual(["DATABASE_URL", "BETTER_AUTH_SECRET", "SITE_URL"]);

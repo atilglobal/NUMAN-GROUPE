@@ -97,6 +97,24 @@ Ters vekil bu porta HTTP ile bağlanır; uygulama TLS sonlandırmaz.
 
 Bunlar operatör kararıdır. Karar verilince bu belge somut hostname ve secret store adıyla güncellenir.
 
+## Vercel (operatör seçtiyse)
+
+Bu uygulama Vercel’de **yalnızca PostgreSQL URL’si build ortamında varsa** derlenir. `next build` yayımlanmış sayfaları veritabanından okur; `DATABASE_URL` yoksa derleme `src/db/client.ts` ile durur.
+
+1. Neon, Supabase veya Vercel Postgres ile bir PostgreSQL oluşturun (üretimde `npm run db:local` kullanılmaz).
+2. Bağlantı dizesine `sslmode=require` ekleyin.
+3. Vercel: **Project → Settings → Environment Variables**
+   - `DATABASE_URL` (veya Neon entegrasyonunun yazdığı `POSTGRES_URL`)
+   - `BETTER_AUTH_SECRET` (≥ 32 karakter)
+   - `SITE_URL` = Vercel HTTPS adresi (ör. `https://….vercel.app`)
+   - `SITE_ENV=production`
+   - `BETTER_AUTH_URL` = `SITE_URL`
+4. Üç ortamı da işaretleyin: **Production, Preview, Development**. Yalnızca Production işaretliyse derleme yine `DATABASE_URL is not set` verir.
+5. Değişkeni kaydettikten sonra **Redeploy** (önbelleksiz).
+6. İlk kurulumda migrate’i veritabanına uygulayın (`npm run db:migrate` sırların yüklü olduğu bir ortamda). Boş şemada derleme bağlanır ama içerik boş kalır.
+
+Vercel diski geçicidir: panelden yüklenen medya bir sonraki dağıtımda kaybolabilir. Kalıcı medya için volume veya nesne depo henüz kodda yok.
+
 ## Go-live’dan önce içerik
 
 Üretimde demo gizlenir; `db:demo:clear` satırları da siler. Logo, iletişim, gizlilik ve yasal metinler panelden girilmeden public sitede boş/dürüst yer tutucu kalır. Gizlilik sayfası hukuki belge olarak sunulmaz (`docs/admin-guide.md`).
