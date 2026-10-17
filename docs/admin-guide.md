@@ -6,7 +6,7 @@ Teknik yetki ve oturum: `docs/admin.md`. Bu kılavuz editör ve yönetici işidi
 
 ## Giriş
 
-- Kayıt kapalıdır. İlk yönetici `npm run admin:create` ile açılır; sonrakiler **Kullanıcılar** ekranından.
+- Kayıt kapalıdır. Canlıda ilk yönetici `/setup` ile açılır (kurulum anahtarı + seçtiğiniz kullanıcı adı, e-posta ve parola). Yerelde `npm run admin:create` de kullanılabilir. Sonrakiler **Kullanıcılar** ekranından.
 - Roller: **Yönetici** (her şey) ve **Editör** (içerik + medya). Editör talepler, kullanıcılar ve site ayarlarına giremez; menü gizlense de sunucu da reddeder.
 - Oturum 12 saat. Çıkış ve parola değişikliği oturumları kapatır.
 

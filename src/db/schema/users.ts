@@ -9,7 +9,7 @@ export type UserRole = (typeof userRoleEnum.enumValues)[number];
 
 /**
  * Panel users. Core columns follow Better Auth's user model. There is no
- * public sign-up: rows are created by `npm run admin:create` or by an admin.
+ * public sign-up: rows are created by `/setup`, `npm run admin:create` or by an admin.
  */
 export const users = pgTable(
   "users",

@@ -12,6 +12,7 @@ describe("assessProductionEnv", () => {
     RESEND_API_KEY: "re_test",
     INQUIRY_NOTIFY_FROM: "NUMAN GROUPE <noreply@example.com>",
     AUTH_IP_HEADER: "x-forwarded-for",
+    SETUP_KEY: "x".repeat(24),
   };
 
   it("is ready when the durable Node host variables are set", () => {

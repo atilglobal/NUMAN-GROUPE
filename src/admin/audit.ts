@@ -12,7 +12,7 @@ export type AuditEntry = {
   ip?: string | null;
 };
 
-export async function writeAudit(db: Database, entry: AuditEntry): Promise<void> {
+export async function writeAudit(db: Pick<Database, "insert">, entry: AuditEntry): Promise<void> {
   await db.insert(auditLogs).values({
     actorUserId: entry.actorUserId,
     action: entry.action,

@@ -21,7 +21,13 @@ const required = (max: number, label: string) => trimmed(max, label).min(1, `${l
 const optional = (max: number, label: string) =>
   trimmed(max, label).transform((value) => (value === "" ? null : value));
 
-const USERNAME_PATTERN = /^[a-z][a-z0-9._-]{2,31}$/;
+export const USERNAME_PATTERN = /^[a-z][a-z0-9._-]{2,31}$/;
+
+export const usernameSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .regex(USERNAME_PATTERN, "Kullanıcı adı 3–32 karakter olmalı; harfle başlamalı, yalnızca a-z, 0-9, nokta, alt çizgi ve tire.");
 
 export const emailSchema = z
   .string()

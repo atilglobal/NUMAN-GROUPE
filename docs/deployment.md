@@ -123,7 +123,7 @@ Preview ve Production **ayrı env kümeleridir**. Neon Preview branch kullanıyo
    - `npm run db:migrate` — bekleyen migration; drop/reset yok
    - `npm run db:seed` — yalnızca eksik uzmanlık yuvaları ve boş kurumsal sayfalar; mevcut satırlara dokunmaz.
    - Sunum içeriği: `ALLOW_DEMO_SEED=true npm run db:seed:demo` (SITE_ENV production olsa da yazar). Vercel’de göstermek için `SITE_ENV=staging` ve `ALLOW_DEMO_CONTENT=true`. Gerçek yayında `SITE_ENV=production` ve `npm run db:demo:clear`.
-   - `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` ile `npm run admin:create` — sonra bu üç değişkeni silin. E-posta zaten varsa parola değiştirilmez.
+   - İlk yönetici: Production’a `SETUP_KEY` (Secret, ≥ 16 karakter, `BETTER_AUTH_SECRET` değil) ekleyin, Redeploy, `https://…/setup` formunu doldurun. Başarıda anahtarı silin. Preview `/setup` çalışmaz. Sonraki Production yayınları gözden geçirilmiş migration’ları otomatik uygular; demo veya yönetici parolası yeniden yazılmaz.
 
 Vercel diski geçicidir. Nesne depo yokken panel yüklemesi reddedilir (sessiz kayıp yok). Demo görseller (`content/demo/`) Git’tedir; `SITE_ENV=production` iken public’te gösterilmez.
 

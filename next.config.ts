@@ -9,6 +9,21 @@ const nextConfig: NextConfig = {
   images: {
     localPatterns: [{ pathname: "/media/**" }, { pathname: "/media/v/**" }],
   },
+  outputFileTracingIncludes: {
+    "/setup": ["./drizzle/**"],
+    "/setup/**": ["./drizzle/**"],
+  },
+  async headers() {
+    return [
+      {
+        source: "/setup",
+        headers: [
+          { key: "Cache-Control", value: "private, no-store, no-cache, must-revalidate" },
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+        ],
+      },
+    ];
+  },
   experimental: {
     // Root layout lives under app/[locale]; unmatched URLs need a standalone 404.
     globalNotFound: true,

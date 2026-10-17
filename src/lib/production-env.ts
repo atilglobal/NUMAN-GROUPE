@@ -60,6 +60,10 @@ export function assessProductionEnv(
     warnings.push("AUTH_IP_HEADER is unset; sign-in throttling is per e-mail only, not per client IP.");
   }
 
+  if (!env.SETUP_KEY?.trim()) {
+    warnings.push("SETUP_KEY is unset; /setup stays closed. Add it only for the first Production administrator, then remove it.");
+  }
+
   const ready =
     missing.length === 0 &&
     env.SITE_ENV === "production" &&

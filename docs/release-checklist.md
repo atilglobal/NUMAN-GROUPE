@@ -19,7 +19,7 @@ Hedef alan adı, TLS ve hosting hesabı **henüz yok**. Bu liste canlıya çıkm
 - [ ] `npm run db:seed` (firma uydurmaz)
 - [ ] `npm run db:demo:clear` — demo satır yok
 - [ ] `SITE_ENV=production` — `db:seed:demo` reddedilir
-- [ ] `npm run admin:create` — sonra `ADMIN_PASSWORD` ortamdan silinir
+- [ ] İlk yönetici: Vercel Production `SETUP_KEY` + `/setup`, veya `npm run admin:create` — sonra `SETUP_KEY` / `ADMIN_PASSWORD` ortamdan silinir
 - [ ] En az bir editör (isteğe bağlı) panelden, yönetici olmayan rolle
 - [ ] `npm run build` ve süreç yöneticisi ile `next start` veya `node .next/standalone/server.js`
 

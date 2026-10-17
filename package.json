@@ -7,7 +7,8 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build && tsx scripts/prepare-standalone.ts",
+    "build": "tsx scripts/migrate-if-production.ts && next build && tsx scripts/prepare-standalone.ts",
+    "db:migrate:production": "tsx scripts/migrate-if-production.ts",
     "start": "tsx scripts/start-standalone.ts",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",

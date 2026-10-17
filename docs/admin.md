@@ -4,6 +4,10 @@ Panel `/admin` altındadır, arayüz dili Türkçedir; içerik alanları FR / EN
 
 ## İlk yönetici
 
+Canlı Vercel Production: `SETUP_KEY` (Secret) + `/setup`. Preview kapalıdır. Anahtar `BETTER_AUTH_SECRET` değildir; başarıdan sonra kaldırılır.
+
+Yerel:
+
 ```bash
 npm run db:migrate        # 0001_auth_and_roles dahil
 npm run admin:create      # ad, e-posta ve gizli girilen parola sorulur

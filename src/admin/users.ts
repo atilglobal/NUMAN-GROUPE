@@ -49,9 +49,11 @@ export async function listUsers(db: Database): Promise<UserRow[]> {
   return rows.map((row) => ({ ...row, activeSessions: Number(row.activeSessions ?? 0) }));
 }
 
-/** Creates a panel user with a credential account. Used by the setup command and by admins. */
-export async function createUserWithPassword(
-  db: Database,
+type Writer = Pick<Database, "insert" | "select">;
+
+/** Inserts a credential user on an open connection or transaction. */
+export async function insertUserWithPassword(
+  db: Writer,
   input: { name: string; email: string; role: UserRole; password: string },
   actor: Actor | null,
 ): Promise<string> {
@@ -62,25 +64,32 @@ export async function createUserWithPassword(
   const passwordHash = await hashPassword(input.password);
   const id = crypto.randomUUID();
 
-  await db.transaction(async (tx) => {
-    await tx.insert(users).values({ id, name: input.name.trim(), email, role: input.role, emailVerified: true });
-    await tx.insert(accounts).values({
-      id: crypto.randomUUID(),
-      accountId: id,
-      providerId: "credential",
-      userId: id,
-      password: passwordHash,
-    });
-    await writeAudit(tx, {
-      actorUserId: actor?.id ?? null,
-      action: "user.create",
-      entityType: "user",
-      entityId: id,
-      metadata: { role: input.role },
-      ip: actor?.ip,
-    });
+  await db.insert(users).values({ id, name: input.name.trim(), email, role: input.role, emailVerified: true });
+  await db.insert(accounts).values({
+    id: crypto.randomUUID(),
+    accountId: id,
+    providerId: "credential",
+    userId: id,
+    password: passwordHash,
+  });
+  await writeAudit(db, {
+    actorUserId: actor?.id ?? null,
+    action: "user.create",
+    entityType: "user",
+    entityId: id,
+    metadata: { role: input.role },
+    ip: actor?.ip,
   });
   return id;
+}
+
+/** Creates a panel user with a credential account. Used by setup, CLI and admins. */
+export async function createUserWithPassword(
+  db: Database,
+  input: { name: string; email: string; role: UserRole; password: string },
+  actor: Actor | null,
+): Promise<string> {
+  return db.transaction((tx) => insertUserWithPassword(tx, input, actor));
 }
 
 async function otherActiveAdmins(db: Database, excludeUserId: string): Promise<number> {
@@ -182,7 +191,7 @@ export async function setUserPassword(db: Database, actor: Actor, userId: string
   });
 }
 
-export async function hasAnyAdmin(db: Database): Promise<boolean> {
+export async function hasAnyAdmin(db: Pick<Database, "select">): Promise<boolean> {
   const [row] = await db.select({ total: count() }).from(users).where(eq(users.role, "admin"));
   return Number(row?.total ?? 0) > 0;
 }

@@ -27,4 +27,5 @@ function copy(from: string, to: string) {
 copy(path.join(root, "public"), path.join(standalone, "public"));
 copy(path.join(root, ".next", "static"), path.join(standalone, ".next", "static"));
 copy(path.join(root, "content", "demo"), path.join(standalone, "content", "demo"));
+copy(path.join(root, "drizzle"), path.join(standalone, "drizzle"));
 console.log("Standalone runtime files copied.");

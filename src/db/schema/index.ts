@@ -19,3 +19,4 @@ export * from "./ui";
 export * from "./cms";
 export * from "./menus";
 export * from "./audit";
+export * from "./setup";
