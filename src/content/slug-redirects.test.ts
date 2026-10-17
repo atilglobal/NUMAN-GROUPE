@@ -69,7 +69,7 @@ describe("slug redirects", () => {
       title: "Stade national",
     });
     expect(await resolveSlugRedirect(db, "projects", "fr", "stade-national", { demo: false })).toBe(
-      "/fr/projets/stade-renove",
+      "/projets/stade-renove",
     );
   });
 

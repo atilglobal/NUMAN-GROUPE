@@ -59,7 +59,7 @@ async function PanelShell({ children }: { children: ReactNode }) {
               <span className="font-medium text-navy-950">{user.name}</span>
               <span className="ml-2 rounded bg-paper-2 px-2 py-0.5 text-xs text-navy-900">{roleLabels[user.role]}</span>
             </p>
-            <a href="/fr" target="_blank" rel="noopener" className="text-sm text-muted underline-offset-4 hover:underline">
+            <a href="/" target="_blank" rel="noopener" className="text-sm text-muted underline-offset-4 hover:underline">
               Siteyi görüntüle
             </a>
             <form action={signOutAction}>

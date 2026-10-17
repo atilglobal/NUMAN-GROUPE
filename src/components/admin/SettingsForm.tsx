@@ -66,8 +66,27 @@ export function SettingsForm({
             Bağlantı ekle
           </button>
         </fieldset>
-        <div>
-          <p className="mb-2 text-sm font-medium text-navy-950">Logo</p>
+        <div className="grid gap-3 rounded-md border border-line p-4">
+          <p className="text-sm font-medium text-navy-950">Logo (header ve footer)</p>
+          <p className="text-xs text-muted">
+            Kütüphaneden seçin veya yukarıdan yeni dosya yükleyin. Kaldırmak kaydı silmez; yalnızca sitede
+            yer tutucu yazı kalır.
+          </p>
+          {defaults.logoAssetId ? (
+            <div className="flex items-center gap-3 rounded-md bg-paper-2 p-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={media.find((item) => item.id === defaults.logoAssetId)?.src ?? ""}
+                alt=""
+                className="h-12 w-auto max-w-[10rem] object-contain"
+              />
+              <p className="text-xs text-muted">
+                {media.find((item) => item.id === defaults.logoAssetId)?.originalFilename ?? "Seçili logo"}
+              </p>
+            </div>
+          ) : (
+            <p className="text-sm text-muted">Logo seçilmedi.</p>
+          )}
           <MediaPicker
             items={media}
             coverId={defaults.logoAssetId}
@@ -75,7 +94,7 @@ export function SettingsForm({
             allowGallery={false}
             coverName="logoAssetId"
             coverLabel="Logo yap"
-            coverSelectedLabel="Logo seçili"
+            coverSelectedLabel="Logo seçili — tekrar tıklayınca kaldır"
           />
         </div>
         <div>

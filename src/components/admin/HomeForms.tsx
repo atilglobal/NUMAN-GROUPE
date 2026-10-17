@@ -152,7 +152,7 @@ export function HomeCopyForm({
           label="CTA hedefi"
           name="ctaHref"
           defaultValue={defaults.ctaHref}
-          hint="Örn. /fr/contact veya https://…"
+          hint="Örn. /contact, /en/contact veya https://…"
         />
       </div>
       <TextField label="Footer satırı" name="footerTagline" defaultValue={defaults.footerTagline} maxLength={200} />

@@ -244,7 +244,15 @@ export async function saveUploadedImage(
   const id = crypto.randomUUID();
   const ext = EXTENSIONS[sniffed.mime];
   const storageKey = `uploads/${id}.${ext}`;
-  await putObject(storageKey, buffer);
+  try {
+    await putObject(storageKey, buffer);
+  } catch (error) {
+    throw new MediaUploadError(
+      error instanceof Error
+        ? error.message
+        : "Görsel kaydedilemedi. Kalıcı depolama yapılandırılmamış olabilir.",
+    );
+  }
 
   try {
     await db.transaction(async (tx) => {

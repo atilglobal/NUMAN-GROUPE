@@ -19,7 +19,7 @@ describe("project list filters", () => {
   it("builds a stable public URL that keeps filters", () => {
     expect(
       projectListHref("fr", { status: "in_progress", expertiseSlug: "hopitaux", country: "TR", page: 3 }),
-    ).toBe("/fr/projets?status=in_progress&expertise=hopitaux&country=TR&page=3");
+    ).toBe("/projets?status=in_progress&expertise=hopitaux&country=TR&page=3");
     expect(projectListHref("tr", { page: 1 })).toBe("/tr/projeler");
   });
 });

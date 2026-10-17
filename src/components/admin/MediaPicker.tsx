@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { uploadImageAction } from "@/admin/actions/media";
+import { buttonClass } from "./button-styles";
 import type { Locale } from "@/i18n/config";
 import type { MediaPickerItem } from "@/media/store";
 import { ActionForm, FormStatus, SubmitButton, TextField } from "./forms";
@@ -163,17 +164,31 @@ function altSummary(alts: Partial<Record<Locale, string>>) {
 }
 
 export function MediaUploadForm() {
+  const [fileName, setFileName] = useState<string | null>(null);
+
   return (
-    <ActionForm action={uploadImageAction} resetOnSuccess className="grid gap-3 rounded-md border border-dashed border-line p-4">
-      <p className="text-sm font-medium text-navy-950">Yeni görsel yükle</p>
+    <ActionForm
+      action={uploadImageAction}
+      resetOnSuccess
+      onSuccess={() => setFileName(null)}
+      className="grid gap-3 rounded-md border border-dashed border-line bg-paper/40 p-4"
+    >
+      <p className="text-sm font-medium text-navy-950">Yeni görsel ekle</p>
       <FormStatus />
-      <input
-        name="file"
-        type="file"
-        accept="image/jpeg,image/png,image/webp,image/gif"
-        className="text-sm"
-        required
-      />
+      <div className="flex flex-wrap items-center gap-3">
+        <label className={`${buttonClass("primary")} cursor-pointer`}>
+          Dosya seç
+          <input
+            name="file"
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            required
+            className="sr-only"
+            onChange={(event) => setFileName(event.target.files?.[0]?.name ?? null)}
+          />
+        </label>
+        <p className="text-sm text-muted">{fileName ?? "JPEG, PNG, WebP veya GIF — en fazla 6 MB"}</p>
+      </div>
       <div className="grid gap-3 sm:grid-cols-3">
         <TextField label="Alt metin (FR)" name="altFr" maxLength={200} />
         <TextField label="Alt metin (EN)" name="altEn" maxLength={200} />
@@ -185,12 +200,11 @@ export function MediaUploadForm() {
         <TextField label="Açıklama (TR)" name="captionTr" maxLength={240} />
       </div>
       <p className="text-xs text-muted">
-        En az bir dilde alternatif metin zorunlu. Açıklama isteğe bağlıdır. JPEG, PNG, WebP veya GIF, en fazla 6 MB.
+        En az bir dilde alternatif metin zorunlu. Vercel’de kalıcı yükleme için nesne depolama (MEDIA_S3_*) gerekir;
+        aksi halde yükleme reddedilir, başarılı sayılmaz.
       </p>
       <div>
-        <SubmitButton variant="secondary" pendingLabel="Yükleniyor…">
-          Yükle
-        </SubmitButton>
+        <SubmitButton pendingLabel="Yükleniyor…">Görseli yükle</SubmitButton>
       </div>
     </ActionForm>
   );

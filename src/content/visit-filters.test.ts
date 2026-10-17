@@ -13,7 +13,7 @@ describe("visit list filters", () => {
 
   it("builds a stable public URL that keeps filters", () => {
     expect(visitListHref("fr", { country: "TR", year: 2023, page: 3 })).toBe(
-      "/fr/visites-institutionnelles?country=TR&year=2023&page=3",
+      "/visites-institutionnelles?country=TR&year=2023&page=3",
     );
     expect(visitListHref("en", { page: 1 })).toBe("/en/institutional-visits");
   });

@@ -11,7 +11,8 @@ import * as queries from "./queries";
 import { resolveCmsSlugRedirect, resolveSlugRedirect as lookupSlugRedirect } from "./slug-redirects";
 import { mergeDictionary } from "@/i18n/catalog";
 import { getDictionary } from "@/i18n/dictionaries";
-import type { ProjectListFilters, SiteChrome, VisitListFilters } from "./types";
+import { promoCta, promoForExpertiseSlug, promoHero } from "./promo-visuals";
+import type { ExpertiseView, ProjectListFilters, SiteChrome, VisitListFilters } from "./types";
 
 /*
  * Cached public reads used by pages. Panel writes expire these tags
@@ -24,8 +25,23 @@ import type { ProjectListFilters, SiteChrome, VisitListFilters } from "./types";
 
 const options = () => ({ demo: isDemoContentEnabled() });
 
-function emptyChrome(): SiteChrome {
+function withPromoChrome(locale: Locale, chrome: SiteChrome): SiteChrome {
   return {
+    ...chrome,
+    homeVisuals: {
+      ...chrome.homeVisuals,
+      hero: chrome.homeVisuals.hero ?? promoHero(locale),
+      callToAction: chrome.homeVisuals.callToAction ?? promoCta(locale),
+    },
+  };
+}
+
+function withPromoExpertise(item: ExpertiseView, locale: Locale): ExpertiseView {
+  return { ...item, image: item.image ?? promoForExpertiseSlug(item.slug, locale) };
+}
+
+function emptyChrome(locale: Locale = "fr"): SiteChrome {
+  return withPromoChrome(locale, {
     companyName: null,
     contactEmail: null,
     contactPhone: null,
@@ -37,7 +53,7 @@ function emptyChrome(): SiteChrome {
     copy: null,
     homeVisuals: { hero: null, callToAction: null, heroVideoUrl: null },
     homeLayout: DEFAULT_HOME_LAYOUT,
-  };
+  });
 }
 
 export async function getExpertises(locale: Locale) {
@@ -45,7 +61,8 @@ export async function getExpertises(locale: Locale) {
   cacheLife("hours");
   cacheTag(contentTags.expertises, contentTags.media);
   const db = tryGetDb();
-  return db ? queries.listExpertises(db, locale, options()) : [];
+  const rows = db ? await queries.listExpertises(db, locale, options()) : [];
+  return rows.map((item) => withPromoExpertise(item, locale));
 }
 
 export async function getProjects(locale: Locale, limit?: number) {
@@ -137,7 +154,8 @@ export async function getHomeVisuals(locale: Locale) {
   cacheLife("hours");
   cacheTag(contentTags.settings, contentTags.media);
   const db = tryGetDb();
-  return db ? queries.getHomeVisuals(db, locale, options()) : emptyChrome().homeVisuals;
+  const visuals = db ? await queries.getHomeVisuals(db, locale, options()) : emptyChrome(locale).homeVisuals;
+  return withPromoChrome(locale, { ...emptyChrome(locale), homeVisuals: visuals }).homeVisuals;
 }
 
 export async function getSiteChrome(locale: Locale) {
@@ -145,7 +163,7 @@ export async function getSiteChrome(locale: Locale) {
   cacheLife("hours");
   cacheTag(contentTags.settings, contentTags.media);
   const db = tryGetDb();
-  return db ? queries.getSiteChrome(db, locale, options()) : emptyChrome();
+  return db ? withPromoChrome(locale, await queries.getSiteChrome(db, locale, options())) : emptyChrome(locale);
 }
 
 export async function getAboutSections(locale: Locale) {
@@ -168,7 +186,12 @@ export async function findDetail(section: DetailSection, locale: Locale, slug: s
   // Project details also show the expertise name; every detail may show images.
   cacheTag(sectionTag[section], contentTags.expertises, contentTags.media);
   const db = tryGetDb();
-  return db ? queries.findDetail(db, section, locale, slug, options()) : null;
+  const entry = db ? await queries.findDetail(db, section, locale, slug, options()) : null;
+  if (section === "expertises" && entry && !entry.image) {
+    const slug = entry.slugs[locale] ?? Object.values(entry.slugs).find(Boolean);
+    return { ...entry, image: slug ? promoForExpertiseSlug(slug, locale) : null };
+  }
+  return entry;
 }
 
 export async function resolveSlugRedirect(section: DetailSection, locale: Locale, slug: string) {

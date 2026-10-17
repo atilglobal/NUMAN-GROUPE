@@ -4,6 +4,7 @@ import { dictionaries } from "@/i18n/dictionaries";
 import { homePath, isUnknownPublicPath } from "@/i18n/routes";
 
 const SESSION_COOKIES = ["better-auth.session_token", "__Secure-better-auth.session_token"];
+const RESERVED = new Set(["admin", "setup", "media", "en", "tr", "_next", "api"]);
 
 function isAdminPath(pathname: string): boolean {
   return pathname === "/admin" || pathname.startsWith("/admin/");
@@ -25,9 +26,15 @@ function unknownPublicResponse(pathname: string): NextResponse {
   });
 }
 
+function rewriteToFrench(request: NextRequest, pathname: string) {
+  const url = request.nextUrl.clone();
+  url.pathname = pathname === "/" ? "/fr" : `/fr${pathname}`;
+  return NextResponse.rewrite(url);
+}
+
 /**
- * Optimistic panel cookie check, plus HTTP 404 for unknown public section URLs.
- * Session validity and permissions are still decided in `src/auth/session.ts`.
+ * Optimistic panel cookie check, French unprefixed URLs, and HTTP 404 for
+ * unknown public section URLs. Session validity is still decided in session.ts.
  */
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -38,13 +45,29 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/admin/giris", request.url));
   }
 
+  if (pathname === "/fr" || pathname.startsWith("/fr/")) {
+    const nextPath = pathname === "/fr" ? "/" : pathname.slice(3) || "/";
+    const url = request.nextUrl.clone();
+    url.pathname = nextPath;
+    return NextResponse.redirect(url, 308);
+  }
+
   if (isUnknownPublicPath(pathname)) {
     return unknownPublicResponse(pathname);
   }
+
+  const first = pathname.split("/").filter(Boolean)[0];
+  if (!first) return rewriteToFrench(request, "/");
+  if (!RESERVED.has(first)) return rewriteToFrench(request, pathname);
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/admin", "/admin/:path*", "/fr/:path*", "/en/:path*", "/tr/:path*"],
+  matcher: [
+    "/",
+    "/admin",
+    "/admin/:path*",
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|brand/).*)",
+  ],
 };

@@ -56,7 +56,7 @@ export function EmptyState({ title, children }: { title: string; children?: Reac
 const statusStyles: Record<TranslationState, string> = {
   published: "bg-emerald-100 text-emerald-900",
   draft: "bg-amber-100 text-amber-900",
-  missing: "bg-zinc-100 text-zinc-600",
+  missing: "bg-red-50 text-red-800 ring-1 ring-red-200",
 };
 
 export function StatusBadge({ state, prefix }: { state: TranslationState; prefix?: string }) {

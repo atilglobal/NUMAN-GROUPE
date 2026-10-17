@@ -33,6 +33,7 @@ describe("localized routes", () => {
   });
 
   it("parses home, section and detail paths", () => {
+    expect(parsePath("/")).toEqual({ locale: "fr", section: null, slug: null });
     expect(parsePath("/fr")).toEqual({ locale: "fr", section: null, slug: null });
     expect(parsePath("/en/institutional-visits")).toEqual({
       locale: "en",
@@ -41,6 +42,11 @@ describe("localized routes", () => {
     });
     expect(parsePath("/en/official-visits")).toEqual({
       locale: "en",
+      section: "visits",
+      slug: null,
+    });
+    expect(parsePath("/visites-institutionnelles")).toEqual({
+      locale: "fr",
       section: "visits",
       slug: null,
     });
@@ -64,22 +70,29 @@ describe("localized routes", () => {
   });
 
   it("flags unknown locale-prefixed paths for HTTP 404", () => {
+    expect(isUnknownPublicPath("/")).toBe(false);
     expect(isUnknownPublicPath("/fr")).toBe(false);
+    expect(isUnknownPublicPath("/projets")).toBe(false);
     expect(isUnknownPublicPath("/fr/projets")).toBe(false);
-    expect(isUnknownPublicPath("/fr/projets/un-projet")).toBe(false);
-    expect(isUnknownPublicPath("/fr/p/une-page")).toBe(false);
+    expect(isUnknownPublicPath("/projets/un-projet")).toBe(false);
+    expect(isUnknownPublicPath("/p/une-page")).toBe(false);
+    expect(isUnknownPublicPath("/inexistant-xyz")).toBe(true);
     expect(isUnknownPublicPath("/fr/inexistant-xyz")).toBe(true);
-    expect(isUnknownPublicPath("/fr/contact/x")).toBe(true);
+    expect(isUnknownPublicPath("/contact/x")).toBe(true);
     expect(isUnknownPublicPath("/admin/kullanicilar")).toBe(false);
   });
 
   it("translates a section path into the matching section of another language", () => {
+    expect(translatePath("/visites-officielles", "tr")).toBe("/tr/resmi-ziyaretler");
     expect(translatePath("/fr/visites-officielles", "tr")).toBe("/tr/resmi-ziyaretler");
     expect(translatePath("/tr/kadro", "en")).toBe("/en/team");
+    expect(translatePath("/", "en")).toBe("/en");
     expect(translatePath("/fr", "en")).toBe("/en");
+    expect(translatePath("/en/projects", "fr")).toBe("/projets");
   });
 
   it("falls back to the section list for detail pages without known alternates", () => {
+    expect(translatePath("/projets/un-projet", "en")).toBe("/en/projects");
     expect(translatePath("/fr/projets/un-projet", "en")).toBe("/en/projects");
   });
 
@@ -88,11 +101,12 @@ describe("localized routes", () => {
   });
 
   it("builds detail and alternate paths", () => {
-    expect(detailPath("fr", "expertises", "stades")).toBe("/fr/expertises/stades");
+    expect(detailPath("fr", "expertises", "stades")).toBe("/expertises/stades");
     expect(sectionAlternates("projects")).toEqual({
-      fr: "/fr/projets",
+      fr: "/projets",
       en: "/en/projects",
       tr: "/tr/projeler",
     });
+    expect(sectionAlternates(null)).toEqual({ fr: "/", en: "/en", tr: "/tr" });
   });
 });

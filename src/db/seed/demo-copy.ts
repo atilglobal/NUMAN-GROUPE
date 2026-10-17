@@ -355,7 +355,7 @@ export const homeCopy: Record<
     ctaDescription:
       "Décrivez le programme et le site. Nous indiquerons une suite de travail, sans devis fictif ni délai improvisé.",
     ctaLabel: "Envoyer une demande",
-    ctaHref: "/fr/contact",
+    ctaHref: "/contact",
     footerTagline: "Construction et ingénierie — stades, hôpitaux, villages sportifs, logements.",
     seoTitle: "NUMAN GROUPE — Construction et ingénierie",
     seoDescription:

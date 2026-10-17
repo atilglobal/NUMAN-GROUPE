@@ -1,4 +1,4 @@
-import { isLocale, locales, type Locale, type Localized } from "./config";
+import { defaultLocale, isLocale, locales, type Locale, type Localized } from "./config";
 
 export const sections = [
   "about",
@@ -55,12 +55,17 @@ export function sectionFromSlug(locale: Locale, slug: string): Section | null {
   return null;
 }
 
+/** French is unprefixed (`/`); English and Turkish keep `/en` and `/tr`. */
+export function localePrefix(locale: Locale): string {
+  return locale === defaultLocale ? "" : `/${locale}`;
+}
+
 export function homePath(locale: Locale): string {
-  return `/${locale}`;
+  return localePrefix(locale) || "/";
 }
 
 export function sectionPath(locale: Locale, section: Section): string {
-  return `/${locale}/${sectionSlugs[section][locale]}`;
+  return `${localePrefix(locale)}/${sectionSlugs[section][locale]}`;
 }
 
 export function detailPath(
@@ -78,37 +83,42 @@ export type ParsedPath = {
 };
 
 export function cmsPagePath(locale: Locale, slug: string): string {
-  return `/${locale}/p/${slug}`;
+  return `${localePrefix(locale)}/p/${slug}`;
 }
 
 export function parsePath(pathname: string): ParsedPath | null {
-  const [localeSegment, sectionSegment, slugSegment, ...rest] = pathname
-    .split("/")
-    .filter(Boolean);
+  const parts = pathname.split("/").filter(Boolean);
+  let locale: Locale = defaultLocale;
+  let rest = parts;
 
-  if (!localeSegment || !isLocale(localeSegment) || rest.length > 0) {
-    return null;
+  if (parts[0] && isLocale(parts[0])) {
+    locale = parts[0];
+    rest = parts.slice(1);
+  } else if (parts.length === 0) {
+    return { locale: defaultLocale, section: null, slug: null };
   }
 
+  const [sectionSegment, slugSegment, ...extra] = rest;
+  if (extra.length > 0) return null;
+
   if (!sectionSegment) {
-    return { locale: localeSegment, section: null, slug: null };
+    return { locale, section: null, slug: null };
   }
 
   if (sectionSegment === "p" && slugSegment) {
     return {
-      locale: localeSegment,
+      locale,
       section: null,
       slug: decodeURIComponent(slugSegment),
     };
   }
 
-  const section = sectionFromSlug(localeSegment, sectionSegment);
+  const section = sectionFromSlug(locale, sectionSegment);
   if (!section) return null;
-
   if (slugSegment && !isDetailSection(section)) return null;
 
   return {
-    locale: localeSegment,
+    locale,
     section,
     slug: slugSegment ? decodeURIComponent(slugSegment) : null,
   };
@@ -120,8 +130,9 @@ export function parsePath(pathname: string): ParsedPath | null {
  * Components would otherwise render the not-found UI as 200).
  */
 export function isUnknownPublicPath(pathname: string): boolean {
-  const [localeSegment, second, third, ...rest] = pathname.split("/").filter(Boolean);
-  if (!localeSegment || !isLocale(localeSegment)) return false;
+  const [first, second, third, ...rest] = pathname.split("/").filter(Boolean);
+  if (!first) return false;
+  if (first === "admin" || first === "setup" || first === "media") return false;
   if (second === "p" && third && rest.length === 0) return false;
   return parsePath(pathname) === null;
 }

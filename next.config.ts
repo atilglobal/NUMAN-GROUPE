@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   images: {
-    localPatterns: [{ pathname: "/media/**" }, { pathname: "/media/v/**" }],
+    localPatterns: [{ pathname: "/media/**" }, { pathname: "/media/v/**" }, { pathname: "/brand/**" }],
   },
   outputFileTracingIncludes: {
     "/setup": ["./drizzle/**"],
@@ -33,17 +33,28 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      { source: "/", destination: "/fr", permanent: true },
       {
         source: "/fr/visites-officielles",
-        destination: "/fr/visites-institutionnelles",
+        destination: "/visites-institutionnelles",
         permanent: true,
       },
       {
         source: "/fr/visites-officielles/:slug",
-        destination: "/fr/visites-institutionnelles/:slug",
+        destination: "/visites-institutionnelles/:slug",
         permanent: true,
       },
+      {
+        source: "/visites-officielles",
+        destination: "/visites-institutionnelles",
+        permanent: true,
+      },
+      {
+        source: "/visites-officielles/:slug",
+        destination: "/visites-institutionnelles/:slug",
+        permanent: true,
+      },
+      { source: "/fr", destination: "/", permanent: true },
+      { source: "/fr/:path*", destination: "/:path*", permanent: true },
       {
         source: "/en/official-visits",
         destination: "/en/institutional-visits",
