@@ -76,7 +76,7 @@ void withDb(async (db) => {
 
   let password = process.env.ADMIN_PASSWORD;
   if (!password) {
-    password = await askHidden("Parola (en az 12 karakter): ");
+    password = await askHidden("Parola (en az 8 karakter): ");
     const confirm = await askHidden("Parola (tekrar): ");
     if (password !== confirm) throw new Error("Parolalar eşleşmiyor.");
   }

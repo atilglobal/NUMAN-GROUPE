@@ -1,5 +1,6 @@
 import { hashPassword } from "better-auth/crypto";
 import { and, asc, count, eq, isNull, ne, sql } from "drizzle-orm";
+import { normalizePanelLogin } from "../auth/login-id";
 import type { Database } from "../db/client";
 import { accounts, sessions, users, type UserRole } from "../db/schema";
 import { writeAudit } from "./audit";
@@ -54,7 +55,7 @@ export async function createUserWithPassword(
   input: { name: string; email: string; role: UserRole; password: string },
   actor: Actor | null,
 ): Promise<string> {
-  const email = input.email.trim().toLowerCase();
+  const email = normalizePanelLogin(input.email);
   const [existing] = await db.select({ id: users.id }).from(users).where(eq(users.email, email));
   if (existing) throw new AdminRuleError("Bu e-posta adresiyle kayıtlı bir kullanıcı zaten var.");
 

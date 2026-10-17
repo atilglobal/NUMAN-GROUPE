@@ -19,6 +19,7 @@
     "db:seed:demo": "tsx scripts/db-seed-demo.ts",
     "db:demo:clear": "tsx scripts/db-seed-demo.ts --clear",
     "admin:create": "tsx scripts/admin-create.ts",
+    "admin:ensure": "tsx scripts/admin-ensure.ts",
     "release:check-env": "tsx scripts/check-release-env.ts"
   },
   "dependencies": {

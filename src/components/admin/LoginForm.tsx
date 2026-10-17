@@ -7,7 +7,14 @@ export function LoginForm() {
   return (
     <ActionForm action={signInAction} className="grid gap-4">
       <FormStatus />
-      <TextField label="E-posta" name="email" type="email" autoComplete="username" required maxLength={254} />
+      <TextField
+        label="Kullanıcı adı veya e-posta"
+        name="email"
+        type="text"
+        autoComplete="username"
+        required
+        maxLength={254}
+      />
       <TextField
         label="Parola"
         name="password"

@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import type { Database } from "../db/client";
 import { accounts, sessions, users, verifications } from "../db/schema";
 
-export const PASSWORD_MIN_LENGTH = 12;
+export const PASSWORD_MIN_LENGTH = 8;
 export const PASSWORD_MAX_LENGTH = 128;
 
 /** Panel sessions: 12 h lifetime, extended at most once per hour of activity. */

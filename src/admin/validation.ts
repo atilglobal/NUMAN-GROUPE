@@ -21,12 +21,16 @@ const required = (max: number, label: string) => trimmed(max, label).min(1, `${l
 const optional = (max: number, label: string) =>
   trimmed(max, label).transform((value) => (value === "" ? null : value));
 
+const USERNAME_PATTERN = /^[a-z][a-z0-9._-]{2,31}$/;
+
 export const emailSchema = z
   .string()
   .trim()
   .toLowerCase()
   .max(254, "E-posta adresi çok uzun.")
-  .pipe(z.email("Geçerli bir e-posta adresi girin."));
+  .refine((value) => value.includes("@") ? z.email().safeParse(value).success : USERNAME_PATTERN.test(value), {
+    message: "Geçerli bir e-posta veya kullanıcı adı girin.",
+  });
 
 export const passwordSchema = z
   .string()

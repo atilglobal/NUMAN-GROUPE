@@ -9,9 +9,10 @@ npm run db:migrate        # 0001_auth_and_roles dahil
 npm run admin:create      # ad, e-posta ve gizli girilen parola sorulur
 ```
 
-- Parola en az 12, en fazla 128 karakter. Ekrana veya loga yazılmaz.
+- Parola en az 8, en fazla 128 karakter. Ekrana veya loga yazılmaz. Giriş alanı e-posta veya kullanıcı adı kabul eder.
 - Etkileşimsiz ortamda `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` değişkenleri kullanılabilir; hesap oluşunca kaldırılmalıdır.
-- Bir yönetici zaten varsa komut çalışmaz. Sonraki kullanıcılar panelden (Kullanıcılar) açılır. Herkese açık kayıt yoktur.
+- Belirli bir girişi oluşturmak veya parolasını güncellemek: `npm run admin:ensure` (`ADMIN_EMAIL`, `ADMIN_PASSWORD`). Parola loga yazılmaz; derlemede çalışmaz.
+- `admin:create` bir yönetici zaten varsa çalışmaz. Sonraki kullanıcılar panelden (Kullanıcılar) açılır. Herkese açık kayıt yoktur.
 - `BETTER_AUTH_SECRET` (en az 32 karakter, ortam başına farklı) zorunludur; `.env.example` üretme komutunu gösterir.
 
 ## Roller

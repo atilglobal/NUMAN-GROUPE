@@ -16,9 +16,9 @@ export function ChangePasswordForm({ action }: { action: ServerAction }) {
         type="password"
         autoComplete="new-password"
         required
-        minLength={12}
+        minLength={8}
         maxLength={128}
-        hint="En az 12 karakter. Uzun bir parola cümlesi kullanabilirsiniz."
+        hint="En az 8 karakter. Uzun bir parola cümlesi kullanabilirsiniz."
       />
       <TextField label="Yeni parola (tekrar)" name="confirmPassword" type="password" autoComplete="new-password" required maxLength={128} />
       <div>

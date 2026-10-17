@@ -14,8 +14,11 @@ describe("panel validation", () => {
   it("normalises a new user and enforces the password length", () => {
     const ok = createUserSchema.parse({ name: " Ayşe ", email: " Ayse@Example.ORG ", role: "editor", password: "x".repeat(12) });
     expect(ok).toMatchObject({ name: "Ayşe", email: "ayse@example.org" });
+    expect(createUserSchema.parse({ name: "Yönetici", email: "admin", role: "admin", password: "Admin123" })).toMatchObject({
+      email: "admin",
+    });
 
-    const result = createUserSchema.safeParse({ name: "", email: "nope", role: "owner", password: "short" });
+    const result = createUserSchema.safeParse({ name: "", email: "not an email", role: "owner", password: "short" });
     expect(result.success).toBe(false);
     if (!result.success) {
       expect(Object.keys(fieldErrors(result.error)).sort()).toEqual(["email", "name", "password", "role"]);

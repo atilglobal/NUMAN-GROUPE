@@ -73,10 +73,10 @@ export default async function UsersPage() {
                           label="Yeni parola"
                           name="password"
                           type="password"
-                          minLength={12}
+                          minLength={8}
                           maxLength={128}
                           autoComplete="new-password"
-                          hint="En az 12 karakter."
+                          hint="En az 8 karakter."
                         />
                       </ConfirmDialog>
                       <ConfirmDialog

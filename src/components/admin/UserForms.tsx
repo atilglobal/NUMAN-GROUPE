@@ -12,17 +12,24 @@ export function CreateUserForm({ action }: { action: ServerAction }) {
       <FormStatus />
       <div className="grid gap-4 sm:grid-cols-2">
         <TextField label="Ad soyad" name="name" required maxLength={120} autoComplete="off" />
-        <TextField label="E-posta" name="email" type="email" required maxLength={254} autoComplete="off" />
+        <TextField
+          label="Kullanıcı adı veya e-posta"
+          name="email"
+          type="text"
+          required
+          maxLength={254}
+          autoComplete="off"
+        />
         <SelectField label="Rol" name="role" options={roleOptions} defaultValue="editor" />
         <TextField
           label="Başlangıç parolası"
           name="password"
           type="password"
           required
-          minLength={12}
+          minLength={8}
           maxLength={128}
           autoComplete="new-password"
-          hint="En az 12 karakter. Kullanıcı ilk girişten sonra Hesabım sayfasından değiştirebilir."
+          hint="En az 8 karakter. Kullanıcı ilk girişten sonra Hesabım sayfasından değiştirebilir."
         />
       </div>
       <div>

@@ -2,6 +2,7 @@ import { APIError } from "better-auth/api";
 import { writeAudit } from "../admin/audit";
 import type { Database } from "../db/client";
 import type { Auth } from "./config";
+import { normalizePanelLogin } from "./login-id";
 import { clearLoginFailures, isLoginBlocked, recordLoginFailure } from "./rate-limit";
 
 /** Same text for unknown address, wrong password and disabled account. */
@@ -21,7 +22,7 @@ export async function signInWithPassword(
   input: { email: string; password: string; ip: string | null; headers: Headers },
   now = new Date(),
 ): Promise<SignInOutcome> {
-  const email = input.email.trim().toLowerCase();
+  const email = normalizePanelLogin(input.email);
   const keys = { email, ip: input.ip };
 
   if (await isLoginBlocked(db, keys, now)) {
