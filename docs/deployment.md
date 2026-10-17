@@ -52,7 +52,7 @@ Host secret store’a `.env.example` değişkenlerini koyun. Üretimde en az:
 - `MEDIA_STORAGE_DIR` (volume yolu)
 - İsteğe bağlı Resend ve `AUTH_IP_HEADER`
 
-`ALLOW_DEMO_CONTENT` üretimde açılmaz. `npm run release:check-env -- --strict` eksik adları verir.
+`ALLOW_DEMO_CONTENT` üretimde (`SITE_ENV=production`) açılmaz; kod yok sayar. Geçici müşteri sunumu: `SITE_ENV=staging`, `ALLOW_DEMO_CONTENT=true`, `SITE_URL` ve `BETTER_AUTH_URL` tarayıcı kökeni. Bu kombinasyon demo satırları gösterir ve noindex uygular. `npm run release:check-env -- --strict` eksik adları verir.
 
 ### 3. İlk kurulum
 
@@ -121,7 +121,8 @@ Preview ve Production **ayrı env kümeleridir**. Neon Preview branch kullanıyo
 5. Değişkenleri kaydettikten sonra **Redeploy** (önbelleksiz).
 6. Bilgisayarınızda, Vercel Production’daki **aynı** connection string ile (sırlar loga yazılmaz):
    - `npm run db:migrate` — bekleyen migration; drop/reset yok
-   - `npm run db:seed` — yalnızca eksik uzmanlık yuvaları ve boş kurumsal sayfalar; mevcut satırlara dokunmaz. `db:seed:demo` Production’da reddedilir.
+   - `npm run db:seed` — yalnızca eksik uzmanlık yuvaları ve boş kurumsal sayfalar; mevcut satırlara dokunmaz.
+   - Sunum içeriği: `ALLOW_DEMO_SEED=true npm run db:seed:demo` (SITE_ENV production olsa da yazar). Vercel’de göstermek için `SITE_ENV=staging` ve `ALLOW_DEMO_CONTENT=true`. Gerçek yayında `SITE_ENV=production` ve `npm run db:demo:clear`.
    - `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` ile `npm run admin:create` — sonra bu üç değişkeni silin. E-posta zaten varsa parola değiştirilmez.
 
 Vercel diski geçicidir. Nesne depo yokken panel yüklemesi reddedilir (sessiz kayıp yok). Demo görseller (`content/demo/`) Git’tedir; `SITE_ENV=production` iken public’te gösterilmez.

@@ -70,17 +70,47 @@ describe("demo seed", () => {
     expect(await db.select().from(projects)).toEqual([]);
   });
 
+  it("can write demo rows when ALLOW_DEMO_SEED=true even if SITE_ENV is production", async () => {
+    await seedBase(db);
+    await seedDemo(db, { SITE_ENV: "production", ALLOW_DEMO_SEED: "true" });
+
+    expect(await db.select().from(projects)).toHaveLength(6);
+  });
+
   it("flags every row it creates as demo and can run twice", async () => {
     await seedBase(db);
     await seedDemo(db, dev);
     await seedDemo(db, dev);
 
     const allProjects = await db.select().from(projects);
-    expect(allProjects).toHaveLength(4);
+    expect(allProjects).toHaveLength(6);
     expect(allProjects.every((p) => p.isDemo)).toBe(true);
+    expect(await db.select().from(officialVisits)).toHaveLength(3);
     expect((await db.select().from(officialVisits)).every((v) => v.isDemo)).toBe(true);
+    expect(await db.select().from(teamMembers)).toHaveLength(4);
     expect((await db.select().from(teamMembers)).every((m) => m.isDemo)).toBe(true);
     expect((await db.select().from(mediaAssets)).every((a) => a.isDemo)).toBe(true);
+    expect(await db.select().from(pageContentTranslations)).not.toEqual([]);
+  });
+
+  it("does not overwrite an edited institutional page", async () => {
+    await seedBase(db);
+    await seedDemo(db, dev);
+    const [page] = await db.select().from(pageContents).where(eq(pageContents.key, "about"));
+    const [row] = await db
+      .select()
+      .from(pageContentTranslations)
+      .where(eq(pageContentTranslations.pageId, page.id));
+    await db
+      .update(pageContentTranslations)
+      .set({ title: "Texte édité" })
+      .where(eq(pageContentTranslations.id, row.id));
+    await seedDemo(db, dev);
+    const [again] = await db
+      .select()
+      .from(pageContentTranslations)
+      .where(eq(pageContentTranslations.id, row.id));
+    expect(again.title).toBe("Texte édité");
   });
 
   it("is removed completely by clearDemo, leaving the base data intact", async () => {

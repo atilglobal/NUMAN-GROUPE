@@ -1,6 +1,7 @@
 export const HOME_SECTION_KEYS = [
   "hero",
   "intro",
+  "process",
   "expertises",
   "projects",
   "visits",

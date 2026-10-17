@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from "../auth/config";
+import { HOME_SECTION_KEYS } from "../content/home-layout";
 import { locales } from "../i18n/config";
 import { SLUG_PATTERN } from "../db/schema";
 
@@ -255,7 +256,7 @@ export const homeVisualsSchema = z.object({
   homeSections: z
     .array(
       z.object({
-        key: z.enum(["hero", "intro", "expertises", "projects", "visits", "team", "cta"]),
+        key: z.enum(HOME_SECTION_KEYS),
         visible: z.boolean(),
       }),
     )

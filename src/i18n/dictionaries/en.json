@@ -45,6 +45,27 @@
     "body": "NUMAN GROUPE designs and builds public facilities and residential developments. Our fields of work cover stadiums, hospitals, sports villages and housing.",
     "cta": "Discover the Group"
   },
+  "process": {
+    "eyebrow": "Method",
+    "title": "From study to handover.",
+    "description": "Four steps to frame, coordinate and deliver a facility — without promising a schedule or outcome we have not documented.",
+    "design": {
+      "title": "Design",
+      "body": "Review of the brief, site constraints and operating needs, then a clear architectural and technical intent."
+    },
+    "planning": {
+      "title": "Planning",
+      "body": "Organisation of packages, interfaces and checks. Any timetable remains a working hypothesis until the client confirms it."
+    },
+    "build": {
+      "title": "Delivery on site",
+      "body": "Site follow-up, trade coordination and safety requirements. Progress described in sample projects is fictional."
+    },
+    "handover": {
+      "title": "Handover",
+      "body": "Preparation of reception, as-built files and the transfer of operations. No real commissioning is claimed here."
+    }
+  },
   "expertises": {
     "eyebrow": "Our expertise",
     "title": "Projects that match your ambitions.",

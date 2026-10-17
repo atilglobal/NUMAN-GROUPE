@@ -10,6 +10,7 @@ export const uiGroupLabels: Record<string, string> = {
   languages: "Dil adları",
   hero: "Ana sayfa karşılama",
   intro: "Giriş metinleri",
+  process: "Süreç bölümü",
   expertises: "Uzmanlık arayüzü",
   projects: "Proje listesi ve filtreler",
   visits: "Ziyaret listesi ve filtreler",

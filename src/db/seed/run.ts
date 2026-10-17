@@ -1,4 +1,4 @@
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, isNull } from "drizzle-orm";
 import { isDemoContentEnabled } from "../../content/demo-policy";
 import { locales, type Locale } from "../../i18n/config";
 import type { Database } from "../client";
@@ -11,13 +11,17 @@ import {
   officialVisitGallery,
   officialVisitTranslations,
   pageContents,
+  pageContentTranslations,
+  projectGallery,
   projects,
   projectTranslations,
   siteSettings,
+  siteSettingTranslations,
   teamMembers,
   teamMemberTranslations,
 } from "../schema";
 import { baseExpertises, basePageKeys } from "./base";
+import { expertiseBodies, homeCopy, pageCopy } from "./demo-copy";
 import {
   demoExpertiseCovers,
   demoImages,
@@ -72,10 +76,21 @@ export async function seedBase(db: Database): Promise<{ expertisesCreated: numbe
 export class DemoContentDisabledError extends Error {
   constructor() {
     super(
-      "Demo content is disabled in this environment (SITE_ENV=production or ALLOW_DEMO_CONTENT=false); refusing to seed it.",
+      "Demo content is disabled in this environment (SITE_ENV=production or ALLOW_DEMO_CONTENT=false); refusing to seed it. Set ALLOW_DEMO_SEED=true only for this script if you must load demo rows into a database whose SITE_ENV is still production.",
     );
     this.name = "DemoContentDisabledError";
   }
+}
+
+type SeedEnv = Parameters<typeof isDemoContentEnabled>[0] & { ALLOW_DEMO_SEED?: string };
+
+function mayWriteDemoSeed(env: SeedEnv): boolean {
+  if (env.ALLOW_DEMO_SEED === "true") return true;
+  return isDemoContentEnabled(env);
+}
+
+function emptyText(value: string | null | undefined): boolean {
+  return !value?.trim();
 }
 
 /** Removes every demo row. Demo media detach automatically (foreign keys set null). */
@@ -89,11 +104,9 @@ export async function clearDemo(db: Database): Promise<void> {
   });
 }
 
-type DemoEnv = Parameters<typeof isDemoContentEnabled>[0];
-
 /** Replaces existing demo rows; expects the base seed so projects can link to expertises. */
-export async function seedDemo(db: Database, env: DemoEnv = process.env): Promise<void> {
-  if (!isDemoContentEnabled(env)) throw new DemoContentDisabledError();
+export async function seedDemo(db: Database, env: SeedEnv = process.env): Promise<void> {
+  if (!mayWriteDemoSeed(env)) throw new DemoContentDisabledError();
 
   await clearDemo(db);
 
@@ -139,7 +152,21 @@ export async function seedDemo(db: Database, env: DemoEnv = process.env): Promis
       await tx
         .update(expertises)
         .set({ coverAssetId: imageIds[imageKey] })
-        .where(eq(expertises.id, expertiseId));
+        .where(and(eq(expertises.id, expertiseId), isNull(expertises.coverAssetId)));
+      const bodyByLocale = expertiseBodies[slug];
+      if (!bodyByLocale) continue;
+      for (const locale of locales) {
+        await tx
+          .update(expertiseTranslations)
+          .set({ body: bodyByLocale[locale] })
+          .where(
+            and(
+              eq(expertiseTranslations.expertiseId, expertiseId),
+              eq(expertiseTranslations.locale, locale),
+              isNull(expertiseTranslations.body),
+            ),
+          );
+      }
     }
 
     for (const seed of demoProjects) {
@@ -160,9 +187,22 @@ export async function seedDemo(db: Database, env: DemoEnv = process.env): Promis
           locale,
           slug: seed.slug[locale],
           title: seed.title[locale],
+          summary: seed.summary[locale],
+          body: seed.body[locale],
+          seoTitle: seed.seoTitle[locale],
+          seoDescription: seed.seoDescription[locale],
           ...published(),
         })),
       );
+      if (seed.gallery.length > 0) {
+        await tx.insert(projectGallery).values(
+          seed.gallery.map((key, index) => ({
+            projectId: project.id,
+            assetId: imageIds[key],
+            sortOrder: index,
+          })),
+        );
+      }
     }
 
     for (const seed of demoVisits) {
@@ -170,7 +210,6 @@ export async function seedDemo(db: Database, env: DemoEnv = process.env): Promis
         .insert(officialVisits)
         .values({
           visitedOn: seed.visitedOn,
-          countryCode: seed.countryCode,
           coverAssetId: imageIds[seed.cover],
           isFeatured: seed.isFeatured,
           isDemo: true,
@@ -186,6 +225,8 @@ export async function seedDemo(db: Database, env: DemoEnv = process.env): Promis
           location: seed.location[locale],
           summary: seed.summary[locale],
           body: seed.body[locale],
+          seoTitle: seed.seoTitle[locale],
+          seoDescription: seed.seoDescription[locale],
           ...published(),
         })),
       );
@@ -217,9 +258,90 @@ export async function seedDemo(db: Database, env: DemoEnv = process.env): Promis
     }
 
     await tx.insert(siteSettings).values({ id: 1 }).onConflictDoNothing();
+    const [settings] = await tx
+      .select({
+        heroImageAssetId: siteSettings.heroImageAssetId,
+        callToActionImageAssetId: siteSettings.callToActionImageAssetId,
+      })
+      .from(siteSettings)
+      .where(eq(siteSettings.id, 1));
     await tx
       .update(siteSettings)
-      .set({ heroImageAssetId: imageIds.hero, callToActionImageAssetId: imageIds.construction })
+      .set({
+        heroImageAssetId: settings?.heroImageAssetId ?? imageIds.hero,
+        callToActionImageAssetId: settings?.callToActionImageAssetId ?? imageIds.construction,
+      })
       .where(eq(siteSettings.id, 1));
+
+    for (const [key, copy] of Object.entries(pageCopy)) {
+      const [page] = await tx
+        .select({ id: pageContents.id })
+        .from(pageContents)
+        .where(eq(pageContents.key, key as (typeof basePageKeys)[number]));
+      if (!page) continue;
+      for (const locale of locales) {
+        const [existing] = await tx
+          .select({ id: pageContentTranslations.id })
+          .from(pageContentTranslations)
+          .where(
+            and(eq(pageContentTranslations.pageId, page.id), eq(pageContentTranslations.locale, locale)),
+          );
+        if (existing) continue;
+        const text = copy[locale];
+        await tx.insert(pageContentTranslations).values({
+          pageId: page.id,
+          locale,
+          title: text.title,
+          summary: text.summary,
+          body: text.body,
+          seoTitle: text.seoTitle,
+          seoDescription: text.seoDescription,
+          ...published(),
+        });
+      }
+    }
+
+    for (const locale of locales) {
+      const text = homeCopy[locale];
+      const [existing] = await tx
+        .select()
+        .from(siteSettingTranslations)
+        .where(and(eq(siteSettingTranslations.settingsId, 1), eq(siteSettingTranslations.locale, locale)));
+      if (!existing) {
+        await tx.insert(siteSettingTranslations).values({
+          settingsId: 1,
+          locale,
+          heroTitle: text.heroTitle,
+          heroDescription: text.heroDescription,
+          introTitle: text.introTitle,
+          introBody: text.introBody,
+          ctaTitle: text.ctaTitle,
+          ctaDescription: text.ctaDescription,
+          ctaLabel: text.ctaLabel,
+          ctaHref: text.ctaHref,
+          footerTagline: text.footerTagline,
+          seoTitle: text.seoTitle,
+          seoDescription: text.seoDescription,
+          ...published(),
+        });
+        continue;
+      }
+      await tx
+        .update(siteSettingTranslations)
+        .set({
+          heroTitle: emptyText(existing.heroTitle) ? text.heroTitle : existing.heroTitle,
+          heroDescription: emptyText(existing.heroDescription) ? text.heroDescription : existing.heroDescription,
+          introTitle: emptyText(existing.introTitle) ? text.introTitle : existing.introTitle,
+          introBody: emptyText(existing.introBody) ? text.introBody : existing.introBody,
+          ctaTitle: emptyText(existing.ctaTitle) ? text.ctaTitle : existing.ctaTitle,
+          ctaDescription: emptyText(existing.ctaDescription) ? text.ctaDescription : existing.ctaDescription,
+          ctaLabel: emptyText(existing.ctaLabel) ? text.ctaLabel : existing.ctaLabel,
+          ctaHref: emptyText(existing.ctaHref) ? text.ctaHref : existing.ctaHref,
+          footerTagline: emptyText(existing.footerTagline) ? text.footerTagline : existing.footerTagline,
+          seoTitle: emptyText(existing.seoTitle) ? text.seoTitle : existing.seoTitle,
+          seoDescription: emptyText(existing.seoDescription) ? text.seoDescription : existing.seoDescription,
+        })
+        .where(eq(siteSettingTranslations.id, existing.id));
+    }
   });
 }

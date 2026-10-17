@@ -45,6 +45,27 @@
     "body": "NUMAN GROUPE conçoit et réalise des équipements publics et des ensembles résidentiels. Nos domaines d'intervention couvrent les stades, les hôpitaux, les villages sportifs et les logements.",
     "cta": "Découvrir le Groupe"
   },
+  "process": {
+    "eyebrow": "Méthode",
+    "title": "De l'étude à la remise.",
+    "description": "Quatre étapes pour cadrer, coordonner et livrer un équipement, sans promettre un délai ou un résultat que nous n'avons pas encore documenté.",
+    "design": {
+      "title": "Conception",
+      "body": "Analyse du programme, des contraintes de site et des exigences d'exploitation, puis définition d'une intention architecturale et technique."
+    },
+    "planning": {
+      "title": "Planification",
+      "body": "Organisation des lots, des interfaces et des contrôles. Le calendrier reste une hypothèse de travail jusqu'à validation du maître d'ouvrage."
+    },
+    "build": {
+      "title": "Réalisation",
+      "body": "Suivi de chantier, coordination des corps d'état et respect des exigences de sécurité. Les avancements cités dans les exemples sont fictifs."
+    },
+    "handover": {
+      "title": "Remise",
+      "body": "Préparation de la réception, des dossiers d'ouvrage et du transfert d'exploitation. Aucune mise en service réelle n'est alléguée ici."
+    }
+  },
   "expertises": {
     "eyebrow": "Nos expertises",
     "title": "Des projets à la hauteur de vos ambitions.",

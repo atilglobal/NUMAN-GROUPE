@@ -48,8 +48,8 @@ Başka bir PostgreSQL (yerel kurulum, Docker, yönetilen servis) kullanılacaksa
 | `npm run db:generate` | Şema değişikliğinden yeni SQL migration üretir (`drizzle/`). |
 | `npm run db:migrate` | Bekleyen migration'ları `DATABASE_URL` üzerine uygular. |
 | `npm run db:seed` | Temel veri: 4 uzmanlık (üç dilde, `isSeed`), 9 kurumsal sayfa yuvası (metinsiz), boş site ayarları satırı. Tekrar çalıştırılabilir; mevcut satırlara dokunmaz. |
-| `npm run db:seed:demo` | Demo veri; demo kapalı ortamda reddedilir. Var olan demo satırlarını silip yeniden yazar. |
-| `npm run db:demo:clear` | Tüm demo satırlarını ve demo medya kayıtlarını siler. |
+| `npm run db:seed:demo` | Demo veri; demo kapalı ortamda reddedilir (`ALLOW_DEMO_SEED=true` yalnızca bu komutu açar). Var olan `is_demo` satırlarını silip yeniden yazar. Kurumsal sayfa ve ana sayfa metinlerini yalnızca boşsa doldurur; elle düzenlenmiş satırları ezmez. |
+| `npm run db:demo:clear` | `is_demo` satırlarını ve demo medya kayıtlarını siler. Gerçek kayıtları ve ortak (demo olmayan) medyayı silmez. |
 | `npm run admin:create` | İlk yöneticiyi oluşturur (`admin.md`); yönetici varsa reddeder. |
 
 Migration akışı: şemayı değiştir, `npm run db:generate -- --name kisa_aciklama` ile dosya üret, SQL'i incele, `npm run db:migrate`. Uygulanmış bir migration dosyası düzenlenmez; yeni dosya eklenir.
@@ -65,6 +65,7 @@ Migration akışı: şemayı değiştir, `npm run db:generate -- --name kisa_aci
 | `RESEND_API_KEY`, `INQUIRY_NOTIFY_TO`, `INQUIRY_NOTIFY_FROM` | İsteğe bağlı talep bildirimi. Yoksa talep yine kaydedilir. |
 | `SITE_URL` | Kanonik/hreflang ve sitemap mutlak adresleri. Boşsa sitemap boş döner. |
 | `SITE_ENV`, `ALLOW_DEMO_CONTENT` | Demo politikası (aşağıda). |
+| `ALLOW_DEMO_SEED` | Yalnızca `db:seed:demo` için; `true` ise `SITE_ENV=production` olsa da demo satır yazar. Public görünürlük açmaz. |
 | `BETTER_AUTH_SECRET` | Zorunlu (panel oturumları), en az 32 karakter rastgele değer. |
 | `BETTER_AUTH_URL` | Panelin public adresi; boşsa `SITE_URL`. |
 | `AUTH_IP_HEADER` | Güvenilir proxy'nin istemci IP'sini koyduğu başlık; boşsa IP tabanlı giriş sınırı kapalı. |
@@ -99,7 +100,8 @@ Kimlik tabloları (`sessions`, `accounts`, `verifications`, `auth_rate_limits`) 
 
 - Demo satırlar `is_demo = true` ile işaretlidir (projeler, ziyaretler, kadro, uzmanlık, medya). Public sorgular demo kapalıyken bunları ve demo görselleri hiç döndürmez.
 - `SITE_ENV=production` → demo her zaman kapalı. Aksi hâlde `ALLOW_DEMO_CONTENT=true|false`; tanımsızsa `next dev` açık, production build kapalı.
-- `db:seed:demo`, demo kapalı bir ortamda çalışmayı reddeder. Temel seed hiçbir demo satırı yazmaz.
+- Müşteri sunumu (geçici): `SITE_ENV=staging` ve `ALLOW_DEMO_CONTENT=true`. Demo açıkken sayfalar noindex olur. Gerçek yayında `SITE_ENV=production` yapın (demo gizlenir) ve site geneli noindex’i kaldırın.
+- `db:seed:demo`, demo kapalı bir ortamda çalışmayı reddeder; `ALLOW_DEMO_SEED=true` yalnızca yazmayı açar, göstermez. Temel seed hiçbir demo satırı yazmaz.
 - Demo görseller `content/demo/` altındadır (public paketinde değil) ve yapay illüstrasyondur; NUMAN GROUPE fotoğrafı değildir. `SITE_ENV=production` (veya demo kapalı) iken `GET /media/demo/...` 404 döner. Üretime çıkmadan önce `db:demo:clear` çalıştırılır.
 
 ## Testler

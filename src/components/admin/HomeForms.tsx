@@ -12,6 +12,7 @@ type ServerAction = (previous: ActionState, formData: FormData) => Promise<Actio
 const SECTION_LABELS: Record<(typeof HOME_SECTION_KEYS)[number], string> = {
   hero: "Hero",
   intro: "Kısa tanıtım",
+  process: "Süreç",
   expertises: "Uzmanlıklar",
   projects: "Projeler",
   visits: "Resmî ziyaretler",

@@ -97,7 +97,7 @@ describe("demo separation", () => {
   it("marks demo entries and gives every demo image an alt text in each language", async () => {
     for (const locale of locales) {
       const projectViews = await listProjects(db, locale, on);
-      expect(projectViews).toHaveLength(4);
+      expect(projectViews).toHaveLength(6);
       expect(new Set(projectViews.map((p) => p.status))).toEqual(new Set(["completed", "in_progress"]));
       for (const project of projectViews) {
         expect(project.isDemo).toBe(true);
@@ -192,6 +192,7 @@ describe("per-language publication", () => {
       .select({ id: pageContents.id })
       .from(pageContents)
       .where(eq(pageContents.key, "about"));
+    await db.delete(pageContentTranslations).where(eq(pageContentTranslations.pageId, about.id));
     await db.insert(pageContentTranslations).values([
       { pageId: about.id, locale: "fr", title: "À propos", status: "published", publishedAt: new Date() },
       { pageId: about.id, locale: "en", title: "About", status: "draft" },
@@ -533,10 +534,10 @@ describe("site chrome and about blocks", () => {
     expect(chrome.contactPhone).toBeNull();
     expect(chrome.whatsapp).toBeNull();
     expect(chrome.socialLinks).toEqual([{ label: "Site", url: "https://example.org" }]);
-    expect(chrome.copy).toBeNull();
   });
 
   it("exposes home copy only once published", async () => {
+    await db.delete(siteSettingTranslations).where(eq(siteSettingTranslations.locale, "fr"));
     await db.insert(siteSettingTranslations).values({
       settingsId: 1,
       locale: "fr",
@@ -555,6 +556,18 @@ describe("site chrome and about blocks", () => {
   it("skips unpublished about blocks and empty certificates", async () => {
     const pages = await db.select({ id: pageContents.id, key: pageContents.key }).from(pageContents);
     const idOf = (key: string) => pages.find((row) => row.key === key)!.id;
+    await db
+      .delete(pageContentTranslations)
+      .where(eq(pageContentTranslations.pageId, idOf("mission")));
+    await db
+      .delete(pageContentTranslations)
+      .where(eq(pageContentTranslations.pageId, idOf("approach")));
+    await db
+      .delete(pageContentTranslations)
+      .where(eq(pageContentTranslations.pageId, idOf("quality")));
+    await db
+      .delete(pageContentTranslations)
+      .where(eq(pageContentTranslations.pageId, idOf("certificates")));
     await db.insert(pageContentTranslations).values([
       {
         pageId: idOf("mission"),

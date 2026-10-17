@@ -15,6 +15,7 @@ import { CallToAction } from "@/components/home/CallToAction";
 import { ExpertisesSection } from "@/components/home/ExpertisesSection";
 import { Hero } from "@/components/home/Hero";
 import { Intro } from "@/components/home/Intro";
+import { ProcessSection } from "@/components/home/Process";
 import { ProjectsSection } from "@/components/home/ProjectsSection";
 import { TeamSection } from "@/components/home/TeamSection";
 import { VisitsSection } from "@/components/home/VisitsSection";
@@ -81,6 +82,7 @@ export default async function HomePage({ searchParams }: PageProps<"/[locale]">)
         body={copy?.introBody}
       />
     ),
+    process: <ProcessSection dict={dict} />,
     expertises: <ExpertisesSection locale={locale} dict={dict} expertises={expertises} />,
     projects: <ProjectsSection locale={locale} dict={dict} projects={projects} />,
     visits: <VisitsSection locale={locale} dict={dict} visits={visits} />,

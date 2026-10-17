@@ -67,7 +67,11 @@ Yayımlanmamış gizlilik sayfası ile formu açmak teknik olarak mümkündür; 
 
 ## Demo içerik
 
-`npm run db:seed:demo` örnek illüstrasyon ve “Exemple” başlıkları ekler; her satır `isDemo`. `SITE_ENV=production` iken public sorgular ve demo dosya sunumu kapalıdır. Yayından önce `npm run db:demo:clear`.
+`npm run db:seed:demo` üç dilde örnek projeler, ziyaretler, görev kartları, uzmanlık gövdeleri ve (yalnızca boşsa) kurumsal/ana sayfa metinleri ekler. Proje, ziyaret, kadro ve medya satırları `isDemo`dır. Metinler panelden FR/EN/TR sekmelerinde düzenlenir.
+
+`SITE_ENV=production` iken public sorgular ve `/media/demo` kapalıdır; bu yüzden canlı site boş görünür. Sunum için Vercel’de `SITE_ENV=staging` ve `ALLOW_DEMO_CONTENT=true` kullanın (noindex açıktır). Veritabanına yazmak için, ortam hâlâ production ise geçici `ALLOW_DEMO_SEED=true` ile seed çalıştırıp değişkeni kaldırın.
+
+Yayından önce: `npm run db:demo:clear` (yalnızca `is_demo` satırlar), `SITE_ENV=production`, `ALLOW_DEMO_CONTENT` kapalı. Site geneli noindex gerçek yayın için kapatılır (`SITE_ENV=production` ve demo kapalı).
 
 ## Çeviri kapsamı
 

@@ -45,6 +45,27 @@
     "body": "NUMAN GROUPE kamu tesisleri ve konut yerleşkeleri tasarlar ve inşa eder. Çalışma alanlarımız stadyumları, hastaneleri, spor köylerini ve lojmanları kapsar.",
     "cta": "Grubu tanıyın"
   },
+  "process": {
+    "eyebrow": "Yöntem",
+    "title": "Etütten teslime.",
+    "description": "Bir tesisi çerçevelemek, koordine etmek ve teslim etmek için dört adım — belgelenmemiş süre veya sonuç vaat etmeden.",
+    "design": {
+      "title": "Tasarım",
+      "body": "Program, yer kısıtları ve işletme ihtiyaçlarının incelenmesi; ardından mimari ve teknik niyetin netleştirilmesi."
+    },
+    "planning": {
+      "title": "Planlama",
+      "body": "İş paketleri, arayüzler ve kontrollerin düzenlenmesi. Takvim, işveren onayına kadar çalışma hipotezi olarak kalır."
+    },
+    "build": {
+      "title": "Uygulama",
+      "body": "Şantiye takibi, meslek gruplarının koordinasyonu ve güvenlik gerekleri. Örnek projelerdeki ilerleme kurgusaldır."
+    },
+    "handover": {
+      "title": "Teslim",
+      "body": "Kabul, yapı dosyaları ve işletmeye aktarımın hazırlanması. Gerçek bir devreye alma iddia edilmez."
+    }
+  },
   "expertises": {
     "eyebrow": "Uzmanlık alanlarımız",
     "title": "Hedeflerinize yakışır projeler.",
