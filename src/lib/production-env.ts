@@ -37,14 +37,14 @@ export function assessProductionEnv(
   }
 
   if (isObjectStorageConfigured(env)) {
-    /* durable object store; local MEDIA_STORAGE_DIR is unused */
+    /* durable object store; Postgres blobs unused */
   } else if (env.VERCEL === "1") {
     warnings.push(
-      "Vercel disk is ephemeral; set MEDIA_S3_BUCKET, MEDIA_S3_ACCESS_KEY_ID and MEDIA_S3_SECRET_ACCESS_KEY (plus MEDIA_S3_ENDPOINT for R2/MinIO).",
+      "MEDIA_S3_* is unset; uploads are stored in Postgres. Optional object storage: MEDIA_S3_BUCKET, MEDIA_S3_ACCESS_KEY_ID, MEDIA_S3_SECRET_ACCESS_KEY.",
     );
   } else if (!env.MEDIA_STORAGE_DIR?.trim()) {
     warnings.push(
-      "MEDIA_STORAGE_DIR is unset; uploads default to .data/media and will be lost on an ephemeral filesystem.",
+      "MEDIA_STORAGE_DIR is unset; uploads default to .data/media unless Postgres blob storage is used.",
     );
   }
 

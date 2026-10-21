@@ -245,7 +245,7 @@ export async function saveUploadedImage(
   const ext = EXTENSIONS[sniffed.mime];
   const storageKey = `uploads/${id}.${ext}`;
   try {
-    await putObject(storageKey, buffer);
+    await putObject(storageKey, buffer, db);
   } catch (error) {
     throw new MediaUploadError(
       error instanceof Error
@@ -276,7 +276,7 @@ export async function saveUploadedImage(
       );
     });
   } catch (error) {
-    await deleteObject(storageKey);
+    await deleteObject(storageKey, db);
     throw error;
   }
   return id;
@@ -289,7 +289,7 @@ export async function deleteMediaAsset(db: Database, id: string): Promise<void> 
     .where(eq(mediaAssets.id, id));
   if (!row) throw new MediaUploadError("Kayıt bulunamadı.");
   await db.delete(mediaAssets).where(eq(mediaAssets.id, id));
-  await deleteObject(row.storageKey);
+  await deleteObject(row.storageKey, db);
 }
 
 export async function getAsset(db: Database, id: string) {

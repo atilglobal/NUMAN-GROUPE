@@ -20,7 +20,7 @@ export async function ensureDerivative(
   const [asset] = await db.select().from(mediaAssets).where(eq(mediaAssets.id, input.assetId));
   if (!asset) return null;
   if (asset.mimeType === "image/gif") {
-    const original = await readObject(asset.storageKey);
+    const original = await readObject(asset.storageKey, db);
     return original ? { bytes: original, mime: asset.mimeType } : null;
   }
 
@@ -34,11 +34,11 @@ export async function ensureDerivative(
       mime,
     );
   for (const mime of ["image/jpeg", "image/png", "image/webp"]) {
-    const cached = await readObject(guessKey(mime));
+    const cached = await readObject(guessKey(mime), db);
     if (cached) return { bytes: cached, mime };
   }
 
-  const original = await readObject(asset.storageKey);
+  const original = await readObject(asset.storageKey, db);
   if (!original) return null;
 
   let rendered: { bytes: Buffer; mime: string };
@@ -55,7 +55,7 @@ export async function ensureDerivative(
     throw new MediaProcessError("Görsel işlenemedi. Yeniden deneyin.");
   }
 
-  await putObject(guessKey(rendered.mime), rendered.bytes);
+  await putObject(guessKey(rendered.mime), rendered.bytes, db);
   return rendered;
 }
 

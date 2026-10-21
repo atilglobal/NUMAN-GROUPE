@@ -7,6 +7,7 @@ export {
 export * from "./users";
 export * from "./auth";
 export * from "./media";
+export * from "./media-blobs";
 export * from "./expertises";
 export * from "./projects";
 export * from "./visits";

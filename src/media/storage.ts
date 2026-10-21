@@ -1,6 +1,8 @@
 import { mkdir, readFile, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { isDemoContentEnabled } from "@/content/demo-policy";
+import { tryGetDb, type Database } from "@/db/client";
+import { deleteMediaBlob, putMediaBlob, readMediaBlob } from "./blob-store";
 import {
   deleteStoredObject,
   isObjectStorageConfigured,
@@ -9,11 +11,9 @@ import {
 } from "./object-store";
 
 /**
- * Bytes live in object storage when MEDIA_S3_* is set, otherwise on
- * MEDIA_STORAGE_DIR (default `.data/media`). Vercel’s disk is ephemeral:
- * uploads without a bucket are refused rather than silently lost.
- * MEDIA_PUBLIC_BASE_URL points at a CDN when one exists; otherwise
- * GET /media/[...key] streams from this store.
+ * Bytes live in S3 when MEDIA_S3_* is set. Otherwise they are stored in
+ * Postgres (`media_blobs`) so Vercel deploys do not wipe uploads. Local disk
+ * is only a leftover fallback for files written before this store existed.
  */
 
 const UPLOAD_PREFIX = "uploads/";
@@ -50,7 +50,7 @@ function resolveKey(storageKey: string): string | null {
   return absolute;
 }
 
-export async function putObject(storageKey: string, bytes: Buffer): Promise<void> {
+export async function putObject(storageKey: string, bytes: Buffer, db: Database | null = tryGetDb()): Promise<void> {
   if (!isStoredUploadKey(storageKey) && !isStoredVariantKey(storageKey)) {
     throw new Error("Invalid storage key.");
   }
@@ -58,10 +58,12 @@ export async function putObject(storageKey: string, bytes: Buffer): Promise<void
     await putStoredObject(storageKey, bytes);
     return;
   }
-  if (process.env.VERCEL === "1" && process.env.NODE_ENV === "production") {
-    throw new Error(
-      "Uploads on Vercel are not durable without object storage. Set MEDIA_S3_BUCKET, MEDIA_S3_ACCESS_KEY_ID, MEDIA_S3_SECRET_ACCESS_KEY (and MEDIA_S3_ENDPOINT / MEDIA_S3_REGION for R2 or MinIO).",
-    );
+  if (db) {
+    await putMediaBlob(db, storageKey, bytes);
+    return;
+  }
+  if (process.env.VERCEL === "1") {
+    throw new Error("Veritabanı bağlantısı yok; görsel kaydedilemedi.");
   }
   const file = resolveKey(storageKey);
   if (!file) throw new Error("Invalid storage key.");
@@ -69,7 +71,7 @@ export async function putObject(storageKey: string, bytes: Buffer): Promise<void
   await writeFile(/* turbopackIgnore: true */ file, bytes);
 }
 
-export async function readObject(storageKey: string): Promise<Buffer | null> {
+export async function readObject(storageKey: string, db: Database | null = tryGetDb()): Promise<Buffer | null> {
   if (DEMO_KEY.test(storageKey)) {
     if (!isDemoContentEnabled()) return null;
     try {
@@ -82,6 +84,10 @@ export async function readObject(storageKey: string): Promise<Buffer | null> {
   }
   if (isObjectStorageConfigured()) {
     return readStoredObject(storageKey);
+  }
+  if (db) {
+    const fromDb = await readMediaBlob(db, storageKey);
+    if (fromDb) return fromDb;
   }
   const file = resolveKey(storageKey);
   if (!file) return null;
@@ -101,10 +107,17 @@ export async function readObject(storageKey: string): Promise<Buffer | null> {
   }
 }
 
-export async function deleteObject(storageKey: string): Promise<void> {
+export async function deleteObject(storageKey: string, db: Database | null = tryGetDb()): Promise<void> {
   if (isObjectStorageConfigured()) {
     await deleteStoredObject(storageKey);
     return;
+  }
+  if (db) {
+    try {
+      await deleteMediaBlob(db, storageKey);
+    } catch {
+      /* table may not exist yet during partial setup */
+    }
   }
   const file = resolveKey(storageKey);
   if (!file) return;

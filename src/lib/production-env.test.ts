@@ -44,8 +44,8 @@ describe("assessProductionEnv", () => {
     expect(result.warnings.some((item) => item.includes("https"))).toBe(true);
   });
 
-  it("warns when Vercel has no object store", () => {
+  it("notes Postgres media storage when S3 is unset", () => {
     const result = assessProductionEnv({ ...complete, VERCEL: "1", MEDIA_STORAGE_DIR: undefined });
-    expect(result.warnings.some((item) => item.includes("MEDIA_S3_BUCKET"))).toBe(true);
+    expect(result.warnings.some((item) => item.includes("Postgres"))).toBe(true);
   });
 });

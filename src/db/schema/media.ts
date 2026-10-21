@@ -13,7 +13,7 @@ import {
 import { id, localeEnum, notBlank, timestamps } from "./common";
 import { users } from "./users";
 
-/** File metadata only; bytes live in the storage driver, never in the database. */
+/** File metadata. Bytes live in S3, Postgres media_blobs, or local disk. */
 export const mediaAssets = pgTable(
   "media_assets",
   {
