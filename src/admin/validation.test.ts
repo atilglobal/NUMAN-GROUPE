@@ -118,6 +118,14 @@ describe("panel validation", () => {
     expect(projectRootSchema.parse({ status: "completed", sortOrder: 1, coverAssetId: "", gallery: [] }).status).toBe(
       "completed",
     );
+    const ids = Array.from({ length: 100 }, (_, index) => `11111111-1111-4111-8111-${String(index).padStart(12, "0")}`);
+    expect(projectRootSchema.safeParse({ status: "planned", sortOrder: 0, coverAssetId: "", gallery: ids }).success).toBe(
+      true,
+    );
+    expect(
+      projectRootSchema.safeParse({ status: "planned", sortOrder: 0, coverAssetId: "", gallery: [...ids, "11111111-1111-4111-8111-000000000100"] })
+        .success,
+    ).toBe(false);
   });
 
   it("drops empty visit participants and treats featured as a checkbox", () => {

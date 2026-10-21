@@ -3,6 +3,7 @@ import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from "../auth/config";
 import { HOME_SECTION_KEYS } from "../content/home-layout";
 import { locales } from "../i18n/config";
 import { SLUG_PATTERN } from "../db/schema";
+import { PROJECT_GALLERY_MAX, VISIT_GALLERY_MAX } from "../media/gallery-limits";
 
 /*
  * Server-side validation for every panel form. Messages are Turkish and
@@ -150,7 +151,9 @@ export const projectRootSchema = z.object({
   isFeatured: featuredSchema,
   sortOrder: sortOrderSchema,
   coverAssetId: optionalUuid,
-  gallery: z.array(z.uuid("Geçersiz görsel.")).max(24, "Galeride en fazla 24 görsel olabilir."),
+  gallery: z
+    .array(z.uuid("Geçersiz görsel."))
+    .max(PROJECT_GALLERY_MAX, `Galeride en fazla ${PROJECT_GALLERY_MAX} görsel olabilir.`),
 });
 
 export type ProjectRootInput = z.infer<typeof projectRootSchema>;
@@ -214,7 +217,7 @@ export const visitRootSchema = z.object({
   countryCode: countryCodeSchema,
   isFeatured: featuredSchema,
   coverAssetId: optionalUuid,
-  gallery: z.array(z.uuid("Geçersiz görsel.")).max(24, "Galeride en fazla 24 görsel olabilir."),
+  gallery: z.array(z.uuid("Geçersiz görsel.")).max(VISIT_GALLERY_MAX, `Galeride en fazla ${VISIT_GALLERY_MAX} görsel olabilir.`),
   participants: z
     .array(visitParticipantSchema)
     .max(40, "En fazla 40 katılımcı.")

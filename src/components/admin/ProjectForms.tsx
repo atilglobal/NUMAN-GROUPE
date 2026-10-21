@@ -4,7 +4,9 @@ import type { ActionState } from "@/auth/session";
 import type { ProjectStatus } from "@/db/schema/projects";
 import type { MediaPickerItem } from "@/media/store";
 import { ActionForm, CheckboxField, FormStatus, SelectField, SubmitButton, TextAreaField, TextField } from "./forms";
-import { MediaPicker, MediaUploadForm } from "./MediaPicker";
+import { PROJECT_GALLERY_MAX } from "@/media/gallery-limits";
+import { MediaBatchUpload } from "./MediaBatchUpload";
+import { MediaPicker } from "./MediaPicker";
 
 type ServerAction = (previous: ActionState, formData: FormData) => Promise<ActionState>;
 
@@ -80,6 +82,7 @@ export function ProjectRootFields({
         items={media}
         coverId={defaults.coverAssetId}
         galleryIds={defaults.gallery}
+        galleryMax={PROJECT_GALLERY_MAX}
         withCopy
       />
     </div>
@@ -98,7 +101,7 @@ const emptyTranslation: ProjectTranslationDefaults = {
 export function NewProjectForm({ action, media }: { action: ServerAction; media: MediaPickerItem[] }) {
   return (
     <div className="grid gap-6">
-      <MediaUploadForm />
+      <MediaBatchUpload />
       <ActionForm action={action} className="grid gap-6">
         <FormStatus />
         <p className="text-sm text-muted">
@@ -160,7 +163,7 @@ export function ProjectRootForm({
 }) {
   return (
     <div className="grid gap-6">
-      <MediaUploadForm />
+      <MediaBatchUpload />
       <ActionForm action={action} className="grid gap-4">
         <FormStatus />
         <ProjectRootFields defaults={defaults} media={media} />

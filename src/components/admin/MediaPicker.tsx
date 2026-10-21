@@ -14,6 +14,7 @@ export function MediaPicker({
   allowGallery = true,
   withCaptions = false,
   withCopy = false,
+  galleryMax = 24,
   coverName = "coverAssetId",
   coverLabel = "Kapak yap",
   coverSelectedLabel = "Kapak seçili",
@@ -24,12 +25,14 @@ export function MediaPicker({
   allowGallery?: boolean;
   withCaptions?: boolean;
   withCopy?: boolean;
+  galleryMax?: number;
   coverName?: string;
   coverLabel?: string;
   coverSelectedLabel?: string;
 }) {
   const [cover, setCover] = useState(coverId ?? "");
   const [gallery, setGallery] = useState(galleryIds);
+  const [limitMessage, setLimitMessage] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const filtered = items.filter((item) => {
     const haystack = `${item.originalFilename ?? ""} ${item.alts.fr ?? ""} ${item.alts.en ?? ""} ${item.alts.tr ?? ""}`.toLowerCase();
@@ -37,7 +40,18 @@ export function MediaPicker({
   });
 
   function toggleGallery(id: string) {
-    setGallery((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
+    setGallery((current) => {
+      if (current.includes(id)) {
+        setLimitMessage(null);
+        return current.filter((item) => item !== id);
+      }
+      if (current.length >= galleryMax) {
+        setLimitMessage(`Galeride en fazla ${galleryMax} görsel olabilir.`);
+        return current;
+      }
+      setLimitMessage(null);
+      return [...current, id];
+    });
   }
 
   const formState = useFormState();
@@ -65,6 +79,12 @@ export function MediaPicker({
 
       <div>
         <p className="text-sm font-medium text-navy-950">Mevcut görseller</p>
+        {allowGallery ? (
+          <p className="mt-1 text-sm text-navy-950">
+            Seçilen fotoğraf: {gallery.length} / {galleryMax}
+          </p>
+        ) : null}
+        {limitMessage ? <p className="mt-1 text-sm text-red-700">{limitMessage}</p> : null}
         {coverError ? <p className="mt-1 text-sm text-red-700">{coverError}</p> : null}
         {galleryError ? <p className="mt-1 text-sm text-red-700">{galleryError}</p> : null}
         <p className="mt-1 text-xs text-muted">
@@ -105,6 +125,7 @@ export function MediaPicker({
                         type="button"
                         className={`min-h-8 rounded px-2 ${inGallery ? "bg-paper-2" : "border border-line"}`}
                         onClick={() => toggleGallery(item.id)}
+                        disabled={!inGallery && gallery.length >= galleryMax}
                       >
                         {inGallery ? "Galeriden çıkar" : "Galeriye ekle"}
                       </button>

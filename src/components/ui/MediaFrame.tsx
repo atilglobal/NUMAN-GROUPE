@@ -1,8 +1,8 @@
-import Image from "next/image";
 import type { ReactNode } from "react";
 import type { ResolvedImage } from "@/content/types";
 import { mediaProfiles, type MediaProfileId } from "@/media/profiles";
 import { cn } from "./cn";
+import { SafeMediaImage } from "./SafeMediaImage";
 
 type MediaFrameProps = {
   image: ResolvedImage | null;
@@ -36,15 +36,17 @@ export function MediaFrame({
   return (
     <div className={cn("relative overflow-hidden bg-navy-800", className)}>
       {image && src ? (
-        <Image
+        <SafeMediaImage
           src={src}
           alt={image.alt}
-          fill
           sizes={profile ? mediaProfiles[profile].sizes : sizes}
           preload={preload}
-          fetchPriority={preload ? "high" : "auto"}
-          decoding="async"
           className={cn(objectClass, imageClassName)}
+          objectPosition={
+            image.focalX != null && image.focalY != null
+              ? `${image.focalX * 100}% ${image.focalY * 100}%`
+              : undefined
+          }
         />
       ) : (
         <div

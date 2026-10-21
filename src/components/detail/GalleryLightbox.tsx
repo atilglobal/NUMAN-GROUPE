@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { galleryNeedsToggle, visibleGalleryThumbs } from "@/content/project-gallery";
 import type { ResolvedImage } from "@/content/types";
 import { DemoBadge } from "@/components/ui/Badges";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 
-type Labels = {
+export type GalleryLabels = {
   gallery: string;
   open: string;
   close: string;
@@ -13,19 +14,40 @@ type Labels = {
   next: string;
   of: string;
   demo: string;
+  showAll?: string;
+  showLess?: string;
+  count?: string;
 };
 
 type Props = {
   images: ResolvedImage[];
-  labels: Labels;
+  thumbs?: ResolvedImage[];
+  cover?: ResolvedImage | null;
+  afterCover?: ReactNode;
+  labels: GalleryLabels;
+  previewLimit?: number;
+  heading?: string;
 };
 
-export function GalleryLightbox({ images, labels }: Props) {
+export function GalleryLightbox({
+  images,
+  thumbs = images,
+  cover,
+  afterCover,
+  labels,
+  previewLimit,
+  heading,
+}: Props) {
   const titleId = useId();
   const [index, setIndex] = useState<number | null>(null);
+  const [expanded, setExpanded] = useState(false);
   const touchStart = useRef<number | null>(null);
+  const restoreFocus = useRef<HTMLElement | null>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const open = index !== null;
   const current = index !== null ? images[index] : null;
+  const shown = previewLimit != null ? visibleGalleryThumbs(thumbs, expanded, previewLimit) : thumbs;
+  const toggle = previewLimit != null && galleryNeedsToggle(thumbs.length, previewLimit);
 
   const close = useCallback(() => setIndex(null), []);
   const go = useCallback(
@@ -38,8 +60,19 @@ export function GalleryLightbox({ images, labels }: Props) {
     [images.length],
   );
 
+  function openImage(image: ResolvedImage) {
+    restoreFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const at = images.findIndex((item) => (item.assetId ?? item.src) === (image.assetId ?? image.src));
+    setIndex(at >= 0 ? at : 0);
+  }
+
   useEffect(() => {
-    if (!open) return;
+    if (!open) {
+      restoreFocus.current?.focus();
+      restoreFocus.current = null;
+      return;
+    }
+    closeRef.current?.focus();
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     function onKey(event: KeyboardEvent) {
@@ -54,36 +87,96 @@ export function GalleryLightbox({ images, labels }: Props) {
     };
   }, [open, close, go]);
 
-  if (images.length === 0) return null;
+  if (images.length === 0 && thumbs.length === 0 && !cover) return null;
 
   return (
     <>
-      <ul className="mt-4 grid gap-4 sm:grid-cols-2">
-        {images.map((image, imageIndex) => (
-          <li key={image.assetId ?? `${image.src}-${imageIndex}`}>
-            <figure>
+      {cover ? (
+        <figure className="mb-14 lg:mb-16">
+          <button
+            type="button"
+            className="relative block w-full text-left"
+            onClick={() => openImage(cover)}
+            aria-label={`${labels.open}: ${cover.alt}`}
+          >
+            <MediaFrame
+              image={cover}
+              sizes="(min-width: 1280px) 1200px, 100vw"
+              preload
+              className="aspect-[4/3] sm:aspect-[16/10] lg:aspect-[16/9]"
+            >
+              {cover.isDemo ? <DemoBadge label={labels.demo} className="absolute right-3 top-3" /> : null}
+            </MediaFrame>
+          </button>
+          {cover.caption ? <figcaption className="mt-3 text-sm text-muted">{cover.caption}</figcaption> : null}
+        </figure>
+      ) : null}
+
+      {afterCover}
+
+      {thumbs.length > 0 ? (
+        <section aria-labelledby={heading ? "project-gallery" : undefined} className={previewLimit != null ? "border-t border-line pt-12" : undefined}>
+          {heading || labels.count ? (
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              {heading ? (
+                <h2 id="project-gallery" className="font-serif text-3xl text-navy-950 sm:text-4xl">
+                  {heading}
+                </h2>
+              ) : null}
+              {labels.count ? (
+                <p className="text-sm text-muted">{labels.count.replace("{count}", String(thumbs.length))}</p>
+              ) : null}
+            </div>
+          ) : null}
+
+          <ul
+            className={
+              previewLimit != null
+                ? "mt-6 grid grid-cols-1 gap-3 min-[390px]:grid-cols-2 lg:grid-cols-3 lg:gap-4"
+                : "mt-4 grid gap-4 sm:grid-cols-2"
+            }
+          >
+            {shown.map((image, imageIndex) => (
+              <li key={image.assetId ?? `${image.src}-${imageIndex}`}>
+                <figure>
+                  <button
+                    type="button"
+                    className="relative block w-full text-left"
+                    onClick={() => openImage(image)}
+                    aria-label={`${labels.open}: ${image.alt}`}
+                  >
+                    <MediaFrame
+                      image={image}
+                      profile="galleryThumb"
+                      sizes="(min-width: 1024px) 33vw, 50vw"
+                      className="aspect-[4/3] bg-navy-800"
+                    >
+                      {image.isDemo ? (
+                        <DemoBadge label={labels.demo} className="absolute right-3 top-3" />
+                      ) : null}
+                    </MediaFrame>
+                  </button>
+                  {image.caption ? <figcaption className="mt-2 text-sm text-muted">{image.caption}</figcaption> : null}
+                </figure>
+              </li>
+            ))}
+          </ul>
+
+          {toggle ? (
+            <div className="mt-6">
               <button
                 type="button"
-                className="relative block w-full text-left"
-                onClick={() => setIndex(imageIndex)}
-                aria-label={`${labels.open}: ${image.alt}`}
+                className="inline-flex min-h-12 items-center border border-navy-900 px-6 text-[0.9375rem] font-medium text-navy-900 hover:bg-navy-900 hover:text-paper"
+                onClick={() => setExpanded((value) => !value)}
               >
-                <MediaFrame
-                  image={image}
-                  profile="galleryThumb"
-                  sizes="(min-width: 640px) 384px, 100vw"
-                  className="aspect-[4/3]"
-                >
-                  {image.isDemo ? (
-                    <DemoBadge label={labels.demo} className="absolute right-3 top-3" />
-                  ) : null}
-                </MediaFrame>
+                {expanded
+                  ? (labels.showLess ?? "")
+                  : (labels.showAll ?? "").replace("{count}", String(thumbs.length))}
               </button>
-              {image.caption ? <figcaption className="mt-2 text-sm text-muted">{image.caption}</figcaption> : null}
-            </figure>
-          </li>
-        ))}
-      </ul>
+            </div>
+          ) : null}
+        </section>
+      ) : null}
 
       {open && current ? (
         <div
@@ -128,7 +221,12 @@ export function GalleryLightbox({ images, labels }: Props) {
               <button type="button" className="min-h-10 rounded-md bg-paper px-4 text-sm text-navy-950" onClick={() => go(-1)}>
                 {labels.previous}
               </button>
-              <button type="button" className="min-h-10 rounded-md bg-paper px-4 text-sm text-navy-950" onClick={close}>
+              <button
+                ref={closeRef}
+                type="button"
+                className="min-h-10 rounded-md bg-paper px-4 text-sm text-navy-950"
+                onClick={close}
+              >
                 {labels.close}
               </button>
               <button type="button" className="min-h-10 rounded-md bg-paper px-4 text-sm text-navy-950" onClick={() => go(1)}>

@@ -91,6 +91,17 @@ describe("new project FormData vs schema", () => {
     expect(summarizeFieldErrors(parsed.fieldErrors)).toContain("Sıra:");
   });
 
+  it("accepts 100 gallery photos and rejects the 101st", () => {
+    const ids = Array.from({ length: 100 }, (_, index) => `11111111-1111-4111-8111-${String(index).padStart(12, "0")}`);
+    const ok = parseProjectForm(newProjectFormData({ title: "Galerie", gallery: ids }));
+    expect(ok.ok).toBe(true);
+    const over = parseProjectForm(
+      newProjectFormData({ title: "Galerie", gallery: [...ids, "11111111-1111-4111-8111-000000000100"] }),
+    );
+    expect(over.ok).toBe(false);
+    if (!over.ok) expect(over.fieldErrors.gallery).toMatch(/100/);
+  });
+
   it("keeps the featured error key when a garbage value is posted", () => {
     const result = projectRootSchema.safeParse({
       status: "planned",
