@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { savePageTranslationAction, setPageStatusAction } from "@/admin/actions/pages";
 import { dateTimeFormat, localeLabels, pageKeyLabels } from "@/admin/labels";
@@ -15,9 +16,20 @@ import { Card, PageHeader, StatusBadge } from "@/components/admin/ui";
 export const metadata: Metadata = { title: "Sayfayı düzenle" };
 
 const HINTS: Record<string, string> = {
+  about:
+    "Karşılama özeti ve « Biz kimiz » gövdesi. Resmî unvan sözlükteki « Numan Groupe International » metnidir. Tamamlanmış iş veya ofis sayısı yazmayın.",
+  history: "1987 ve Antalya merkezi. Belgede olmayan kilometre taşı eklemeyin. Antalya’yı Avrupa şehri olarak tanımlamayın.",
+  mission: "Misyonun görev kapsamını koruyun. Finansmanı garanti gibi yazmayın.",
+  vision: "Vizyonun ilkelerini koruyun. Hedef ortakları mevcut anlaşmalı ortak gibi göstermeyin.",
+  approach: "Çalışma yönteminin girişi. Yedi adım sözlükten gelir; burada yalnızca ek açıklama yazın.",
+  principles: "İlkelerin altına sözleşmelerle belirlenen kesin yükümlülük metnini yazın.",
+  finance:
+    "Finansmanın inceleme, onay ve imzalı belgelere bağlı olduğu açıklama görünür kalsın. Finansman garantisi yazmayın.",
+  regions: "Afrika, Asya ve Avrupa anlatımları. Belgede olmayan ülke veya ofis işaretlemeyin.",
+  organization: "İşlevleri anlatın. Çalışan sayısı veya uydurma özgeçmiş yazmayın.",
+  future: "Seçici gelişim. Tekrarlayan tanıtım paragraflarını kısaltın.",
   certificates:
     "Yalnızca doğrulanmış sertifikaları yazın. Belge yoksa bu bloğu boş ve yayımlanmamış bırakın; sitede görünmez.",
-  mission: "Misyon ve vizyonu abartmadan, doğrulanmış ifadelerle yazın.",
   quality: "Kalite ve güvenlik yaklaşımı. Sahip olunmayan belge veya standart iddiası yazmayın.",
   privacy:
     "Yer tutucu metin yayıma hazır gizlilik politikası değildir. Canlıya çıkmadan önce hukuk danışmanı metnini kaydedin; aksi hâlde sitede hukuki belge yok uyarısı görünür.",
@@ -78,7 +90,15 @@ export default async function EditPageContent({ params }: { params: Promise<{ id
 
   return (
     <>
-      <PageHeader title={title} back={{ href: "/admin/sayfalar", label: "Kurumsal içerikler" }} />
+      <PageHeader
+        title={title}
+        back={{ href: "/admin/sayfalar", label: "Kurumsal içerikler" }}
+        description={
+          <Link href="/tr/hakkimizda" className="underline underline-offset-4">
+            Public Grup sayfasını önizle
+          </Link>
+        }
+      />
       <Card title="İçerik">
         <LocaleTabs label="İçerik dili" tabs={tabs} />
       </Card>

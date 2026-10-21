@@ -6,6 +6,7 @@ import type { DetailSection } from "@/i18n/routes";
 import { PUBLIC_PAGE_SIZE } from "@/lib/pagination";
 import { contentTags, PUBLIC_CONTENT_REV } from "./cache-tags";
 import { isDemoContentEnabled } from "./demo-policy";
+import { DEFAULT_GROUP_LAYOUT } from "./group-layout";
 import { DEFAULT_HOME_LAYOUT } from "./home-layout";
 import * as queries from "./queries";
 import { resolveCmsSlugRedirect, resolveSlugRedirect as lookupSlugRedirect } from "./slug-redirects";
@@ -57,6 +58,7 @@ function emptyChrome(locale: Locale = "fr"): SiteChrome {
     copy: null,
     homeVisuals: { hero: null, callToAction: null, heroVideoUrl: null },
     homeLayout: DEFAULT_HOME_LAYOUT,
+    groupLayout: DEFAULT_GROUP_LAYOUT,
   });
 }
 

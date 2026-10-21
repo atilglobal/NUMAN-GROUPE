@@ -1,25 +1,37 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { updateGroupLayoutAction } from "@/admin/actions/pages";
 import { pageKeyLabels } from "@/admin/labels";
 import { listPagesForAdmin } from "@/admin/pages";
+import { getGroupLayout } from "@/admin/settings";
 import { requirePermission } from "@/auth/session";
 import { getDb } from "@/db/client";
 import { locales } from "@/i18n/config";
+import { GroupLayoutForm } from "@/components/admin/GroupLayoutForm";
 import { Card, PageHeader, StatusBadge } from "@/components/admin/ui";
 
 export const metadata: Metadata = { title: "Kurumsal içerikler" };
 
 export default async function PagesAdminPage() {
   await requirePermission("content:write");
-  const rows = await listPagesForAdmin(getDb());
+  const db = getDb();
+  const [rows, layout] = await Promise.all([listPagesForAdmin(db), getGroupLayout(db)]);
 
   return (
     <>
       <PageHeader
         title="Kurumsal içerikler"
-        description="Sabit bloklar: hakkımızda, misyon ve vizyon, çalışma yaklaşımı, kalite ve güvenlik, varsa doğrulanmış sertifikalar. Tam sayfa oluşturucu yoktur."
+        description="Grup sayfası blokları ortak kayıtlardır. Bir metni değiştirince public Grup sayfasına yansır. Tam sayfa oluşturucu yoktur."
+        actions={
+          <Link href="/tr/hakkimizda" className="text-sm underline underline-offset-4">
+            Grup sayfasını önizle
+          </Link>
+        }
       />
-      <Card>
+      <Card title="Grup sayfası bölümleri">
+        <GroupLayoutForm action={updateGroupLayoutAction} layout={layout} />
+      </Card>
+      <Card title="Metin kayıtları">
         <ul className="divide-y divide-line">
           {rows.map((row) => (
             <li key={row.id} className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between">

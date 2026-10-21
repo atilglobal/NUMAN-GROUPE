@@ -28,7 +28,7 @@ import {
 } from "@/i18n/routes";
 import { publicPageMetadata } from "@/lib/seo";
 import { hasRichText } from "@/content/rich-text";
-import { AboutPage } from "@/components/about/AboutPage";
+import { GroupPage } from "@/components/about/GroupPage";
 import { ContactPage } from "@/components/contact/ContactPage";
 import { ExpertiseList } from "@/components/expertises/ExpertiseList";
 import { PageAlternates } from "@/components/i18n/alternates";
@@ -196,11 +196,24 @@ async function SectionBody({
   }
 
   if (section === "about") {
-    const aboutSections = await getAboutSections(locale);
+    const [aboutSections, chrome, expertises, team] = await Promise.all([
+      getAboutSections(locale),
+      getSiteChrome(locale),
+      getExpertises(locale),
+      getTeam(locale),
+    ]);
     return (
       <>
         <PageAlternates alternates={sectionAlternates("about")} />
-        <AboutPage locale={locale} dict={dict} page={page} sections={aboutSections} />
+        <GroupPage
+          locale={locale}
+          dict={dict}
+          page={page}
+          sections={aboutSections}
+          expertises={expertises}
+          chrome={chrome}
+          hasTeam={team.length > 0}
+        />
       </>
     );
   }

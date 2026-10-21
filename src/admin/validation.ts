@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from "../auth/config";
+import { GROUP_SECTION_KEYS } from "../content/group-layout";
 import { HOME_SECTION_KEYS } from "../content/home-layout";
 import { locales } from "../i18n/config";
 import { SLUG_PATTERN } from "../db/schema";
@@ -269,6 +270,19 @@ export const homeVisualsSchema = z.object({
 });
 
 export type HomeVisualsInput = z.infer<typeof homeVisualsSchema>;
+
+export const groupLayoutSchema = z.object({
+  groupSections: z
+    .array(
+      z.object({
+        key: z.enum(GROUP_SECTION_KEYS),
+        visible: z.boolean(),
+      }),
+    )
+    .min(1),
+});
+
+export type GroupLayoutInput = z.infer<typeof groupLayoutSchema>;
 
 export const homeCopySchema = z.object({
   heroTitle: optional(200, "Hero başlığı"),

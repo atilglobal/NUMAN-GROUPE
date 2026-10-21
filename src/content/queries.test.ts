@@ -493,6 +493,10 @@ describe("site chrome and about blocks", () => {
       .where(eq(siteSettings.id, 1));
 
     const chrome = await getSiteChrome(db, "fr", off);
+    expect(chrome.groupLayout.find((item) => item.key === "quality")).toEqual({
+      key: "quality",
+      visible: false,
+    });
     expect(chrome.contactEmail).toBe("hello@example.org");
     expect(chrome.contactPhone).toBeNull();
     expect(chrome.whatsapp).toBeNull();

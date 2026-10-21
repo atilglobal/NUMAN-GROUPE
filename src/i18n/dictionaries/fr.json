@@ -149,6 +149,145 @@
     "exploreExpertises": "Voir nos expertises",
     "exploreProjects": "Voir nos projets"
   },
+  "group": {
+    "navLabel": "Sections du Groupe",
+    "eyebrow": "Le Groupe",
+    "officialName": "Numan Groupe International",
+    "lead": "Groupe international fondé en 1987 à Antalya, en République de Türkiye. Développement, construction et structuration de projets d’infrastructures, avec des coopérations en Afrique, en Asie et en Europe.",
+    "discover": "Découvrir le Groupe",
+    "contact": "Nous contacter",
+    "snapshotTitle": "Numan Groupe en un regard",
+    "snapshotYearLabel": "1987",
+    "snapshotYear": "Année de création",
+    "snapshotSeatLabel": "Antalya, Türkiye",
+    "snapshotSeat": "Siège social",
+    "snapshotFocusLabel": "Afrique, Asie et Europe",
+    "snapshotFocus": "Activités et coopérations internationales",
+    "snapshotWorkLabel": "Développement de projets, construction et infrastructures",
+    "snapshotWork": "Domaines d’activité",
+    "identityTitle": "Qui sommes-nous ?",
+    "historyNav": "Historique",
+    "missionNav": "Mission",
+    "visionNav": "Vision",
+    "sectorsTitle": "Secteurs et domaines d’activité",
+    "sectorsLead": "Des domaines dans lesquels le Groupe peut intervenir selon le projet et les compétences requises — pas un catalogue d’ouvrages livrés.",
+    "sectorOpen": "Voir l’expertise",
+    "sectors": {
+      "institutional": {
+        "title": "Bâtiments institutionnels et administratifs",
+        "body": "Bâtiments administratifs, sièges institutionnels, complexes gouvernementaux et autres édifices publics : programme, études préliminaires, coordination et suivi, selon le projet."
+      },
+      "health": {
+        "title": "Infrastructures hospitalières et sanitaires",
+        "body": "Hôpitaux, centres de santé et établissements médico-sociaux. La préparation doit tenir compte des exigences fonctionnelles, sanitaires, d’équipement et d’exploitation."
+      },
+      "sports": {
+        "title": "Infrastructures sportives",
+        "body": "Stades, complexes sportifs, salles, centres d’entraînement et équipements de compétition : capacité, sécurité, accessibilité, exploitation et maintenance."
+      },
+      "roads": {
+        "title": "Routes et infrastructures de transport",
+        "body": "Routes, ouvrages d’art, aménagements de circulation et équipements de mobilité. Les études doivent intégrer les contraintes foncières, environnementales et de maintenance."
+      },
+      "ports": {
+        "title": "Ports et plateformes logistiques",
+        "body": "Infrastructures portuaires, terminaux, stockage, manutention et plateformes logistiques, avec analyse des flux et des exigences réglementaires."
+      },
+      "defense": {
+        "title": "Infrastructures stratégiques et de défense",
+        "body": "Dans le respect des lois, autorisations et règles de confidentialité applicables, examen de projets destinés aux institutions publiques et organismes compétents."
+      },
+      "urban": {
+        "title": "Aménagement urbain et développement territorial",
+        "body": "Zones résidentielles, équipements publics, réseaux de proximité et opérations urbaines intégrées, en tenant compte de la planification et de l’exploitation à long terme."
+      }
+    },
+    "financeTitle": "Développement et structuration financière",
+    "financeCaveat": "Aucune solution de financement ne peut être considérée comme acquise avant les vérifications nécessaires, l’accord des parties et la signature des documents contractuels et financiers applicables.",
+    "financeSteps": {
+      "need": {
+        "title": "Analyse des besoins et du périmètre",
+        "body": "Définition des objectifs, du périmètre et analyse préliminaire des besoins."
+      },
+      "prep": {
+        "title": "Préparation technique et financière",
+        "body": "Estimation initiale des coûts, proposition technique et financière, calendrier prévisionnel."
+      },
+      "risk": {
+        "title": "Risques et coûts préliminaires",
+        "body": "Identification des risques, des contraintes et des hypothèses à documenter."
+      },
+      "partners": {
+        "title": "Recherche de partenaires techniques et financiers",
+        "body": "Identification des besoins en fonds propres, dette ou financement institutionnel, et recherche de partenaires."
+      },
+      "contract": {
+        "title": "Coordination avant contractualisation",
+        "body": "Échanges entre autorités, entreprises et financeurs, et suivi des conditions préalables."
+      }
+    },
+    "methodTitle": "Notre méthode de travail",
+    "methodSteps": {
+      "qualify": {
+        "title": "Qualification de l’opportunité",
+        "body": "Identification du porteur, du besoin, du site, du secteur et du cadre institutionnel."
+      },
+      "collect": {
+        "title": "Examen des informations",
+        "body": "Documents disponibles, études existantes, autorisations et contraintes principales."
+      },
+      "analyse": {
+        "title": "Analyse préliminaire",
+        "body": "Aspects techniques, économiques, juridiques, environnementaux et opérationnels."
+      },
+      "define": {
+        "title": "Définition de la solution",
+        "body": "Programme, périmètre d’intervention et proposition adaptée."
+      },
+      "structure": {
+        "title": "Structuration contractuelle et financière",
+        "body": "Responsabilités, coûts, garanties, conditions de paiement et mécanismes de financement."
+      },
+      "deliver": {
+        "title": "Mise en œuvre et coordination",
+        "body": "Exécution, coordination et suivi conformément aux documents contractuels."
+      },
+      "close": {
+        "title": "Contrôle et clôture",
+        "body": "Livrables, réception, traitement des réserves et archivage."
+      }
+    },
+    "principlesTitle": "Nos principes et engagements",
+    "principles": {
+      "rigour": {
+        "title": "Rigueur",
+        "body": "Décisions et propositions fondées sur des informations vérifiables, des analyses documentées et des hypothèses identifiées. Les besoins exprimés sont examinés avant toute offre."
+      },
+      "transparency": {
+        "title": "Transparence",
+        "body": "Responsabilités, coûts, délais, risques et conditions présentés de manière compréhensible, avec leurs limites et conditions préalables."
+      },
+      "compliance": {
+        "title": "Conformité",
+        "body": "Examen au regard des lois, règlements, normes, autorisations et obligations contractuelles. Confidentialité des informations reçues."
+      },
+      "responsibility": {
+        "title": "Responsabilité",
+        "body": "Périmètre des engagements défini clairement. Les résultats qui dépendent de validations externes ne sont pas présentés comme acquis."
+      },
+      "cooperation": {
+        "title": "Coopération",
+        "body": "Coordination structurée entre autorités, entreprises, consultants, investisseurs et institutions financières, selon les responsabilités convenues."
+      },
+      "continuity": {
+        "title": "Pérennité",
+        "body": "Prise en compte des coûts d’exploitation, de maintenance et de la capacité à assurer la continuité du service."
+      }
+    },
+    "teamLink": "Voir l’équipe",
+    "closingTitle": "Un partenaire pour préparer et réaliser des projets d’infrastructures.",
+    "closingBody": "Numan Groupe International souhaite des relations professionnelles fondées sur des engagements vérifiables, des responsabilités clairement définies et une exécution conforme aux exigences applicables."
+  },
   "contact": {
     "email": "E-mail",
     "phone": "Téléphone",

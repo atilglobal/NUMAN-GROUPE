@@ -5,7 +5,14 @@ import { id, notBlank, publication, publishedAtCheck, timestamps } from "./commo
 export const pageKeyEnum = pgEnum("page_key", [
   "about",
   "mission",
+  "vision",
+  "history",
   "approach",
+  "principles",
+  "finance",
+  "regions",
+  "organization",
+  "future",
   "quality",
   "certificates",
   "contact",
@@ -14,8 +21,20 @@ export const pageKeyEnum = pgEnum("page_key", [
   "cookies",
 ]);
 
-/** Blocks composed on the public about page, in this order after the intro. */
-export const aboutSectionKeys = ["mission", "approach", "quality", "certificates"] as const;
+/** Editorial blocks composed on the public Group page when published. */
+export const aboutSectionKeys = [
+  "history",
+  "mission",
+  "vision",
+  "approach",
+  "principles",
+  "finance",
+  "regions",
+  "organization",
+  "future",
+  "quality",
+  "certificates",
+] as const;
 export type AboutSectionKey = (typeof aboutSectionKeys)[number];
 
 export type PageKey = (typeof pageKeyEnum.enumValues)[number];

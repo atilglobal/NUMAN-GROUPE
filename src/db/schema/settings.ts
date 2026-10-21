@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import { check, jsonb, pgTable, smallint, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import type { GroupSectionLayout } from "../../content/group-layout";
 import type { HomeSectionLayout } from "../../content/home-layout";
 import { DEFAULT_HOME_LAYOUT } from "../../content/home-layout";
 import { id, publication, publishedAtCheck, timestamps } from "./common";
@@ -36,6 +37,10 @@ export const siteSettings = pgTable(
       .$type<HomeSectionLayout[]>()
       .default(sql`'[]'::jsonb`)
       .notNull(),
+    groupSections: jsonb("group_sections")
+      .$type<GroupSectionLayout[]>()
+      .default(sql`'[]'::jsonb`)
+      .notNull(),
     updatedById: text("updated_by_id").references(() => users.id, { onDelete: "set null" }),
     updatedAt: timestamp("updated_at", { withTimezone: true })
       .defaultNow()
@@ -46,6 +51,7 @@ export const siteSettings = pgTable(
     check("site_settings_single_row", sql`${t.id} = 1`),
     check("site_settings_social_links", sql`jsonb_typeof(${t.socialLinks}) = 'array'`),
     check("site_settings_home_sections", sql`jsonb_typeof(${t.homeSections}) = 'array'`),
+    check("site_settings_group_sections", sql`jsonb_typeof(${t.groupSections}) = 'array'`),
     check(
       "site_settings_hero_video_url",
       sql`${t.heroVideoUrl} is null or ${t.heroVideoUrl} ~ '^https://[^\\s]+$'`,

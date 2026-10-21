@@ -42,7 +42,7 @@ describe("base seed", () => {
   it("creates page slots without inventing their text, and an empty settings row", async () => {
     await seedBase(db);
 
-    expect(await db.select().from(pageContents)).toHaveLength(9);
+    expect(await db.select().from(pageContents)).toHaveLength(16);
     expect(await db.select().from(pageContentTranslations)).toEqual([]);
     const [settings] = await db.select().from(siteSettings);
     expect(settings).toMatchObject({ companyName: null, contactEmail: null, contactPhone: null });

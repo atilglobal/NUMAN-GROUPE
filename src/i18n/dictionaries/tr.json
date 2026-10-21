@@ -149,6 +149,145 @@
     "exploreExpertises": "Uzmanlık alanlarını görün",
     "exploreProjects": "Projeleri görün"
   },
+  "group": {
+    "navLabel": "Grup bölümleri",
+    "eyebrow": "Grup",
+    "officialName": "Numan Groupe International",
+    "lead": "1987’de Antalya, Türkiye Cumhuriyeti’nde kurulmuş uluslararası grup. Proje geliştirme, inşaat ve altyapı yapılandırması; Afrika, Asya ve Avrupa odaklı iş birlikleri.",
+    "discover": "Grubu tanıyın",
+    "contact": "Bizimle iletişime geçin",
+    "snapshotTitle": "Bir bakışta Numan Groupe",
+    "snapshotYearLabel": "1987",
+    "snapshotYear": "Kuruluş yılı",
+    "snapshotSeatLabel": "Antalya, Türkiye",
+    "snapshotSeat": "Merkez",
+    "snapshotFocusLabel": "Afrika, Asya ve Avrupa",
+    "snapshotFocus": "Faaliyet ve uluslararası iş birliği odağı",
+    "snapshotWorkLabel": "Proje geliştirme, inşaat ve altyapı",
+    "snapshotWork": "Temel faaliyetler",
+    "identityTitle": "Biz kimiz?",
+    "historyNav": "Tarihçe",
+    "missionNav": "Misyon",
+    "visionNav": "Vizyon",
+    "sectorsTitle": "Sektörler ve faaliyet alanları",
+    "sectorsLead": "Grubun, projenin niteliğine ve gereken yetkinliklere göre yer alabileceği alanlar — tamamlanmış işler listesi değildir.",
+    "sectorOpen": "Uzmanlığı görün",
+    "sectors": {
+      "institutional": {
+        "title": "Kamu ve yönetim yapıları",
+        "body": "İdari binalar, kurumsal merkezler, hükümet kompleksleri ve diğer kamu yapıları: programa, ön etütlere, koordinasyona ve takibe proje ölçüsünde katılım."
+      },
+      "health": {
+        "title": "Hastane ve sağlık tesisleri",
+        "body": "Hastaneler, sağlık merkezleri ve mediko-sosyal kuruluşlar. Hazırlık; işlevsel, sağlık, ekipman ve işletme gereklerini dikkate almalıdır."
+      },
+      "sports": {
+        "title": "Spor yapıları",
+        "body": "Stadyumlar, spor kompleksleri, salonlar, antrenman merkezleri ve müsabaka tesisleri: kapasite, güvenlik, erişilebilirlik, işletme ve bakım."
+      },
+      "roads": {
+        "title": "Yol ve ulaşım altyapısı",
+        "body": "Yollar, sanat yapıları, dolaşım düzenlemeleri ve hareketlilik ekipmanları. Etütler arazi, çevre ve bakım kısıtlarını içermelidir."
+      },
+      "ports": {
+        "title": "Liman ve lojistik tesisleri",
+        "body": "Liman altyapıları, terminaller, depolama, elleçleme ve lojistik platformları; akış ve yürürlükteki kuralların analiziyle."
+      },
+      "defense": {
+        "title": "Stratejik ve savunma altyapıları",
+        "body": "Yürürlükteki yasalar, izinler ve gizlilik kurallarına uygun olarak, kamu kurumları ve yetkili kuruluşlara yönelik projelerin incelenmesi."
+      },
+      "urban": {
+        "title": "Kentsel gelişim ve yerleşim projeleri",
+        "body": "Konut alanları, kamu donatıları, yakın çevre şebekeleri ve bütünleşik kentsel işlemler; planlama ve uzun vadeli işletme dikkate alınarak."
+      }
+    },
+    "financeTitle": "Proje geliştirme ve finansal yapılandırma",
+    "financeCaveat": "Gerekli incelemeler, ilgili tarafların onayı ve uygulanacak sözleşme ile finansman belgelerinin imzası gerçekleşmeden hiçbir finansman çözümü kazanılmış sayılamaz.",
+    "financeSteps": {
+      "need": {
+        "title": "İhtiyaç ve kapsam analizi",
+        "body": "Hedeflerin ve kapsamın tanımı, ihtiyaçların ön analizi."
+      },
+      "prep": {
+        "title": "Teknik ve finansal hazırlık",
+        "body": "İlk maliyet tahmini, teknik ve finansal teklif, öngörülen takvim."
+      },
+      "risk": {
+        "title": "Risk ve ön maliyet değerlendirmesi",
+        "body": "Risklerin, kısıtların ve belgelenecek varsayımların belirlenmesi."
+      },
+      "partners": {
+        "title": "Teknik ve finansal iş ortağı araştırması",
+        "body": "Özkaynak, borç veya kurumsal finansman ihtiyaçlarının tespiti ve ortak arayışı."
+      },
+      "contract": {
+        "title": "Sözleşme öncesi koordinasyon",
+        "body": "Makamlar, firmalar ve finansörler arasındaki yazışmalar ile ön koşulların takibi."
+      }
+    },
+    "methodTitle": "Çalışma yaklaşımımız",
+    "methodSteps": {
+      "qualify": {
+        "title": "Fırsatın değerlendirilmesi",
+        "body": "Proje sahibinin, ihtiyacın, yerin, sektörün ve kurumsal çerçevenin belirlenmesi."
+      },
+      "collect": {
+        "title": "Bilgi ve belgelerin incelenmesi",
+        "body": "Mevcut belgeler, etütler, izinler ve başlıca kısıtlar."
+      },
+      "analyse": {
+        "title": "Ön analiz",
+        "body": "Teknik, ekonomik, hukuki, çevresel ve operasyonel yönler."
+      },
+      "define": {
+        "title": "Çözümün tanımlanması",
+        "body": "Program, müdahale kapsamı ve uygun teklif."
+      },
+      "structure": {
+        "title": "Sözleşmesel ve finansal yapılandırma",
+        "body": "Sorumluluklar, maliyetler, teminatlar, ödeme koşulları ve finansman mekanizmaları."
+      },
+      "deliver": {
+        "title": "Uygulama ve koordinasyon",
+        "body": "Sözleşme belgelerine uygun yürütme, koordinasyon ve takip."
+      },
+      "close": {
+        "title": "Kontrol ve kapanış",
+        "body": "Teslimler, kabul, çekincelerin giderilmesi ve arşivleme."
+      }
+    },
+    "principlesTitle": "İlkelerimiz ve taahhütlerimiz",
+    "principles": {
+      "rigour": {
+        "title": "Titizlik",
+        "body": "Kararlar ve teklifler doğrulanabilir bilgilere, belgelenmiş analizlere ve tanımlanmış varsayımlara dayanır. İfade edilen ihtiyaçlar, tekliften önce incelenir."
+      },
+      "transparency": {
+        "title": "Şeffaflık",
+        "body": "Sorumluluklar, maliyetler, süreler, riskler ve koşullar; sınırları ve ön koşullarıyla birlikte anlaşılır biçimde sunulur."
+      },
+      "compliance": {
+        "title": "Mevzuata uygunluk",
+        "body": "Yasalar, yönetmelikler, standartlar, izinler ve sözleşmesel yükümlülükler çerçevesinde inceleme. Alınan bilgilerin gizliliği."
+      },
+      "responsibility": {
+        "title": "Sorumluluk",
+        "body": "Taahhütlerin kapsamı açık tanımlanır. Dış onaylara bağlı sonuçlar kazanılmış gibi sunulmaz."
+      },
+      "cooperation": {
+        "title": "İş birliği",
+        "body": "Makamlar, firmalar, danışmanlar, yatırımcılar ve finans kurumları arasında, kararlaştırılan sorumluluklara göre yapılandırılmış koordinasyon."
+      },
+      "continuity": {
+        "title": "Uzun vadeli sürdürülebilirlik",
+        "body": "İşletme ve bakım maliyetleri ile hizmetin sürekliliğini sağlama kapasitesi dikkate alınır."
+      }
+    },
+    "teamLink": "Kadromuzu görün",
+    "closingTitle": "Altyapı projelerinin hazırlanması ve gerçekleştirilmesi için bir ortak.",
+    "closingBody": "Numan Groupe International; doğrulanabilir taahhütlere, açık tanımlanmış sorumluluklara ve yürürlükteki gereklerle uyumlu uygulamaya dayanan mesleki ilişkiler kurmak ister."
+  },
   "contact": {
     "email": "E-posta",
     "phone": "Telefon",

@@ -34,8 +34,15 @@ export async function listPagesForAdmin(db: Database): Promise<PageListRow[]> {
   ]);
   const order: PageKey[] = [
     "about",
+    "history",
     "mission",
+    "vision",
     "approach",
+    "principles",
+    "finance",
+    "regions",
+    "organization",
+    "future",
     "quality",
     "certificates",
     "contact",

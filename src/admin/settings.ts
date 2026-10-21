@@ -1,10 +1,11 @@
 import { eq } from "drizzle-orm";
+import { normalizeGroupLayout } from "../content/group-layout";
 import { normalizeHomeLayout } from "../content/home-layout";
 import type { Database } from "../db/client";
 import { siteSettings, siteSettingTranslations } from "../db/schema";
 import type { Locale } from "../i18n/config";
 import { writeAudit } from "./audit";
-import type { HomeCopyInput, HomeVisualsInput, SiteSettingsInput } from "./validation";
+import type { GroupLayoutInput, HomeCopyInput, HomeVisualsInput, SiteSettingsInput } from "./validation";
 
 type Actor = { id: string; ip?: string | null };
 
@@ -24,6 +25,28 @@ export async function getSiteSettings(db: Database): Promise<SiteSettingsInput &
     heroVideoUrl: row?.heroVideoUrl ?? null,
     homeSections: normalizeHomeLayout(row?.homeSections),
   };
+}
+
+export async function getGroupLayout(db: Database) {
+  const [row] = await db.select({ groupSections: siteSettings.groupSections }).from(siteSettings).where(eq(siteSettings.id, 1));
+  return normalizeGroupLayout(row?.groupSections);
+}
+
+export async function updateGroupLayout(db: Database, actor: Actor, input: GroupLayoutInput): Promise<void> {
+  await db.transaction(async (tx) => {
+    await tx
+      .insert(siteSettings)
+      .values({ id: 1, ...input, updatedById: actor.id })
+      .onConflictDoUpdate({ target: siteSettings.id, set: { ...input, updatedById: actor.id } });
+    await writeAudit(tx, {
+      actorUserId: actor.id,
+      action: "settings.update",
+      entityType: "settings",
+      entityId: "1",
+      metadata: { fields: ["group"] },
+      ip: actor.ip,
+    });
+  });
 }
 
 export async function updateSiteSettings(db: Database, actor: Actor, input: SiteSettingsInput): Promise<void> {

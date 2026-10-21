@@ -35,6 +35,7 @@ import {
 import type { Locale } from "@/i18n/config";
 import { cmsPagePath, sectionPath, type DetailSection, type Section } from "@/i18n/routes";
 import { formatPlace } from "@/lib/place";
+import { normalizeGroupLayout } from "./group-layout";
 import { normalizeHomeLayout } from "./home-layout";
 import { mediaUrl } from "@/media/url";
 import { clampPage, PUBLIC_PAGE_SIZE } from "@/lib/pagination";
@@ -969,6 +970,7 @@ export async function getSiteChrome(
       heroVideoUrl: settings?.heroVideoUrl ?? null,
     },
     homeLayout: normalizeHomeLayout(settings?.homeSections),
+    groupLayout: normalizeGroupLayout(settings?.groupSections),
   };
 }
 

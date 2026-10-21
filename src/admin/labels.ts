@@ -54,9 +54,16 @@ export function describeAction(action: string, entityType: string): string {
 
 /** Untranslated pages are labelled by their key in coverage rows. */
 export const pageKeyLabels: Record<string, string> = {
-  about: "Hakkımızda",
-  mission: "Misyon ve vizyon",
-  approach: "Çalışma yaklaşımı",
+  about: "Grup — karşılama ve biz kimiz",
+  history: "Grup — tarihçe ve konumlandırma",
+  mission: "Grup — misyon",
+  vision: "Grup — vizyon",
+  approach: "Grup — çalışma yaklaşımı",
+  principles: "Grup — ilkeler ve taahhütler",
+  finance: "Grup — proje geliştirme ve finansman",
+  regions: "Grup — uluslararası faaliyetler",
+  organization: "Grup — organizasyon",
+  future: "Grup — gelecek yönelimleri",
   quality: "Kalite ve güvenlik",
   certificates: "Sertifikalar",
   contact: "İletişim sayfası",

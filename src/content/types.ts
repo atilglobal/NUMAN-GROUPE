@@ -168,6 +168,7 @@ export type SiteChrome = {
   copy: HomeCopyView | null;
   homeVisuals: HomeVisuals;
   homeLayout: import("./home-layout").HomeSectionLayout[];
+  groupLayout: import("./group-layout").GroupSectionLayout[];
 };
 
 export type AboutSectionView = {

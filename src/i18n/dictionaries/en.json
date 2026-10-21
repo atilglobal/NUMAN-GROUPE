@@ -149,6 +149,145 @@
     "exploreExpertises": "See our expertise",
     "exploreProjects": "See our projects"
   },
+  "group": {
+    "navLabel": "Group sections",
+    "eyebrow": "The Group",
+    "officialName": "Numan Groupe International",
+    "lead": "An international group founded in 1987 in Antalya, Republic of Türkiye. Project development, construction and infrastructure structuring, with cooperation focused on Africa, Asia and Europe.",
+    "discover": "Discover the Group",
+    "contact": "Contact us",
+    "snapshotTitle": "Numan Groupe at a glance",
+    "snapshotYearLabel": "1987",
+    "snapshotYear": "Year of foundation",
+    "snapshotSeatLabel": "Antalya, Türkiye",
+    "snapshotSeat": "Registered office",
+    "snapshotFocusLabel": "Africa, Asia and Europe",
+    "snapshotFocus": "International activity and cooperation",
+    "snapshotWorkLabel": "Project development, construction and infrastructure",
+    "snapshotWork": "Core activities",
+    "identityTitle": "Who we are",
+    "historyNav": "History",
+    "missionNav": "Mission",
+    "visionNav": "Vision",
+    "sectorsTitle": "Sectors and fields of work",
+    "sectorsLead": "Fields in which the Group may take part, depending on the project and the skills required — not a list of completed works.",
+    "sectorOpen": "See this expertise",
+    "sectors": {
+      "institutional": {
+        "title": "Institutional and administrative buildings",
+        "body": "Administrative buildings, institutional headquarters, government complexes and other public buildings: brief, preliminary studies, coordination and follow-up, as the project requires."
+      },
+      "health": {
+        "title": "Hospital and healthcare facilities",
+        "body": "Hospitals, health centres and medico-social establishments. Preparation must take account of functional, sanitary, equipment and operating requirements."
+      },
+      "sports": {
+        "title": "Sports facilities",
+        "body": "Stadiums, sports complexes, halls, training centres and competition venues: capacity, safety, accessibility, operations and maintenance."
+      },
+      "roads": {
+        "title": "Roads and transport infrastructure",
+        "body": "Roads, engineering structures, traffic works and mobility equipment. Studies must include land, environmental and maintenance constraints."
+      },
+      "ports": {
+        "title": "Ports and logistics platforms",
+        "body": "Port infrastructure, terminals, storage, handling and logistics platforms, with analysis of flows and applicable rules."
+      },
+      "defense": {
+        "title": "Strategic and defence infrastructure",
+        "body": "Subject to applicable laws, authorisations and confidentiality rules, review of projects for public institutions and competent bodies."
+      },
+      "urban": {
+        "title": "Urban development and territorial projects",
+        "body": "Residential areas, public facilities, local networks and integrated urban operations, taking planning and long-term operations into account."
+      }
+    },
+    "financeTitle": "Project development and financial structuring",
+    "financeCaveat": "No financing solution can be treated as secured before the necessary checks, the agreement of the parties concerned and the signature of the applicable contractual and financial documents.",
+    "financeSteps": {
+      "need": {
+        "title": "Needs and scope analysis",
+        "body": "Definition of objectives and scope, and a preliminary analysis of needs."
+      },
+      "prep": {
+        "title": "Technical and financial preparation",
+        "body": "Initial cost estimate, technical and financial proposal, indicative timetable."
+      },
+      "risk": {
+        "title": "Risk and preliminary cost review",
+        "body": "Identification of risks, constraints and assumptions to be documented."
+      },
+      "partners": {
+        "title": "Search for technical and financial partners",
+        "body": "Identifying needs for equity, debt or institutional financing, and seeking partners."
+      },
+      "contract": {
+        "title": "Coordination before contracting",
+        "body": "Exchanges between authorities, companies and financiers, and follow-up of conditions precedent."
+      }
+    },
+    "methodTitle": "How we work",
+    "methodSteps": {
+      "qualify": {
+        "title": "Qualifying the opportunity",
+        "body": "Identifying the owner, the need, the site, the sector and the institutional framework."
+      },
+      "collect": {
+        "title": "Reviewing information",
+        "body": "Available documents, existing studies, authorisations and main constraints."
+      },
+      "analyse": {
+        "title": "Preliminary analysis",
+        "body": "Technical, economic, legal, environmental and operational aspects."
+      },
+      "define": {
+        "title": "Defining the solution",
+        "body": "Programme, scope of intervention and a tailored proposal."
+      },
+      "structure": {
+        "title": "Contractual and financial structuring",
+        "body": "Responsibilities, costs, guarantees, payment terms and financing mechanisms."
+      },
+      "deliver": {
+        "title": "Delivery and coordination",
+        "body": "Execution, coordination and follow-up in line with the contractual documents."
+      },
+      "close": {
+        "title": "Control and close-out",
+        "body": "Deliverables, reception, treatment of reservations and archiving."
+      }
+    },
+    "principlesTitle": "Our principles and commitments",
+    "principles": {
+      "rigour": {
+        "title": "Rigour",
+        "body": "Decisions and proposals based on verifiable information, documented analysis and identified assumptions. Stated needs are examined before any offer."
+      },
+      "transparency": {
+        "title": "Transparency",
+        "body": "Responsibilities, costs, time, risks and conditions presented clearly, with their limits and conditions precedent."
+      },
+      "compliance": {
+        "title": "Compliance",
+        "body": "Review against laws, regulations, standards, authorisations and contractual obligations. Confidentiality of information received."
+      },
+      "responsibility": {
+        "title": "Responsibility",
+        "body": "The scope of commitments is defined clearly. Results that depend on external approvals are not presented as secured."
+      },
+      "cooperation": {
+        "title": "Cooperation",
+        "body": "Structured coordination between authorities, companies, consultants, investors and financial institutions, according to agreed responsibilities."
+      },
+      "continuity": {
+        "title": "Long-term continuity",
+        "body": "Account is taken of operating and maintenance costs and of the ability to keep the service running."
+      }
+    },
+    "teamLink": "See the team",
+    "closingTitle": "A partner for preparing and delivering infrastructure projects.",
+    "closingBody": "Numan Groupe International seeks professional relationships based on verifiable commitments, clearly defined responsibilities and delivery that meets applicable requirements."
+  },
   "contact": {
     "email": "Email",
     "phone": "Phone",
