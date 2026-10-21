@@ -6,7 +6,7 @@ type TeamCardProps = {
   member: TeamMemberView;
   demoLabel: string;
   portraitPendingLabel: string;
-  bioToggleLabel: string;
+  bioToggleLabel?: string;
 };
 
 function initials(fullName: string): string {
@@ -16,10 +16,8 @@ function initials(fullName: string): string {
   return (first + last).toUpperCase();
 }
 
-export function TeamCard({ member, demoLabel, portraitPendingLabel, bioToggleLabel }: TeamCardProps) {
-  const badge = member.isDemo ? (
-    <DemoBadge label={demoLabel} className="absolute right-3 top-3" />
-  ) : null;
+export function TeamCard({ member, demoLabel, portraitPendingLabel }: TeamCardProps) {
+  const badge = member.isDemo ? <DemoBadge label={demoLabel} className="absolute right-3 top-3" /> : null;
 
   return (
     <article className="relative flex h-full flex-col bg-white text-center">
@@ -40,26 +38,17 @@ export function TeamCard({ member, demoLabel, portraitPendingLabel, bioToggleLab
             >
               {initials(member.fullName)}
             </span>
-            <span className="text-xs uppercase tracking-[0.16em] text-muted">
-              {portraitPendingLabel}
-            </span>
+            <span className="text-xs uppercase tracking-[0.16em] text-muted">{portraitPendingLabel}</span>
           </div>
           {badge}
         </div>
       )}
-      <div className="flex flex-1 flex-col items-center px-6 py-6">
-        <h3 className="font-serif text-xl text-navy-950">{member.fullName}</h3>
-        <p className="mt-1 text-sm font-medium text-gold-700">{member.roleTitle}</p>
-        {member.bio ? (
-          <details className="mt-3 w-full max-w-xs text-left">
-            <summary className="cursor-pointer text-sm font-medium text-navy-900 underline decoration-gold-500 underline-offset-4">
-              {bioToggleLabel}
-            </summary>
-            <p className="mt-2 text-sm leading-relaxed text-muted">{member.bio}</p>
-          </details>
-        ) : null}
+      <div className="flex flex-1 flex-col px-5 py-5 text-left">
+        <h3 className="break-words font-serif text-xl text-navy-950">{member.fullName}</h3>
+        <p className="mt-1 break-words text-sm font-medium text-gold-700">{member.roleTitle}</p>
+        {member.bio ? <p className="mt-3 text-sm leading-relaxed text-muted">{member.bio}</p> : null}
         {member.links.length > 0 ? (
-          <ul className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm">
+          <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">
             {member.links.map((link) => (
               <li key={link.url}>
                 <a

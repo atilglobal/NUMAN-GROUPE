@@ -76,7 +76,8 @@
     "relatedProjects": "İlgili projeler",
     "contactCta": "Projenizi konuşalım",
     "scopePending": "Bu uzmanlık alanının ayrıntısı yakında tamamlanacak.",
-    "noProjects": "Bu uzmanlık alanına bağlı yayımlanmış proje henüz yok."
+    "noProjects": "Bu uzmanlık alanına bağlı yayımlanmış proje henüz yok.",
+    "scopeTitle": "Kapsam"
   },
   "projects": {
     "eyebrow": "Projelerimiz",
@@ -131,7 +132,8 @@
     "pageOf": "Sayfa {page} / {total}",
     "related": "Diğer ziyaretler",
     "disclaimer": "Ziyaret ziyarettir: ittifak, sipariş veya onay değildir.",
-    "purpose": "Ziyaretin amacı"
+    "purpose": "Ziyaretin amacı",
+    "readMore": "Devamını oku"
   },
   "team": {
     "eyebrow": "Kadromuz",
@@ -140,14 +142,29 @@
     "viewAll": "Kadromuzu tanıyın",
     "empty": "Kadro tanıtımı yakında yayımlanacak.",
     "portraitPending": "Fotoğraf yakında",
-    "bioToggle": "Biyografi"
+    "bioToggle": "Biyografi",
+    "contactCta": "Ekiple iletişime geçin"
+  },
+  "pages": {
+    "exploreExpertises": "Uzmanlık alanlarını görün",
+    "exploreProjects": "Projeleri görün"
   },
   "contact": {
     "email": "E-posta",
     "phone": "Telefon",
     "address": "Adres",
     "whatsapp": "WhatsApp",
-    "social": "Sosyal medya"
+    "social": "Sosyal medya",
+    "detailsTitle": "İletişim bilgileri",
+    "formTitle": "Mesaj gönderin",
+    "nextTitle": "Gönderimden sonra",
+    "nextLead": "Bu adımlar bir talebin nasıl ele alındığını anlatır. Burada yanıt süresi belirtilmez.",
+    "nextShareTitle": "Talebin paylaşılması",
+    "nextShareBody": "İhtiyacı, projeyi veya ele alınacak soruyu yazarsınız.",
+    "nextReviewTitle": "İhtiyacın okunması",
+    "nextReviewBody": "Gönderilen bilgiler, taahhüt olmaksızın çerçeveyi anlamak için okunur.",
+    "nextMeetTitle": "Görüşmenin planlanması",
+    "nextMeetBody": "Takip mümkünse bir görüşme önerilir. Bu bir teklif veya garantili danışmanlık değildir."
   },
   "callToAction": {
     "title": "Bir sonraki büyük projenizi birlikte inşa edelim.",
@@ -227,6 +244,9 @@
     "privacy": "Kişisel verilerin işlenmesine ilişkin metni okudum ve bu talebin kaydedilmesini kabul ediyorum.",
     "privacyLink": "Gizlilik",
     "preference": "Bu talep hakkında yeniden iletişime geçebilirsiniz (isteğe bağlı).",
+    "groupIdentity": "Kimlik",
+    "groupContact": "İletişim",
+    "groupRequest": "Talep",
     "submit": "Gönder",
     "pending": "Gönderiliyor…",
     "success": "Talebiniz kaydedildi. Belirttiğiniz adrese dönüş yapılacaktır.",

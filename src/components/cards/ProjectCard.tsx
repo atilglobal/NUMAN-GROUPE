@@ -33,7 +33,7 @@ export function ProjectCard({ project, href, statusLabel, demoLabel, viewLabel }
             {project.title}
           </Link>
         </h3>
-        {project.summary ? <p className="mt-2 text-sm text-ink/80">{project.summary}</p> : null}
+        {project.summary ? <p className="mt-2 line-clamp-3 text-sm text-ink/80">{project.summary}</p> : null}
         <p className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-navy-950">
           {viewLabel}
           <span

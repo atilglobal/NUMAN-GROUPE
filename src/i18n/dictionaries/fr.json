@@ -76,7 +76,8 @@
     "relatedProjects": "Projets associés",
     "contactCta": "Parler de votre projet",
     "scopePending": "Le détail de cette expertise sera complété prochainement.",
-    "noProjects": "Aucun projet publié n'est encore associé à cette expertise."
+    "noProjects": "Aucun projet publié n'est encore associé à cette expertise.",
+    "scopeTitle": "Périmètre"
   },
   "projects": {
     "eyebrow": "Nos projets",
@@ -131,7 +132,8 @@
     "pageOf": "Page {page} sur {total}",
     "related": "Autres visites",
     "disclaimer": "Une visite reste une visite : ce n'est ni une alliance, ni une commande, ni une homologation.",
-    "purpose": "Objet de la visite"
+    "purpose": "Objet de la visite",
+    "readMore": "Lire la suite"
   },
   "team": {
     "eyebrow": "Notre équipe",
@@ -140,14 +142,29 @@
     "viewAll": "Découvrir l'équipe",
     "empty": "La présentation de l'équipe sera publiée prochainement.",
     "portraitPending": "Portrait à venir",
-    "bioToggle": "Biographie"
+    "bioToggle": "Biographie",
+    "contactCta": "Contacter l'équipe"
+  },
+  "pages": {
+    "exploreExpertises": "Voir nos expertises",
+    "exploreProjects": "Voir nos projets"
   },
   "contact": {
     "email": "E-mail",
     "phone": "Téléphone",
     "address": "Adresse",
     "whatsapp": "WhatsApp",
-    "social": "Réseaux"
+    "social": "Réseaux",
+    "detailsTitle": "Coordonnées",
+    "formTitle": "Envoyer un message",
+    "nextTitle": "Après l'envoi",
+    "nextLead": "Ces étapes décrivent le traitement d'une demande. Aucun délai de réponse n'est annoncé ici.",
+    "nextShareTitle": "Partage de la demande",
+    "nextShareBody": "Vous décrivez le besoin, le projet ou la question à traiter.",
+    "nextReviewTitle": "Lecture du besoin",
+    "nextReviewBody": "Les informations transmises sont lues pour comprendre le cadre, sans engagement.",
+    "nextMeetTitle": "Organisation d'un échange",
+    "nextMeetBody": "Si un suivi est possible, un échange est proposé. Ce n'est ni une offre, ni une consultation garantie."
   },
   "callToAction": {
     "title": "Construisons votre prochain grand projet.",
@@ -227,6 +244,9 @@
     "privacy": "J'ai lu les informations sur le traitement des données et j'accepte l'enregistrement de cette demande.",
     "privacyLink": "Confidentialité",
     "preference": "Vous pouvez me recontacter au sujet de cette demande (facultatif).",
+    "groupIdentity": "Identité",
+    "groupContact": "Coordonnées",
+    "groupRequest": "Demande",
     "submit": "Envoyer",
     "pending": "Envoi en cours…",
     "success": "Votre demande a bien été enregistrée. Nous y répondrons à l'adresse indiquée.",

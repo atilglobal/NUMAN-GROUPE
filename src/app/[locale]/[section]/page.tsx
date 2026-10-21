@@ -28,7 +28,7 @@ import {
 } from "@/i18n/routes";
 import { publicPageMetadata } from "@/lib/seo";
 import { hasRichText } from "@/content/rich-text";
-import { AboutSections } from "@/components/about/AboutSections";
+import { AboutPage } from "@/components/about/AboutPage";
 import { ContactPage } from "@/components/contact/ContactPage";
 import { ExpertiseList } from "@/components/expertises/ExpertiseList";
 import { PageAlternates } from "@/components/i18n/alternates";
@@ -195,9 +195,18 @@ async function SectionBody({
     );
   }
 
-  const aboutSections = section === "about" ? await getAboutSections(locale) : [];
-  const legalGap =
-    (section === "privacy" || section === "legal" || section === "cookies") && !hasRichText(page?.body);
+  if (section === "about") {
+    const aboutSections = await getAboutSections(locale);
+    return (
+      <>
+        <PageAlternates alternates={sectionAlternates("about")} />
+        <AboutPage locale={locale} dict={dict} page={page} sections={aboutSections} />
+      </>
+    );
+  }
+
+  const legal = section === "privacy" || section === "legal" || section === "cookies";
+  const legalGap = legal && !hasRichText(page?.body);
 
   return (
     <PendingPage
@@ -208,12 +217,11 @@ async function SectionBody({
       lead={legalGap ? undefined : page ? page.summary : dict.placeholder.title}
       body={legalGap ? null : page?.body}
       message={legalGap ? dict.placeholder.legalBody : dict.placeholder.body}
+      legal={legal}
       actions={[
         { href: homePath(locale), label: dict.placeholder.backHome },
         { href: sectionPath(locale, "contact"), label: dict.nav.contact },
       ]}
-    >
-      {section === "about" ? <AboutSections sections={aboutSections} /> : null}
-    </PendingPage>
+    />
   );
 }

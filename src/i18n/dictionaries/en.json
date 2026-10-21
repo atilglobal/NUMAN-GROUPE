@@ -76,7 +76,8 @@
     "relatedProjects": "Related projects",
     "contactCta": "Talk about your project",
     "scopePending": "The detail of this expertise will be completed soon.",
-    "noProjects": "No published project is linked to this expertise yet."
+    "noProjects": "No published project is linked to this expertise yet.",
+    "scopeTitle": "Scope"
   },
   "projects": {
     "eyebrow": "Our projects",
@@ -131,7 +132,8 @@
     "pageOf": "Page {page} of {total}",
     "related": "Other visits",
     "disclaimer": "A visit remains a visit: it is not an alliance, a commission or an endorsement.",
-    "purpose": "Purpose of the visit"
+    "purpose": "Purpose of the visit",
+    "readMore": "Read more"
   },
   "team": {
     "eyebrow": "Our team",
@@ -140,14 +142,29 @@
     "viewAll": "Meet the team",
     "empty": "The team presentation will be published soon.",
     "portraitPending": "Portrait coming soon",
-    "bioToggle": "Biography"
+    "bioToggle": "Biography",
+    "contactCta": "Contact the team"
+  },
+  "pages": {
+    "exploreExpertises": "See our expertise",
+    "exploreProjects": "See our projects"
   },
   "contact": {
     "email": "Email",
     "phone": "Phone",
     "address": "Address",
     "whatsapp": "WhatsApp",
-    "social": "Social"
+    "social": "Social",
+    "detailsTitle": "Contact details",
+    "formTitle": "Send a message",
+    "nextTitle": "After you send a message",
+    "nextLead": "These steps describe how a request is handled. No response time is stated here.",
+    "nextShareTitle": "Sharing the request",
+    "nextShareBody": "You describe the need, the project or the question to be addressed.",
+    "nextReviewTitle": "Reading the brief",
+    "nextReviewBody": "The information received is read to understand the context, without commitment.",
+    "nextMeetTitle": "Arranging a conversation",
+    "nextMeetBody": "If a follow-up is possible, a conversation is proposed. This is neither an offer nor a guaranteed consultation."
   },
   "callToAction": {
     "title": "Let's build your next major project.",
@@ -227,6 +244,9 @@
     "privacy": "I have read the information on data processing and I agree to this request being stored.",
     "privacyLink": "Privacy",
     "preference": "You may contact me again about this request (optional).",
+    "groupIdentity": "Identity",
+    "groupContact": "Contact details",
+    "groupRequest": "Request",
     "submit": "Send",
     "pending": "Sending…",
     "success": "Your request has been recorded. We will reply to the address you provided.",

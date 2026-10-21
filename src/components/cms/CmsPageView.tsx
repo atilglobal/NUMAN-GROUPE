@@ -3,12 +3,14 @@ import { getExpertises, getProjects, getTeam, getVisits } from "@/content/servic
 import { RichText } from "@/content/rich-text";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
-import { detailPath, sectionPath } from "@/i18n/routes";
+import { detailPath, homePath, sectionPath } from "@/i18n/routes";
 import { ExpertiseCard } from "@/components/cards/ExpertiseCard";
 import { ProjectCard } from "@/components/cards/ProjectCard";
 import { TeamCard } from "@/components/cards/TeamCard";
 import { VisitCard } from "@/components/cards/VisitCard";
-import { Button } from "@/components/ui/Button";
+import { PageCta } from "@/components/page/PageCta";
+import { PageHero } from "@/components/page/PageHero";
+import { Prose } from "@/components/page/Prose";
 import { Container } from "@/components/ui/Container";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -31,10 +33,21 @@ export async function CmsPageView({
 
   return (
     <article>
-      <Container className="py-12 lg:py-16">
-        <h1 className="font-serif text-4xl text-navy-950">{page.title}</h1>
-        {page.summary ? <p className="mt-4 max-w-2xl text-lg text-muted">{page.summary}</p> : null}
-      </Container>
+      <PageHero
+        breadcrumbs={[{ label: dict.nav.home, href: homePath(locale) }, { label: page.title }]}
+        breadcrumbsLabel={dict.a11y.breadcrumbs}
+        title={page.title}
+        lead={page.summary}
+      />
+      {page.cover ? (
+        <MediaFrame
+          image={page.cover}
+          profile="pageBanner"
+          sizes="100vw"
+          preload
+          className="aspect-[21/9] w-full"
+        />
+      ) : null}
       {page.layout.map((block) => {
         const copy = page.copy[block.id] ?? {};
         const localeImageId = block.imageByLocale?.[locale];
@@ -64,9 +77,9 @@ export async function CmsPageView({
           return (
             <Container key={block.id} className="py-10">
               {copy.title ? <h2 className="font-serif text-3xl text-navy-950">{copy.title}</h2> : null}
-              <div className="mt-4 max-w-3xl">
-                <RichText source={copy.body ?? ""} />
-              </div>
+              <Prose className={copy.title ? "mt-4" : undefined}>
+                <RichText source={copy.body ?? ""} className="space-y-4" />
+              </Prose>
             </Container>
           );
         }
@@ -76,9 +89,9 @@ export async function CmsPageView({
               <MediaFrame image={resolved} profile="pageBanner" sizes="(min-width: 1024px) 50vw, 100vw" className="aspect-[16/9]" />
               <div>
                 {copy.title ? <h2 className="font-serif text-3xl text-navy-950">{copy.title}</h2> : null}
-                <div className="mt-4 text-muted">
-                  <RichText source={copy.body ?? ""} />
-                </div>
+                <Prose className="mt-4">
+                  <RichText source={copy.body ?? ""} className="space-y-4" />
+                </Prose>
               </div>
             </Container>
           );
@@ -168,7 +181,6 @@ export async function CmsPageView({
                       member={item}
                       demoLabel={dict.demo.badge}
                       portraitPendingLabel={dict.team.portraitPending}
-                      bioToggleLabel={dict.team.bioToggle}
                     />
                   </li>
                 ))}
@@ -177,17 +189,13 @@ export async function CmsPageView({
           );
         }
         return (
-          <Container key={block.id} className="py-16">
-            <div className="bg-navy-950 p-8 text-paper">
-              <h2 className="font-serif text-3xl">{copy.title || dict.callToAction.title}</h2>
-              <p className="mt-3 text-paper/80">{copy.body || dict.callToAction.description}</p>
-              <div className="mt-6">
-                <Button href={copy.ctaHref || sectionPath(locale, "contact")} variant="secondary">
-                  {copy.ctaLabel || dict.callToAction.button}
-                </Button>
-              </div>
-            </div>
-          </Container>
+          <PageCta
+            key={block.id}
+            title={copy.title || dict.callToAction.title}
+            description={copy.body || dict.callToAction.description}
+            href={copy.ctaHref || sectionPath(locale, "contact")}
+            label={copy.ctaLabel || dict.callToAction.button}
+          />
         );
       })}
     </article>

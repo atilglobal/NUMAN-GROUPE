@@ -16,6 +16,7 @@ export const uiGroupLabels: Record<string, string> = {
   visits: "Ziyaret listesi ve filtreler",
   team: "Kadro arayüzü",
   contact: "İletişim etiketleri",
+  pages: "İç sayfa bağlantıları",
   callToAction: "Çağrı metinleri",
   footer: "Alt bilgi",
   demo: "Demo uyarıları",

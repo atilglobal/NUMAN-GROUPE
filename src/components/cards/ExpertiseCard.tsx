@@ -8,9 +8,10 @@ type ExpertiseCardProps = {
   expertise: ExpertiseView;
   href: string;
   demoImageLabel: string;
+  openLabel?: string;
 };
 
-export function ExpertiseCard({ expertise, href, demoImageLabel }: ExpertiseCardProps) {
+export function ExpertiseCard({ expertise, href, demoImageLabel, openLabel }: ExpertiseCardProps) {
   return (
     <article className="group relative flex h-full flex-col bg-white shadow-[0_1px_0_rgb(0_0_0/0.04)]">
       <MediaFrame
@@ -30,7 +31,8 @@ export function ExpertiseCard({ expertise, href, demoImageLabel }: ExpertiseCard
               {expertise.name}
             </Link>
           </h3>
-          <p className="mt-2 text-sm leading-relaxed text-muted">{expertise.summary}</p>
+          {expertise.summary ? <p className="mt-2 text-sm leading-relaxed text-muted">{expertise.summary}</p> : null}
+          {openLabel ? <p className="mt-3 text-sm font-medium text-navy-950">{openLabel}</p> : null}
         </div>
         <span
           aria-hidden="true"
