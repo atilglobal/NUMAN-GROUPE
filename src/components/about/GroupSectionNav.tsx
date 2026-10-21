@@ -21,7 +21,7 @@ export function GroupSectionNav({ items, label }: { items: GroupNavItem[]; label
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
         if (visible?.target.id) setCurrent(visible.target.id);
       },
-      { rootMargin: "-30% 0px -60% 0px", threshold: [0.1, 0.25] },
+      { rootMargin: "-28% 0px -62% 0px", threshold: [0.08, 0.2] },
     );
     for (const node of nodes) observer.observe(node);
     return () => observer.disconnect();
@@ -30,34 +30,36 @@ export function GroupSectionNav({ items, label }: { items: GroupNavItem[]; label
   if (items.length === 0) return null;
 
   return (
-    <nav
-      aria-label={label}
-      className="sticky top-[var(--header-height)] z-40 border-b border-line/80 bg-paper/95 backdrop-blur-sm motion-reduce:backdrop-blur-none"
-    >
-      <div className="mx-auto flex w-full max-w-site items-center px-5 sm:px-8 lg:px-10">
+    <nav aria-label={label} className="sticky top-[var(--header-height)] z-40 border-b border-line bg-paper">
+      <div className="mx-auto w-full max-w-site px-5 sm:px-8 lg:px-10">
         <div className="lg:hidden">
           <button
             type="button"
-            className="flex min-h-11 items-center py-2 text-sm font-medium text-navy-950"
+            className="flex min-h-11 w-full items-center justify-between py-2 text-sm font-medium text-navy-950"
             aria-expanded={open}
             onClick={() => setOpen((value) => !value)}
           >
-            {items.find((item) => item.id === current)?.label ?? items[0]?.label}
+            <span>{items.find((item) => item.id === current)?.label ?? items[0]?.label}</span>
+            <span aria-hidden="true" className="text-gold-700">
+              {open ? "–" : "+"}
+            </span>
           </button>
         </div>
         <ul
           className={cn(
-            "flex w-full flex-col gap-1 py-2 lg:flex-row lg:flex-wrap lg:items-center lg:gap-x-4 lg:gap-y-1 lg:py-3",
+            "flex flex-col gap-1 pb-2 lg:flex-row lg:flex-nowrap lg:items-center lg:gap-0 lg:overflow-x-auto lg:py-0",
             open ? "flex" : "hidden lg:flex",
           )}
         >
           {items.map((item) => (
-            <li key={item.id}>
+            <li key={item.id} className="shrink-0">
               <a
                 href={`#${item.id}`}
                 className={cn(
-                  "inline-flex min-h-10 items-center text-sm underline-offset-4 hover:underline",
-                  current === item.id ? "font-medium text-navy-950" : "text-muted hover:text-navy-950",
+                  "inline-flex min-h-11 items-center border-b-2 px-0 text-[0.8rem] tracking-[0.01em] lg:px-3",
+                  current === item.id
+                    ? "border-gold-500 font-medium text-navy-950"
+                    : "border-transparent text-muted hover:text-navy-950",
                 )}
                 onClick={() => setOpen(false)}
               >
