@@ -125,6 +125,11 @@ describe("database guarantees", () => {
     expect(row.countryCode).toBeNull();
   });
 
+  it("accepts the planned showcase status", async () => {
+    const [row] = await db.insert(projects).values({ status: "planned" }).returning({ status: projects.status });
+    expect(row.status).toBe("planned");
+  });
+
   it("rejects a second inquiry with the same idempotency key", async () => {
     const key = crypto.randomUUID();
     const row = {

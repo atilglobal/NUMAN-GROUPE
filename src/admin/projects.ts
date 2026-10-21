@@ -1,8 +1,6 @@
 import { and, asc, count, desc, eq, ilike, inArray, or } from "drizzle-orm";
 import type { Database } from "../db/client";
 import {
-  expertises,
-  expertiseTranslations,
   projectGallery,
   projects,
   projectTranslations,
@@ -38,8 +36,6 @@ export type ProjectListRow = {
   status: ProjectStatus;
   isFeatured: boolean;
   isDemo: boolean;
-  expertiseLabel: string | null;
-  countryCode: string | null;
   states: Record<Locale, PublicationStatus | "missing">;
 };
 
@@ -52,12 +48,9 @@ export type ProjectListResult = {
 
 export async function listProjectsForAdmin(
   db: Database,
-  filters: { q?: string; status?: ProjectStatus; expertiseId?: string; page: number },
+  filters: { q?: string; status?: ProjectStatus; page: number },
 ): Promise<ProjectListResult> {
-  const conditions = [
-    filters.status ? eq(projects.status, filters.status) : undefined,
-    filters.expertiseId ? eq(projects.expertiseId, filters.expertiseId) : undefined,
-  ];
+  const conditions = [filters.status ? eq(projects.status, filters.status) : undefined];
 
   if (filters.q) {
     const matches = await db
@@ -83,8 +76,6 @@ export async function listProjectsForAdmin(
       status: projects.status,
       isFeatured: projects.isFeatured,
       isDemo: projects.isDemo,
-      countryCode: projects.countryCode,
-      expertiseId: projects.expertiseId,
     })
     .from(projects)
     .where(where)
@@ -94,24 +85,15 @@ export async function listProjectsForAdmin(
 
   if (roots.length === 0) return { rows: [], total, page, pageSize: ADMIN_PAGE_SIZE };
 
-  const [translations, expertiseNames] = await Promise.all([
-    db
-      .select({
-        projectId: projectTranslations.projectId,
-        locale: projectTranslations.locale,
-        status: projectTranslations.status,
-        title: projectTranslations.title,
-      })
-      .from(projectTranslations)
-      .where(inArray(projectTranslations.projectId, roots.map((r) => r.id))),
-    db
-      .select({ id: expertises.id, name: expertiseTranslations.name })
-      .from(expertises)
-      .leftJoin(
-        expertiseTranslations,
-        and(eq(expertiseTranslations.expertiseId, expertises.id), eq(expertiseTranslations.locale, "fr")),
-      ),
-  ]);
+  const translations = await db
+    .select({
+      projectId: projectTranslations.projectId,
+      locale: projectTranslations.locale,
+      status: projectTranslations.status,
+      title: projectTranslations.title,
+    })
+    .from(projectTranslations)
+    .where(inArray(projectTranslations.projectId, roots.map((r) => r.id)));
 
   const rows = roots.map((root) => {
     const own = translations.filter((row) => row.projectId === root.id);
@@ -125,8 +107,6 @@ export async function listProjectsForAdmin(
       status: root.status,
       isFeatured: root.isFeatured,
       isDemo: root.isDemo,
-      countryCode: root.countryCode,
-      expertiseLabel: expertiseNames.find((row) => row.id === root.expertiseId)?.name ?? null,
       states,
     };
   });
@@ -177,10 +157,8 @@ export async function getProjectForEditor(db: Database, id: string): Promise<Pro
       slug: row.slug,
       summary: row.summary,
       body: row.body,
-      city: row.city,
       seoTitle: row.seoTitle,
       seoDescription: row.seoDescription,
-      technicalDetails: row.technicalDetails,
       status: row.status,
       publishedAt: row.publishedAt,
       updatedAt: row.updatedAt,
@@ -206,12 +184,6 @@ export async function createProject(
         .insert(projects)
         .values({
           status: input.root.status,
-          expertiseId: input.root.expertiseId,
-          countryCode: input.root.countryCode,
-          startedOn: input.root.startedOn,
-          completedOn: input.root.completedOn,
-          videoUrl: input.root.videoUrl,
-          progressPercent: input.root.progressPercent,
           isFeatured: input.root.isFeatured,
           sortOrder: input.root.sortOrder,
           coverAssetId: input.root.coverAssetId,
@@ -245,12 +217,6 @@ export async function updateProjectRoot(db: Database, actor: Actor, id: string, 
       .update(projects)
       .set({
         status: input.status,
-        expertiseId: input.expertiseId,
-        countryCode: input.countryCode,
-        startedOn: input.startedOn,
-        completedOn: input.completedOn,
-        videoUrl: input.videoUrl,
-        progressPercent: input.progressPercent,
         isFeatured: input.isFeatured,
         sortOrder: input.sortOrder,
         coverAssetId: input.coverAssetId,
@@ -328,20 +294,4 @@ export async function deleteProject(db: Database, actor: Actor, id: string): Pro
       ip: actor.ip,
     });
   });
-}
-
-export async function listExpertiseOptions(db: Database): Promise<{ id: string; label: string }[]> {
-  const rows = await db
-    .select({
-      id: expertises.id,
-      name: expertiseTranslations.name,
-      sortOrder: expertises.sortOrder,
-    })
-    .from(expertises)
-    .leftJoin(
-      expertiseTranslations,
-      and(eq(expertiseTranslations.expertiseId, expertises.id), eq(expertiseTranslations.locale, "fr")),
-    )
-    .orderBy(asc(expertises.sortOrder), asc(expertiseTranslations.name));
-  return rows.map((row) => ({ id: row.id, label: row.name ?? "(adsız uzmanlık)" }));
 }

@@ -81,20 +81,17 @@
   "projects": {
     "eyebrow": "Projelerimiz",
     "title": "Vizyondan uygulamaya.",
-    "description": "Tamamlanan ve devam eden projelerden bir seçki.",
+    "description": "Planlanan, devam eden ve tamamlanan projelerden bir seçki.",
     "filterLabel": "Projeleri duruma göre filtrele",
-    "filterAll": "Tüm projeler",
-    "filterCompleted": "Tamamlanan",
-    "filterInProgress": "Devam eden",
+    "filterAll": "Tüm Projeler",
+    "filterPlanned": "Planlanan Projeler",
+    "filterCompleted": "Tamamlanan Projeler",
+    "filterInProgress": "Devam Eden Projeler",
+    "viewDetail": "Detayı görüntüle",
     "viewAll": "Tüm projeleri görün",
     "empty": "İlk projeler yakında yayımlanacak.",
     "emptyFilter": "Bu filtrelere uyan proje bulunamadı.",
     "filterStatus": "Durum",
-    "filterExpertise": "Uzmanlık alanı",
-    "filterCountry": "Ülke",
-    "filterAllExpertises": "Tüm uzmanlık alanları",
-    "filterAllCountries": "Tüm ülkeler",
-    "applyFilters": "Filtreleri uygula",
     "pagination": "Proje sayfalama",
     "prevPage": "Önceki sayfa",
     "nextPage": "Sonraki sayfa",
@@ -102,8 +99,9 @@
     "related": "İlgili projeler",
     "requestCta": "Proje talebi",
     "status": {
-      "completed": "Tamamlandı",
-      "in_progress": "Yapım aşamasında"
+      "planned": "Planlanan Projeler",
+      "completed": "Tamamlanan Projeler",
+      "in_progress": "Devam Eden Projeler"
     }
   },
   "visits": {

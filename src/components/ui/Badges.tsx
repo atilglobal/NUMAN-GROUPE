@@ -19,14 +19,18 @@ export function StatusBadge({ status, label }: { status: ProjectStatus; label: s
     <span
       className={cn(
         "inline-flex items-center gap-2 rounded-[2px] px-2.5 py-1 text-[0.6875rem] font-semibold uppercase tracking-[0.14em]",
-        status === "in_progress" ? "bg-gold-400 text-navy-950" : "bg-navy-900 text-paper",
+        status === "in_progress"
+          ? "bg-gold-400 text-navy-950"
+          : status === "planned"
+            ? "border border-navy-900/20 bg-paper text-navy-950"
+            : "bg-navy-900 text-paper",
       )}
     >
       <span
         aria-hidden="true"
         className={cn(
           "size-1.5 rounded-full",
-          status === "in_progress" ? "bg-navy-950" : "bg-gold-300",
+          status === "in_progress" ? "bg-navy-950" : status === "planned" ? "bg-navy-900/40" : "bg-gold-300",
         )}
       />
       {label}

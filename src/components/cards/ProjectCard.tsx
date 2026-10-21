@@ -9,9 +9,10 @@ type ProjectCardProps = {
   href: string;
   statusLabel: string;
   demoLabel: string;
+  viewLabel: string;
 };
 
-export function ProjectCard({ project, href, statusLabel, demoLabel }: ProjectCardProps) {
+export function ProjectCard({ project, href, statusLabel, demoLabel, viewLabel }: ProjectCardProps) {
   return (
     <article className="group relative flex h-full flex-col bg-white">
       <MediaFrame
@@ -26,26 +27,22 @@ export function ProjectCard({ project, href, statusLabel, demoLabel }: ProjectCa
           {project.isDemo ? <DemoBadge label={demoLabel} /> : null}
         </div>
       </MediaFrame>
-      <div className="flex flex-1 items-start justify-between gap-4 p-5">
-        <div>
-          {project.expertiseName ? (
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gold-700">
-              {project.expertiseName}
-            </p>
-          ) : null}
-          <h3 className="mt-2 font-serif text-xl leading-snug text-navy-950">
-            <Link href={href} className="after:absolute after:inset-0">
-              {project.title}
-            </Link>
-          </h3>
-          {project.place ? <p className="mt-1 text-sm text-muted">{project.place}</p> : null}
-        </div>
-        <span
-          aria-hidden="true"
-          className="mt-1 grid size-9 shrink-0 place-items-center rounded-full border border-line text-navy-900 transition-colors group-hover:border-navy-900 group-hover:bg-navy-900 group-hover:text-paper"
-        >
-          <ArrowRightIcon />
-        </span>
+      <div className="flex flex-1 flex-col p-5">
+        <h3 className="font-serif text-xl leading-snug text-navy-950">
+          <Link href={href} className="after:absolute after:inset-0">
+            {project.title}
+          </Link>
+        </h3>
+        {project.summary ? <p className="mt-2 text-sm text-ink/80">{project.summary}</p> : null}
+        <p className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-navy-950">
+          {viewLabel}
+          <span
+            aria-hidden="true"
+            className="grid size-8 place-items-center rounded-full border border-line transition-colors group-hover:border-navy-900 group-hover:bg-navy-900 group-hover:text-paper"
+          >
+            <ArrowRightIcon />
+          </span>
+        </p>
       </div>
     </article>
   );

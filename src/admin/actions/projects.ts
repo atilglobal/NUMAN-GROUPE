@@ -35,26 +35,14 @@ function ruleError(error: unknown): ActionState {
   throw error;
 }
 
-function technicalFrom(formData: FormData) {
-  const labels = formData.getAll("techLabel").map((value) => String(value));
-  const values = formData.getAll("techValue").map((value) => String(value));
-  const length = Math.max(labels.length, values.length);
-  return Array.from({ length }, (_, index) => ({
-    label: labels[index] ?? "",
-    value: values[index] ?? "",
-  }));
-}
-
 function translationFields(formData: FormData) {
   return projectTranslationSchema.safeParse({
     title: formData.get("title"),
     slug: formData.get("slug"),
     summary: formData.get("summary") ?? "",
     body: formData.get("body") ?? "",
-    city: formData.get("city") ?? "",
     seoTitle: formData.get("seoTitle") ?? "",
     seoDescription: formData.get("seoDescription") ?? "",
-    technicalDetails: technicalFrom(formData),
   });
 }
 
@@ -65,12 +53,6 @@ function rootFields(formData: FormData) {
     .filter(Boolean);
   return projectRootSchema.safeParse({
     status: formData.get("status"),
-    expertiseId: formData.get("expertiseId") ?? "",
-    countryCode: formData.get("countryCode") ?? "",
-    startedOn: formData.get("startedOn") ?? "",
-    completedOn: formData.get("completedOn") ?? "",
-    videoUrl: formData.get("videoUrl") ?? "",
-    progressPercent: formData.get("progressPercent") ?? "",
     isFeatured: formData.get("isFeatured"),
     sortOrder: formData.get("sortOrder") || 0,
     coverAssetId: formData.get("coverAssetId") ?? "",

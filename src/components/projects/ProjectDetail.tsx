@@ -5,7 +5,7 @@ import { detailPath, homePath, sectionPath } from "@/i18n/routes";
 import { DetailExtras } from "@/components/detail/DetailExtras";
 import { PendingPage } from "@/components/layout/PendingPage";
 import { ProjectCard } from "@/components/cards/ProjectCard";
-import { DemoBadge } from "@/components/ui/Badges";
+import { DemoBadge, StatusBadge } from "@/components/ui/Badges";
 import { Button } from "@/components/ui/Button";
 
 export function ProjectDetail({
@@ -32,7 +32,14 @@ export function ProjectDetail({
       breadcrumbsLabel={dict.a11y.breadcrumbs}
       statusLabel={parentLabel}
       title={entry.title}
-      badges={entry.isDemo ? <DemoBadge label={dict.demo.badge} /> : null}
+      badges={
+        <>
+          {entry.facts.kind === "project" ? (
+            <StatusBadge status={entry.facts.status} label={dict.projects.status[entry.facts.status]} />
+          ) : null}
+          {entry.isDemo ? <DemoBadge label={dict.demo.badge} /> : null}
+        </>
+      }
       lead={entry.summary}
       body={entry.body}
       message={entry.isDemo ? dict.demo.sectionNote : dict.placeholder.detailBody}
@@ -59,6 +66,7 @@ export function ProjectDetail({
                   href={preview ? "#" : detailPath(locale, "projects", project.slug)}
                   statusLabel={dict.projects.status[project.status]}
                   demoLabel={dict.demo.badge}
+                  viewLabel={dict.projects.viewDetail}
                 />
               </li>
             ))}

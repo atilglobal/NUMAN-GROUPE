@@ -3,9 +3,9 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vites
 import { findDetail, listProjects } from "@/content/queries";
 import { setTranslationStatus } from "@/content/publishing";
 import type { Database } from "@/db/client";
-import { mediaAssets, projectGallery } from "@/db/schema";
+import { mediaAssets, projectGallery, projectTranslations } from "@/db/schema";
 import { createTestDb, truncateAll } from "@/db/testing";
-import { createProject, deleteProject, getProjectForEditor, updateProjectRoot } from "./projects";
+import { createProject, deleteProject, getProjectForEditor, saveProjectTranslation, updateProjectRoot } from "./projects";
 import { createUserWithPassword } from "./users";
 
 vi.mock("next/cache", () => ({ updateTag: vi.fn() }));
@@ -33,20 +33,12 @@ const translation = {
   slug: "stade-national",
   summary: "Résumé",
   body: null,
-  city: "Dakar",
   seoTitle: null,
   seoDescription: null,
-  technicalDetails: [{ label: "Capacité", value: "50 000" }],
 };
 
 const root = {
-  status: "in_progress" as const,
-  expertiseId: null,
-  countryCode: "SN",
-  startedOn: "2024-01-01",
-  completedOn: null,
-  videoUrl: null,
-  progressPercent: null,
+  status: "planned" as const,
   isFeatured: true,
   sortOrder: 1,
   coverAssetId: null,
@@ -61,40 +53,50 @@ async function image(storageKey: string) {
   return row.id;
 }
 
+async function publish(id: string, locale: "fr" | "en" | "tr" = "fr") {
+  await setTranslationStatus(db, {
+    entity: "project",
+    entityId: id,
+    locale,
+    status: "published",
+    actorUserId: actor.id,
+  });
+}
+
 describe("project editing", () => {
-  it("publishes a draft only after an explicit status change", async () => {
+  it("creates a project without country or expertise and publishes a planned one", async () => {
     const id = await createProject(db, actor, { root, locale: "fr", translation });
     expect(await listProjects(db, "fr", { demo: false })).toEqual([]);
 
-    await setTranslationStatus(db, {
-      entity: "project",
-      entityId: id,
-      locale: "fr",
-      status: "published",
-      actorUserId: actor.id,
-    });
+    const editor = await getProjectForEditor(db, id);
+    expect(editor).toMatchObject({ status: "planned", expertiseId: null, countryCode: null });
 
+    await publish(id);
     expect((await listProjects(db, "fr", { demo: false })).map((item) => item.slug)).toEqual(["stade-national"]);
     expect(await findDetail(db, "projects", "fr", "stade-national", { demo: false })).toMatchObject({
       title: "Stade national",
-      facts: { progressPercent: null, place: "Dakar, Sénégal" },
+      facts: { kind: "project", status: "planned" },
     });
   });
 
-  it("stores a verified progress figure and gallery order", async () => {
+  it("round-trips the three showcase statuses and keeps gallery order", async () => {
     const a = await image("a.jpg");
     const b = await image("b.jpg");
     const id = await createProject(db, actor, { root, locale: "fr", translation });
-    await updateProjectRoot(db, actor, id, {
-      ...root,
-      progressPercent: 42,
-      isFeatured: false,
-      coverAssetId: a,
-      gallery: [b, a],
-    });
+
+    for (const status of ["in_progress", "completed", "planned"] as const) {
+      await updateProjectRoot(db, actor, id, {
+        ...root,
+        status,
+        isFeatured: false,
+        coverAssetId: a,
+        gallery: [b, a],
+      });
+      expect((await getProjectForEditor(db, id))?.status).toBe(status);
+    }
 
     const editor = await getProjectForEditor(db, id);
-    expect(editor).toMatchObject({ progressPercent: 42, isFeatured: false, coverAssetId: a, gallery: [b, a] });
+    expect(editor).toMatchObject({ isFeatured: false, coverAssetId: a, gallery: [b, a] });
     const gallery = await db
       .select({ assetId: projectGallery.assetId, sortOrder: projectGallery.sortOrder })
       .from(projectGallery)
@@ -104,6 +106,31 @@ describe("project editing", () => {
       { assetId: b, sortOrder: 0 },
       { assetId: a, sortOrder: 1 },
     ]);
+  });
+
+  it("does not overwrite another language when saving a translation", async () => {
+    const id = await createProject(db, actor, { root, locale: "fr", translation });
+    await saveProjectTranslation(db, actor, id, "en", {
+      title: "National stadium",
+      slug: "national-stadium",
+      summary: "Summary",
+      body: null,
+      seoTitle: null,
+      seoDescription: null,
+    });
+    await saveProjectTranslation(db, actor, id, "tr", {
+      title: "Ulusal stadyum",
+      slug: "ulusal-stadyum",
+      summary: "Özet",
+      body: null,
+      seoTitle: null,
+      seoDescription: null,
+    });
+
+    const rows = await db.select().from(projectTranslations).where(eq(projectTranslations.projectId, id));
+    expect(rows.find((row) => row.locale === "fr")?.title).toBe("Stade national");
+    expect(rows.find((row) => row.locale === "en")?.title).toBe("National stadium");
+    expect(rows.find((row) => row.locale === "tr")?.title).toBe("Ulusal stadyum");
   });
 
   it("deletes the project and its gallery", async () => {

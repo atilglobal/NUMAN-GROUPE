@@ -81,20 +81,17 @@
   "projects": {
     "eyebrow": "Our projects",
     "title": "From vision to delivery.",
-    "description": "A selection of completed and ongoing projects.",
+    "description": "A selection of planned, ongoing and completed projects.",
     "filterLabel": "Filter projects by status",
-    "filterAll": "All projects",
-    "filterCompleted": "Completed",
-    "filterInProgress": "In progress",
+    "filterAll": "All Projects",
+    "filterPlanned": "Planned Projects",
+    "filterCompleted": "Completed Projects",
+    "filterInProgress": "Ongoing Projects",
+    "viewDetail": "View details",
     "viewAll": "See all projects",
     "empty": "The first projects will be published soon.",
     "emptyFilter": "No projects match these filters.",
     "filterStatus": "Status",
-    "filterExpertise": "Expertise",
-    "filterCountry": "Country",
-    "filterAllExpertises": "All expertise",
-    "filterAllCountries": "All countries",
-    "applyFilters": "Apply filters",
     "pagination": "Project pagination",
     "prevPage": "Previous page",
     "nextPage": "Next page",
@@ -102,8 +99,9 @@
     "related": "Related projects",
     "requestCta": "Request a project",
     "status": {
-      "completed": "Completed",
-      "in_progress": "In progress"
+      "planned": "Planned Projects",
+      "completed": "Completed Projects",
+      "in_progress": "Ongoing Projects"
     }
   },
   "visits": {

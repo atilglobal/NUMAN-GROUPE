@@ -107,7 +107,7 @@ export const featuredSchema = z
   .optional()
   .transform((value) => value === "on" || value === "true");
 
-export const projectStatusSchema = z.enum(["in_progress", "completed"], "Geçersiz proje durumu.");
+export const projectStatusSchema = z.enum(["planned", "in_progress", "completed"], "Geçersiz proje durumu.");
 
 export const countryCodeSchema = z
   .string()
@@ -120,19 +120,6 @@ export const dateSchema = z
   .trim()
   .transform((value) => (value === "" ? null : value))
   .pipe(z.union([z.null(), z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Tarih YYYY-AA-GG biçiminde olmalıdır.")]));
-
-export const progressPercentSchema = z
-  .string()
-  .trim()
-  .transform((value) => (value === "" ? null : Number(value)))
-  .pipe(
-    z
-      .number("İlerleme bir sayı olmalıdır.")
-      .int("İlerleme tam sayı olmalıdır.")
-      .min(0, "İlerleme 0 ile 100 arasında olmalıdır.")
-      .max(100, "İlerleme 0 ile 100 arasında olmalıdır.")
-      .nullable(),
-  );
 
 export const optionalUuid = z
   .string()
@@ -147,29 +134,13 @@ export const httpsOptional = z
   .pipe(z.union([z.null(), z.url("Geçerli bir https adresi girin.")]))
   .refine((value) => value === null || value.startsWith("https://"), "Yalnızca https bağlantıları kabul edilir.");
 
-export const technicalDetailsSchema = z
-  .array(z.object({ label: trimmed(80, "Teknik etiket"), value: trimmed(200, "Teknik değer") }))
-  .max(30, "En fazla 30 teknik satır.")
-  .transform((rows) => rows.filter((row) => row.label !== "" || row.value !== ""));
-
-export const projectRootSchema = z
-  .object({
-    status: projectStatusSchema,
-    expertiseId: optionalUuid,
-    countryCode: countryCodeSchema,
-    startedOn: dateSchema,
-    completedOn: dateSchema,
-    videoUrl: httpsOptional,
-    progressPercent: progressPercentSchema,
-    isFeatured: featuredSchema,
-    sortOrder: sortOrderSchema,
-    coverAssetId: optionalUuid,
-    gallery: z.array(z.uuid("Geçersiz görsel.")).max(24, "Galeride en fazla 24 görsel olabilir."),
-  })
-  .refine((value) => !value.startedOn || !value.completedOn || value.completedOn >= value.startedOn, {
-    path: ["completedOn"],
-    message: "Bitiş tarihi başlangıçtan önce olamaz.",
-  });
+export const projectRootSchema = z.object({
+  status: projectStatusSchema,
+  isFeatured: featuredSchema,
+  sortOrder: sortOrderSchema,
+  coverAssetId: optionalUuid,
+  gallery: z.array(z.uuid("Geçersiz görsel.")).max(24, "Galeride en fazla 24 görsel olabilir."),
+});
 
 export type ProjectRootInput = z.infer<typeof projectRootSchema>;
 
@@ -178,10 +149,8 @@ export const projectTranslationSchema = z.object({
   slug: slugSchema,
   summary: optional(500, "Kısa açıklama"),
   body: optional(20000, "Ayrıntılı içerik"),
-  city: optional(120, "Şehir"),
   seoTitle: seoTitleSchema,
   seoDescription: seoDescriptionSchema,
-  technicalDetails: technicalDetailsSchema,
 });
 
 export type ProjectTranslationInput = z.infer<typeof projectTranslationSchema>;

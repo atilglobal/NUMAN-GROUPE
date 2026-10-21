@@ -32,20 +32,12 @@ const translation = {
   slug: "stade-national",
   summary: "Résumé",
   body: null,
-  city: null,
   seoTitle: null,
   seoDescription: null,
-  technicalDetails: [],
 };
 
 const root = {
   status: "in_progress" as const,
-  expertiseId: null,
-  countryCode: null,
-  startedOn: null,
-  completedOn: null,
-  videoUrl: null,
-  progressPercent: null,
   isFeatured: false,
   sortOrder: 1,
   coverAssetId: null,

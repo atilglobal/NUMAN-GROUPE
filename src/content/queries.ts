@@ -162,14 +162,11 @@ export async function listProjects(
     .select({
       id: projects.id,
       status: projects.status,
-      countryCode: projects.countryCode,
       coverAssetId: projects.coverAssetId,
       isDemo: projects.isDemo,
       slug: projectTranslations.slug,
       title: projectTranslations.title,
       summary: projectTranslations.summary,
-      city: projectTranslations.city,
-      expertiseName: expertiseTranslations.name,
     })
     .from(projects)
     .innerJoin(
@@ -178,14 +175,6 @@ export async function listProjects(
         eq(projectTranslations.projectId, projects.id),
         eq(projectTranslations.locale, locale),
         published(projectTranslations.status),
-      ),
-    )
-    .leftJoin(
-      expertiseTranslations,
-      and(
-        eq(expertiseTranslations.expertiseId, projects.expertiseId),
-        eq(expertiseTranslations.locale, locale),
-        published(expertiseTranslations.status),
       ),
     )
     .where(
@@ -198,15 +187,12 @@ export async function listProjects(
 }
 
 function projectWhere(
-  locale: Locale,
   options: ReadOptions,
-  filters: Pick<ProjectListFilters, "status" | "expertiseSlug" | "country">,
+  filters: Pick<ProjectListFilters, "status">,
 ): SQL | undefined {
   return and(
     visible(projects.isDemo, options),
     filters.status ? eq(projects.status, filters.status) : undefined,
-    filters.country ? eq(projects.countryCode, filters.country) : undefined,
-    filters.expertiseSlug ? eq(expertiseTranslations.slug, filters.expertiseSlug) : undefined,
   );
 }
 
@@ -217,20 +203,16 @@ async function hydrateProjects(
   rows: {
     id: string;
     status: ProjectView["status"];
-    countryCode: string | null;
     coverAssetId: string | null;
     isDemo: boolean;
     slug: string;
     title: string;
     summary: string | null;
-    city: string | null;
-    expertiseName: string | null;
   }[],
 ): Promise<ProjectView[]> {
   const images = await loadImages(db, rows.map((r) => r.coverAssetId), locale, options);
-  return rows.map(({ coverAssetId, city, countryCode, ...row }) => ({
+  return rows.map(({ coverAssetId, ...row }) => ({
     ...row,
-    place: formatPlace(locale, city, countryCode),
     image: (coverAssetId && images.get(coverAssetId)) || null,
   }));
 }
@@ -238,14 +220,11 @@ async function hydrateProjects(
 const projectSelect = {
   id: projects.id,
   status: projects.status,
-  countryCode: projects.countryCode,
   coverAssetId: projects.coverAssetId,
   isDemo: projects.isDemo,
   slug: projectTranslations.slug,
   title: projectTranslations.title,
   summary: projectTranslations.summary,
-  city: projectTranslations.city,
-  expertiseName: expertiseTranslations.name,
 };
 
 function projectJoins(db: Database, locale: Locale) {
@@ -259,14 +238,6 @@ function projectJoins(db: Database, locale: Locale) {
         eq(projectTranslations.locale, locale),
         published(projectTranslations.status),
       ),
-    )
-    .leftJoin(
-      expertiseTranslations,
-      and(
-        eq(expertiseTranslations.expertiseId, projects.expertiseId),
-        eq(expertiseTranslations.locale, locale),
-        published(expertiseTranslations.status),
-      ),
     );
 }
 
@@ -276,7 +247,7 @@ export async function listProjectsPage(
   options: ReadOptions,
   filters: ProjectListFilters,
 ): Promise<ProjectListResult> {
-  const where = projectWhere(locale, options, filters);
+  const where = projectWhere(options, filters);
   const [totalRow] = await db
     .select({ value: count() })
     .from(projects)
@@ -288,68 +259,22 @@ export async function listProjectsPage(
         published(projectTranslations.status),
       ),
     )
-    .leftJoin(
-      expertiseTranslations,
-      and(
-        eq(expertiseTranslations.expertiseId, projects.expertiseId),
-        eq(expertiseTranslations.locale, locale),
-        published(expertiseTranslations.status),
-      ),
-    )
     .where(where);
   const total = Number(totalRow?.value ?? 0);
   const page = clampPage(filters.page, total, PUBLIC_PAGE_SIZE);
   const offset = (page - 1) * PUBLIC_PAGE_SIZE;
 
-  const [rows, countryRows, expertiseRows] = await Promise.all([
-    projectJoins(db, locale)
-      .where(where)
-      .orderBy(desc(projects.isFeatured), asc(projects.sortOrder), desc(projects.createdAt))
-      .limit(PUBLIC_PAGE_SIZE)
-      .offset(offset),
-    db
-      .selectDistinct({ code: projects.countryCode })
-      .from(projects)
-      .innerJoin(
-        projectTranslations,
-        and(
-          eq(projectTranslations.projectId, projects.id),
-          eq(projectTranslations.locale, locale),
-          published(projectTranslations.status),
-        ),
-      )
-      .where(and(visible(projects.isDemo, options), sql`${projects.countryCode} is not null`))
-      .orderBy(asc(projects.countryCode)),
-    db
-      .selectDistinct({ slug: expertiseTranslations.slug, name: expertiseTranslations.name })
-      .from(projects)
-      .innerJoin(
-        projectTranslations,
-        and(
-          eq(projectTranslations.projectId, projects.id),
-          eq(projectTranslations.locale, locale),
-          published(projectTranslations.status),
-        ),
-      )
-      .innerJoin(
-        expertiseTranslations,
-        and(
-          eq(expertiseTranslations.expertiseId, projects.expertiseId),
-          eq(expertiseTranslations.locale, locale),
-          published(expertiseTranslations.status),
-        ),
-      )
-      .where(visible(projects.isDemo, options))
-      .orderBy(asc(expertiseTranslations.name)),
-  ]);
+  const rows = await projectJoins(db, locale)
+    .where(where)
+    .orderBy(desc(projects.isFeatured), asc(projects.sortOrder), desc(projects.createdAt))
+    .limit(PUBLIC_PAGE_SIZE)
+    .offset(offset);
 
   return {
     items: await hydrateProjects(db, locale, options, rows),
     total,
     page,
     pageSize: PUBLIC_PAGE_SIZE,
-    countries: countryRows.filter((row): row is { code: string } => Boolean(row.code)),
-    expertises: expertiseRows,
   };
 }
 
@@ -357,17 +282,10 @@ export async function listRelatedProjects(
   db: Database,
   locale: Locale,
   options: ReadOptions,
-  input: { projectId: string; expertiseId: string | null; limit?: number },
+  input: { projectId: string; limit?: number },
 ): Promise<ProjectView[]> {
-  if (!input.expertiseId) return [];
   const rows = await projectJoins(db, locale)
-    .where(
-      and(
-        visible(projects.isDemo, options),
-        eq(projects.expertiseId, input.expertiseId),
-        ne(projects.id, input.projectId),
-      ),
-    )
+    .where(and(visible(projects.isDemo, options), ne(projects.id, input.projectId)))
     .orderBy(desc(projects.isFeatured), asc(projects.sortOrder), desc(projects.createdAt))
     .limit(input.limit ?? 3);
   return hydrateProjects(db, locale, options, rows);
@@ -655,27 +573,9 @@ async function detailRow(
           isDemo: projects.isDemo,
           coverAssetId: projects.coverAssetId,
           status: projects.status,
-          countryCode: projects.countryCode,
-          startedOn: projects.startedOn,
-          completedOn: projects.completedOn,
-          videoUrl: projects.videoUrl,
-          progressPercent: projects.progressPercent,
-          city: t.city,
-          technicalDetails: t.technicalDetails,
-          expertiseId: projects.expertiseId,
-          expertiseName: expertiseTranslations.name,
-          expertiseSlug: expertiseTranslations.slug,
         })
         .from(t)
         .innerJoin(projects, eq(projects.id, t.projectId))
-        .leftJoin(
-          expertiseTranslations,
-          and(
-            eq(expertiseTranslations.expertiseId, projects.expertiseId),
-            eq(expertiseTranslations.locale, locale),
-            publishedOnly ? published(expertiseTranslations.status) : undefined,
-          ),
-        )
         .where(
           and(
             eq(t.locale, locale),
@@ -685,36 +585,12 @@ async function detailRow(
           ),
         );
       if (!row) return undefined;
-      const {
-        status,
-        countryCode,
-        startedOn,
-        completedOn,
-        videoUrl,
-        progressPercent,
-        city,
-        technicalDetails,
-        expertiseId,
-        expertiseName,
-        expertiseSlug,
-        ...base
-      } = row;
+      const { status, ...base } = row;
       return {
         ...base,
         facts: {
           kind: "project",
           status,
-          expertiseName,
-          expertiseSlug,
-          expertiseId,
-          place: formatPlace(locale, city, countryCode),
-          startedOn,
-          completedOn,
-          videoUrl,
-          progressPercent,
-          technicalDetails: technicalDetails
-            .filter((detail) => isFilled(detail?.label) && isFilled(detail?.value))
-            .map(({ label, value }) => ({ label: label.trim(), value: value.trim() })),
         },
       };
     }

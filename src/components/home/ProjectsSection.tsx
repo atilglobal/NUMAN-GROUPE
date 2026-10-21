@@ -33,10 +33,12 @@ export function ProjectsSection({ locale, dict, projects }: Props) {
               labels={{
                 filter: dict.projects.filterLabel,
                 all: dict.projects.filterAll,
+                planned: dict.projects.filterPlanned,
                 completed: dict.projects.filterCompleted,
                 inProgress: dict.projects.filterInProgress,
                 emptyFilter: dict.projects.emptyFilter,
                 demo: dict.demo.badge,
+                viewDetail: dict.projects.viewDetail,
                 status: dict.projects.status,
               }}
             />

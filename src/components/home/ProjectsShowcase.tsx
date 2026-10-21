@@ -12,10 +12,12 @@ type ProjectsShowcaseProps = {
   labels: {
     filter: string;
     all: string;
+    planned: string;
     completed: string;
     inProgress: string;
     emptyFilter: string;
     demo: string;
+    viewDetail: string;
     status: Record<ProjectStatus, string>;
   };
   limit: number;
@@ -29,8 +31,9 @@ export function ProjectsShowcase({ items, labels, limit }: ProjectsShowcaseProps
 
   const options: { value: Filter; label: string }[] = [
     { value: "all", label: labels.all },
-    { value: "completed", label: labels.completed },
+    { value: "planned", label: labels.planned },
     { value: "in_progress", label: labels.inProgress },
+    { value: "completed", label: labels.completed },
   ];
 
   return (
@@ -38,7 +41,7 @@ export function ProjectsShowcase({ items, labels, limit }: ProjectsShowcaseProps
       <div
         role="group"
         aria-label={labels.filter}
-        className="grid grid-cols-3 gap-1 rounded-full border border-line bg-white p-1 sm:inline-flex"
+        className="grid grid-cols-2 gap-1 rounded-full border border-line bg-white p-1 sm:inline-flex"
       >
         {options.map((option) => {
           const active = option.value === filter;
@@ -68,6 +71,7 @@ export function ProjectsShowcase({ items, labels, limit }: ProjectsShowcaseProps
                 href={href}
                 statusLabel={labels.status[project.status]}
                 demoLabel={labels.demo}
+                viewLabel={labels.viewDetail}
               />
             </li>
           ))}

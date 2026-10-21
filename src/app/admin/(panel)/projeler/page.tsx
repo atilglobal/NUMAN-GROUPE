@@ -1,13 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { listExpertiseOptions, listProjectsForAdmin } from "@/admin/projects";
+import { listProjectsForAdmin } from "@/admin/projects";
 import { requirePermission } from "@/auth/session";
 import { getDb } from "@/db/client";
+import type { ProjectStatus } from "@/db/schema/projects";
 import { locales } from "@/i18n/config";
 import { buttonClass } from "@/components/admin/button-styles";
 import { Card, EmptyState, PageHeader, Pager, Pill, StatusBadge } from "@/components/admin/ui";
 
 export const metadata: Metadata = { title: "Projeler" };
+
+const PROJECT_STATUSES: ProjectStatus[] = ["planned", "in_progress", "completed"];
+
+const PROJECT_STATUS_TR: Record<ProjectStatus, string> = {
+  planned: "Planlanan Projeler",
+  in_progress: "Devam Eden Projeler",
+  completed: "Tamamlanan Projeler",
+};
 
 export default async function ProjectsAdminPage({
   searchParams,
@@ -15,20 +24,20 @@ export default async function ProjectsAdminPage({
   await requirePermission("content:write");
   const params = await searchParams;
   const q = typeof params.q === "string" ? params.q.trim() : "";
-  const status = params.status === "completed" || params.status === "in_progress" ? params.status : undefined;
-  const expertiseId = typeof params.expertise === "string" && params.expertise ? params.expertise : undefined;
+  const status = PROJECT_STATUSES.includes(params.status as ProjectStatus)
+    ? (params.status as ProjectStatus)
+    : undefined;
   const page = Number(params.page ?? 1);
-  const db = getDb();
-  const [{ rows, total, page: current, pageSize }, expertises] = await Promise.all([
-    listProjectsForAdmin(db, { q: q || undefined, status, expertiseId, page }),
-    listExpertiseOptions(db),
-  ]);
+  const { rows, total, page: current, pageSize } = await listProjectsForAdmin(getDb(), {
+    q: q || undefined,
+    status,
+    page,
+  });
 
   const href = (nextPage: number) => {
     const search = new URLSearchParams();
     if (q) search.set("q", q);
     if (status) search.set("status", status);
-    if (expertiseId) search.set("expertise", expertiseId);
     if (nextPage > 1) search.set("page", String(nextPage));
     const query = search.toString();
     return `/admin/projeler${query ? `?${query}` : ""}`;
@@ -38,7 +47,7 @@ export default async function ProjectsAdminPage({
     <>
       <PageHeader
         title="Projeler"
-        description="Tamamlanan ve devam eden işler. İlerleme yüzdesi zorunlu değildir; yalnızca doğrulanmış oran girilirse sitede görünür."
+        description="Kurumsal tanıtım. Proje durumu ile dil bazında taslak/yayım ayrı tutulur."
         actions={
           <Link href="/admin/projeler/yeni" className={buttonClass("primary")}>
             Yeni proje
@@ -46,18 +55,13 @@ export default async function ProjectsAdminPage({
         }
       />
       <Card>
-        <form method="get" className="mb-4 grid gap-3 sm:grid-cols-4">
+        <form method="get" className="mb-4 grid gap-3 sm:grid-cols-3">
           <input name="q" defaultValue={q} placeholder="Ara (başlık veya slug)" className="min-h-10 rounded-md border border-line px-3 text-sm" />
           <select name="status" defaultValue={status ?? ""} className="min-h-10 rounded-md border border-line px-3 text-sm">
             <option value="">Tüm durumlar</option>
-            <option value="in_progress">Devam ediyor</option>
-            <option value="completed">Tamamlandı</option>
-          </select>
-          <select name="expertise" defaultValue={expertiseId ?? ""} className="min-h-10 rounded-md border border-line px-3 text-sm">
-            <option value="">Tüm uzmanlıklar</option>
-            {expertises.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.label}
+            {PROJECT_STATUSES.map((value) => (
+              <option key={value} value={value}>
+                {PROJECT_STATUS_TR[value]}
               </option>
             ))}
           </select>
@@ -76,8 +80,7 @@ export default async function ProjectsAdminPage({
                     {row.label ?? "(adsız kayıt)"}
                   </Link>
                   <p className="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-muted">
-                    {row.status === "completed" ? "Tamamlandı" : "Devam ediyor"}
-                    {row.expertiseLabel ? <span>· {row.expertiseLabel}</span> : <span>· uzmanlık yok</span>}
+                    {PROJECT_STATUS_TR[row.status]}
                     {row.isFeatured ? <Pill>Öne çıkan</Pill> : null}
                     {row.isDemo ? <Pill tone="warning">Demo</Pill> : null}
                   </p>

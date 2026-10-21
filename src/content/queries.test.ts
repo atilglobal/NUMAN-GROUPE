@@ -175,16 +175,16 @@ describe("per-language publication", () => {
     expect(en.image).toBeNull();
   });
 
-  it("shows an expertise name only from the same language", async () => {
-    const [stadiums] = await listExpertises(db, "fr", off);
-    const projectId = await realProject({
-      fr: { slug: "projet-lie", title: "Projet lié", published: true },
-      en: { slug: "linked-project", title: "Linked project", published: true },
+  it("lists published projects even when they have no expertise or country", async () => {
+    await realProject({
+      fr: { slug: "projet-libre", title: "Projet libre", published: true },
+      en: { slug: "free-project", title: "Free project", published: true },
     });
-    await db.update(projects).set({ expertiseId: stadiums.id }).where(eq(projects.id, projectId));
-
-    expect((await listProjects(db, "fr", off))[0].expertiseName).toBe("Stades");
-    expect((await listProjects(db, "en", off))[0].expertiseName).toBe("Stadiums");
+    expect((await listProjects(db, "fr", off))[0]).toMatchObject({
+      slug: "projet-libre",
+      title: "Projet libre",
+    });
+    expect((await listProjects(db, "en", off))[0].slug).toBe("free-project");
   });
 
   it("serves institutional pages only in published languages", async () => {
@@ -251,28 +251,8 @@ describe("project detail", () => {
     expect(entry?.facts).toEqual({
       kind: "project",
       status: "completed",
-      expertiseName: null,
-      expertiseSlug: null,
-      expertiseId: null,
-      place: "Dakar, Sénégal",
-      startedOn: "2024-03-01",
-      completedOn: null,
-      videoUrl: "https://video.example/stade",
-      progressPercent: null,
-      technicalDetails: [{ label: "Capacité", value: "50 000 places" }],
     });
     expect(entry?.gallery.map((image) => image.alt)).toEqual(["Tribune"]);
-  });
-
-  it("shows the place on project cards in the page language", async () => {
-    const id = await realProject({
-      fr: { slug: "projet-lieu", title: "Projet", published: true },
-      en: { slug: "place-project", title: "Project", published: true },
-    });
-    await db.update(projects).set({ countryCode: "TR" }).where(eq(projects.id, id));
-
-    expect((await listProjects(db, "fr", off))[0].place).toBe("Turquie");
-    expect((await listProjects(db, "en", off))[0].place).toBe("Türkiye");
   });
 
   it("orders featured projects first, then by sort order", async () => {
@@ -286,66 +266,47 @@ describe("project detail", () => {
     expect((await listProjects(db, "fr", off)).map((p) => p.title)).toEqual(["C", "B", "A"]);
   });
 
-  it("never derives a progress percentage from dates", async () => {
-    const id = await realProject({ fr: { slug: "avancement", title: "Avancement", published: true } });
-    await db
-      .update(projects)
-      .set({ startedOn: "2024-01-01", completedOn: "2024-12-01", progressPercent: null })
-      .where(eq(projects.id, id));
-
-    expect((await findDetail(db, "projects", "fr", "avancement", off))?.facts).toMatchObject({
-      progressPercent: null,
-      startedOn: "2024-01-01",
-      completedOn: "2024-12-01",
-    });
-
-    await db.update(projects).set({ progressPercent: 35 }).where(eq(projects.id, id));
-    expect((await findDetail(db, "projects", "fr", "avancement", off))?.facts).toMatchObject({ progressPercent: 35 });
-  });
-
   it("keeps drafts off the public site and available to preview by id", async () => {
     const id = await realProject({ fr: { slug: "brouillon-projet", title: "Brouillon", published: false } });
     expect(await findDetail(db, "projects", "fr", "brouillon-projet", off)).toBeNull();
     expect(await findPreviewDetail(db, "projects", "fr", id)).toMatchObject({ title: "Brouillon" });
   });
 
-  it("filters the public listing and keeps related projects in the same expertise", async () => {
+  it("filters the public listing by showcase status only", async () => {
     const [stadiums] = await listExpertises(db, "fr", off);
-    const linked = await realProject({ fr: { slug: "stade-filtre", title: "Stade filtre", published: true } });
-    const other = await realProject({
-      fr: { slug: "logement-filtre", title: "Logement filtre", published: true },
-    });
+    const planned = await realProject({ fr: { slug: "projet-planifie", title: "Planifié", published: true } });
+    const ongoing = await realProject({ fr: { slug: "projet-cours", title: "En cours", published: true } });
+    const done = await realProject({ fr: { slug: "projet-acheve", title: "Achevé", published: true } });
+    await db.update(projects).set({ status: "planned" }).where(eq(projects.id, planned));
+    await db.update(projects).set({ status: "in_progress" }).where(eq(projects.id, ongoing));
     await db
       .update(projects)
-      .set({ expertiseId: stadiums.id, countryCode: "SN", status: "completed" })
-      .where(eq(projects.id, linked));
-    await db
-      .update(projects)
-      .set({ countryCode: "TR", status: "in_progress" })
-      .where(eq(projects.id, other));
+      .set({ status: "completed", expertiseId: stadiums.id, countryCode: "SN" })
+      .where(eq(projects.id, done));
 
-    const filtered = await listProjectsPage(db, "fr", off, {
-      status: "completed",
-      expertiseSlug: stadiums.slug,
-      country: "SN",
-      page: 1,
-    });
-    expect(filtered.items.map((item) => item.slug)).toEqual(["stade-filtre"]);
-    expect(filtered.countries.map((item) => item.code).sort()).toEqual(["SN", "TR"]);
-    expect(filtered.expertises.some((item) => item.slug === stadiums.slug)).toBe(true);
+    const all = await listProjectsPage(db, "fr", off, { page: 1 });
+    expect(all.items.map((item) => item.slug).sort()).toEqual([
+      "projet-acheve",
+      "projet-cours",
+      "projet-planifie",
+    ]);
 
-    const empty = await listProjectsPage(db, "fr", off, { status: "in_progress", country: "SN", page: 1 });
-    expect(empty.items).toEqual([]);
-    expect(empty.total).toBe(0);
-
-    expect((await listProjectsForExpertise(db, "fr", off, stadiums.id)).map((item) => item.slug)).toEqual([
-      "stade-filtre",
+    expect((await listProjectsPage(db, "fr", off, { status: "planned", page: 1 })).items.map((item) => item.slug)).toEqual([
+      "projet-planifie",
     ]);
     expect(
-      (await listRelatedProjects(db, "fr", off, { projectId: linked, expertiseId: stadiums.id })).map(
-        (item) => item.slug,
-      ),
-    ).not.toContain("stade-filtre");
+      (await listProjectsPage(db, "fr", off, { status: "in_progress", page: 1 })).items.map((item) => item.slug),
+    ).toEqual(["projet-cours"]);
+    expect(
+      (await listProjectsPage(db, "fr", off, { status: "completed", page: 1 })).items.map((item) => item.slug),
+    ).toEqual(["projet-acheve"]);
+
+    expect((await listProjectsForExpertise(db, "fr", off, stadiums.id)).map((item) => item.slug)).toEqual([
+      "projet-acheve",
+    ]);
+    expect(
+      (await listRelatedProjects(db, "fr", off, { projectId: done })).map((item) => item.slug),
+    ).not.toContain("projet-acheve");
   });
 
   it("lists a newly published expertise without a code change", async () => {

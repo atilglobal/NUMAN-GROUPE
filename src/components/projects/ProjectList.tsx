@@ -1,14 +1,22 @@
-import type { ProjectListResult } from "@/content/types";
+import type { ProjectListFilters, ProjectListResult } from "@/content/types";
 import { projectListHref } from "@/content/project-filters";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
-import { countryLabel } from "@/lib/countries";
 import { pageCount } from "@/lib/pagination";
 import { detailPath, homePath, sectionPath } from "@/i18n/routes";
+import type { ProjectStatus } from "@/db/schema/projects";
 import { ProjectCard } from "@/components/cards/ProjectCard";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/SectionHeading";
+import { cn } from "@/components/ui/cn";
+
+const STATUS_FILTERS: { value?: ProjectStatus; label: (dict: Dictionary) => string }[] = [
+  { value: undefined, label: (dict) => dict.projects.filterAll },
+  { value: "planned", label: (dict) => dict.projects.filterPlanned },
+  { value: "in_progress", label: (dict) => dict.projects.filterInProgress },
+  { value: "completed", label: (dict) => dict.projects.filterCompleted },
+];
 
 export function ProjectList({
   locale,
@@ -19,7 +27,7 @@ export function ProjectList({
   locale: Locale;
   dict: Dictionary;
   listing: ProjectListResult;
-  filters: { status?: "completed" | "in_progress"; expertiseSlug?: string; country?: string; page: number };
+  filters: ProjectListFilters;
 }) {
   const label = dict.nav.projects;
   const last = pageCount(listing.total, listing.pageSize);
@@ -36,53 +44,32 @@ export function ProjectList({
         <p className="mt-6 text-lg text-ink/85">{dict.projects.description}</p>
       </div>
 
-      <form method="get" className="mt-10 grid gap-3 rounded-lg border border-line bg-white p-4 sm:grid-cols-3">
-        <label className="grid gap-1 text-sm">
-          {dict.projects.filterStatus}
-          <select name="status" defaultValue={filters.status ?? ""} className="min-h-10 rounded-md border border-line px-3">
-            <option value="">{dict.projects.filterAll}</option>
-            <option value="completed">{dict.projects.filterCompleted}</option>
-            <option value="in_progress">{dict.projects.filterInProgress}</option>
-          </select>
-        </label>
-        <label className="grid gap-1 text-sm">
-          {dict.projects.filterExpertise}
-          <select
-            name="expertise"
-            defaultValue={filters.expertiseSlug ?? ""}
-            className="min-h-10 rounded-md border border-line px-3"
-          >
-            <option value="">{dict.projects.filterAllExpertises}</option>
-            {listing.expertises.map((item) => (
-              <option key={item.slug} value={item.slug}>
-                {item.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="grid gap-1 text-sm">
-          {dict.projects.filterCountry}
-          <select name="country" defaultValue={filters.country ?? ""} className="min-h-10 rounded-md border border-line px-3">
-            <option value="">{dict.projects.filterAllCountries}</option>
-            {listing.countries.map((item) => (
-              <option key={item.code} value={item.code}>
-                {countryLabel(locale, item.code)}
-              </option>
-            ))}
-          </select>
-        </label>
-        <div className="sm:col-span-3">
-          <button type="submit" className="inline-flex min-h-10 items-center rounded-md bg-navy-950 px-4 text-sm text-paper">
-            {dict.projects.applyFilters}
-          </button>
-        </div>
-      </form>
+      <div
+        role="group"
+        aria-label={dict.projects.filterLabel}
+        className="mt-10 grid grid-cols-2 gap-1 rounded-full border border-line bg-white p-1 sm:inline-flex"
+      >
+        {STATUS_FILTERS.map((option) => {
+          const active = (filters.status ?? undefined) === option.value;
+          return (
+            <a
+              key={option.value ?? "all"}
+              href={projectListHref(locale, { status: option.value })}
+              aria-current={active ? "page" : undefined}
+              className={cn(
+                "min-h-10 rounded-full px-3 text-center text-[0.8125rem] leading-tight transition-colors sm:px-5 sm:text-sm",
+                active ? "bg-navy-900 text-paper" : "text-ink/80 hover:bg-paper-2 hover:text-navy-950",
+              )}
+            >
+              {option.label(dict)}
+            </a>
+          );
+        })}
+      </div>
 
       {listing.items.length === 0 ? (
         <p role="status" className="mt-10 border border-dashed border-line px-6 py-12 text-center text-muted">
-          {listing.total === 0 && !filters.status && !filters.expertiseSlug && !filters.country
-            ? dict.projects.empty
-            : dict.projects.emptyFilter}
+          {listing.total === 0 && !filters.status ? dict.projects.empty : dict.projects.emptyFilter}
         </p>
       ) : (
         <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -93,6 +80,7 @@ export function ProjectList({
                 href={detailPath(locale, "projects", project.slug)}
                 statusLabel={dict.projects.status[project.status]}
                 demoLabel={dict.demo.badge}
+                viewLabel={dict.projects.viewDetail}
               />
             </li>
           ))}

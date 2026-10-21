@@ -88,15 +88,15 @@ export async function getProjectListing(locale: Locale, filters: ProjectListFilt
   const db = tryGetDb();
   return db
     ? queries.listProjectsPage(db, locale, options(), filters)
-    : { items: [], total: 0, page: filters.page, pageSize: PUBLIC_PAGE_SIZE, countries: [], expertises: [] };
+    : { items: [], total: 0, page: filters.page, pageSize: PUBLIC_PAGE_SIZE };
 }
 
-export async function getRelatedProjects(locale: Locale, projectId: string, expertiseId: string | null) {
+export async function getRelatedProjects(locale: Locale, projectId: string) {
   "use cache";
   cacheLife("hours");
   cacheTag(contentTags.projects, contentTags.expertises, contentTags.media);
   const db = tryGetDb();
-  return db ? queries.listRelatedProjects(db, locale, options(), { projectId, expertiseId }) : [];
+  return db ? queries.listRelatedProjects(db, locale, options(), { projectId }) : [];
 }
 
 export async function getProjectsForExpertise(locale: Locale, expertiseId: string) {

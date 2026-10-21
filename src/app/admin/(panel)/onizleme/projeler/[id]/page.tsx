@@ -36,7 +36,7 @@ export default async function ProjectPreviewPage({
   }
   const related =
     entry.facts.kind === "project"
-      ? await listRelatedProjects(db, locale, { demo: true }, { projectId: id, expertiseId: entry.facts.expertiseId })
+      ? await listRelatedProjects(db, locale, { demo: true }, { projectId: id })
       : [];
   const dict = getDictionary(locale);
 

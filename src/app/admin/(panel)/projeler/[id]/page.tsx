@@ -7,12 +7,11 @@ import {
   updateProjectRootAction,
 } from "@/admin/actions/projects";
 import { dateTimeFormat, localeLabels } from "@/admin/labels";
-import { getProjectForEditor, listExpertiseOptions } from "@/admin/projects";
+import { getProjectForEditor } from "@/admin/projects";
 import { idSchema } from "@/admin/validation";
 import { requirePermission } from "@/auth/session";
 import { getDb } from "@/db/client";
 import { locales } from "@/i18n/config";
-import { countryOptions } from "@/lib/countries";
 import { listImagesForPicker } from "@/media/store";
 import { PublishForm } from "@/components/admin/ExpertiseForms";
 import { ConfirmDialog } from "@/components/admin/forms";
@@ -22,20 +21,21 @@ import { Card, PageHeader, Pill, StatusBadge } from "@/components/admin/ui";
 
 export const metadata: Metadata = { title: "Projeyi düzenle" };
 
+const PROJECT_STATUS_TR = {
+  planned: "Planlanan Projeler",
+  in_progress: "Devam Eden Projeler",
+  completed: "Tamamlanan Projeler",
+} as const;
+
 export default async function EditProjectPage({ params }: PageProps<"/admin/projeler/[id]">) {
   await requirePermission("content:write");
   const { id } = await params;
   if (!idSchema.safeParse(id).success) notFound();
   const db = getDb();
-  const [entry, expertises, media] = await Promise.all([
-    getProjectForEditor(db, id),
-    listExpertiseOptions(db),
-    listImagesForPicker(db),
-  ]);
+  const [entry, media] = await Promise.all([getProjectForEditor(db, id), listImagesForPicker(db)]);
   if (!entry) notFound();
 
   const title = entry.translations.fr?.title ?? Object.values(entry.translations)[0]?.title ?? "(adsız kayıt)";
-  const expertiseOptions = expertises.map((item) => ({ value: item.id, label: item.label }));
 
   const tabs = locales.map((locale) => {
     const translation = entry.translations[locale];
@@ -54,10 +54,8 @@ export default async function EditProjectPage({ params }: PageProps<"/admin/proj
               slug: translation?.slug ?? "",
               summary: translation?.summary ?? "",
               body: translation?.body ?? "",
-              city: translation?.city ?? "",
               seoTitle: translation?.seoTitle ?? "",
               seoDescription: translation?.seoDescription ?? "",
-              technicalDetails: translation?.technicalDetails ?? [],
             }}
           />
           <aside className="grid content-start gap-3 rounded-md border border-line bg-paper/50 p-4 text-sm">
@@ -93,6 +91,7 @@ export default async function EditProjectPage({ params }: PageProps<"/admin/proj
         back={{ href: "/admin/projeler", label: "Projeler" }}
         description={
           <span className="flex flex-wrap gap-2">
+            <Pill>{PROJECT_STATUS_TR[entry.status]}</Pill>
             {entry.isFeatured ? <Pill>Öne çıkan</Pill> : null}
             {entry.isDemo ? <Pill tone="warning">Demo içerik — üretimde gösterilmez</Pill> : null}
           </span>
@@ -102,20 +101,12 @@ export default async function EditProjectPage({ params }: PageProps<"/admin/proj
         <Card title="İçerik">
           <LocaleTabs label="İçerik dili" tabs={tabs} />
         </Card>
-        <Card title="Genel bilgiler, kapak ve galeri">
+        <Card title="Durum, kapak ve galeri">
           <ProjectRootForm
             action={updateProjectRootAction.bind(null, id)}
-            expertiseOptions={expertiseOptions}
-            countryOptions={countryOptions("tr")}
             media={media}
             defaults={{
               status: entry.status,
-              expertiseId: entry.expertiseId,
-              countryCode: entry.countryCode,
-              startedOn: entry.startedOn,
-              completedOn: entry.completedOn,
-              videoUrl: entry.videoUrl,
-              progressPercent: entry.progressPercent,
               isFeatured: entry.isFeatured,
               sortOrder: entry.sortOrder,
               coverAssetId: entry.coverAssetId,
@@ -124,7 +115,7 @@ export default async function EditProjectPage({ params }: PageProps<"/admin/proj
           />
         </Card>
         <Card title="Tehlikeli işlemler">
-          <p className="mb-3 text-sm text-muted">Silme bütün dillerdeki içeriği kaldırır. Uzmanlık alanı durur.</p>
+          <p className="mb-3 text-sm text-muted">Silme bütün dillerdeki içeriği kaldırır.</p>
           <ConfirmDialog
             triggerLabel="Projeyi sil"
             title="Proje silinsin mi?"

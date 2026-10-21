@@ -135,6 +135,7 @@ export async function CmsPageView({
                       href={detailPath(locale, "projects", item.slug)}
                       statusLabel={dict.projects.status[item.status]}
                       demoLabel={dict.demo.badge}
+                      viewLabel={dict.projects.viewDetail}
                     />
                   </li>
                 ))}

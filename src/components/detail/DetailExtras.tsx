@@ -16,16 +16,7 @@ export function DetailExtras({ entry, locale, dict }: Props) {
   const rows: { label: string; value: string }[] = [];
 
   if (facts.kind === "project") {
-    if (facts.expertiseName) rows.push({ label: dict.detail.expertise, value: facts.expertiseName });
     rows.push({ label: dict.detail.status, value: dict.projects.status[facts.status] });
-    if (facts.place) rows.push({ label: dict.detail.location, value: facts.place });
-    if (facts.startedOn) rows.push({ label: dict.detail.started, value: formatDate(locale, facts.startedOn) });
-    if (facts.completedOn) {
-      rows.push({ label: dict.detail.completed, value: formatDate(locale, facts.completedOn) });
-    }
-    if (facts.progressPercent !== null && facts.progressPercent !== undefined) {
-      rows.push({ label: dict.detail.progress, value: `${facts.progressPercent}\u00a0%` });
-    }
   }
   if (facts.kind === "visit") {
     if (facts.visitedOn) rows.push({ label: dict.detail.date, value: formatDate(locale, facts.visitedOn) });
@@ -33,9 +24,7 @@ export function DetailExtras({ entry, locale, dict }: Props) {
     if (facts.place) rows.push({ label: dict.detail.location, value: facts.place });
   }
 
-  const technical = facts.kind === "project" ? facts.technicalDetails : [];
   const participants = facts.kind === "visit" ? facts.participants : [];
-  const videoUrl = facts.kind === "project" ? facts.videoUrl : null;
 
   return (
     <>
@@ -89,41 +78,6 @@ export function DetailExtras({ entry, locale, dict }: Props) {
             ))}
           </ul>
         </section>
-      ) : null}
-
-      {technical.length > 0 ? (
-        <section aria-labelledby="detail-technical" className="mt-10">
-          <h2 id="detail-technical" className="font-serif text-2xl text-navy-950">
-            {dict.detail.technical}
-          </h2>
-          <dl className="mt-4 grid gap-x-8 gap-y-3 border-t border-line pt-4 sm:grid-cols-2">
-            {technical.map((detail, index) => (
-              <div key={`${detail.label}-${index}`}>
-                <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">
-                  {detail.label}
-                </dt>
-                <dd className="mt-1 text-ink">{detail.value}</dd>
-              </div>
-            ))}
-          </dl>
-        </section>
-      ) : null}
-
-      {videoUrl ? (
-        <p className="mt-10">
-          <span className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">
-            {dict.detail.video}
-          </span>
-          <br />
-          <a
-            href={videoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-navy-900 underline decoration-gold-500 underline-offset-4 hover:text-gold-700"
-          >
-            {dict.detail.watchVideo}
-          </a>
-        </p>
       ) : null}
 
       {entry.gallery.length > 0 ? (

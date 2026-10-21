@@ -89,7 +89,7 @@ export default async function DetailPage({ params }: PageProps<"/[locale]/[secti
   const parentLabel = sectionLabel(section, dict);
 
   if (section === "projects" && entry.facts.kind === "project") {
-    const related = await getRelatedProjects(locale, entry.id, entry.facts.expertiseId);
+    const related = await getRelatedProjects(locale, entry.id);
     return (
       <>
         <PageAlternates alternates={alternates} />

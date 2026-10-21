@@ -28,8 +28,8 @@ import {
 import { expertises } from "./expertises";
 import { mediaAssets } from "./media";
 
-/** Construction progress of the work itself, independent of publication. */
-export const projectStatusEnum = pgEnum("project_status", ["in_progress", "completed"]);
+/** Showcase stage of the work itself, independent of per-locale publication. */
+export const projectStatusEnum = pgEnum("project_status", ["planned", "in_progress", "completed"]);
 
 export type ProjectStatus = (typeof projectStatusEnum.enumValues)[number];
 

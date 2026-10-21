@@ -59,6 +59,7 @@ export function ExpertiseDetail({
                   href={preview ? "#" : detailPath(locale, "projects", project.slug)}
                   statusLabel={dict.projects.status[project.status]}
                   demoLabel={dict.demo.badge}
+                  viewLabel={dict.projects.viewDetail}
                 />
               </li>
             ))}

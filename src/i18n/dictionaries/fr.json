@@ -81,20 +81,17 @@
   "projects": {
     "eyebrow": "Nos projets",
     "title": "De la vision à la réalisation.",
-    "description": "Une sélection de projets terminés et en cours.",
+    "description": "Une sélection de projets à venir, en cours et achevés.",
     "filterLabel": "Filtrer les projets par état",
     "filterAll": "Tous les projets",
-    "filterCompleted": "Terminés",
-    "filterInProgress": "En cours",
+    "filterPlanned": "Projets à venir",
+    "filterCompleted": "Projets achevés",
+    "filterInProgress": "Projets en cours",
+    "viewDetail": "Voir le détail",
     "viewAll": "Voir tous les projets",
     "empty": "Les premiers projets seront publiés prochainement.",
     "emptyFilter": "Aucun projet ne correspond à ces filtres.",
     "filterStatus": "État",
-    "filterExpertise": "Expertise",
-    "filterCountry": "Pays",
-    "filterAllExpertises": "Toutes les expertises",
-    "filterAllCountries": "Tous les pays",
-    "applyFilters": "Appliquer les filtres",
     "pagination": "Pagination des projets",
     "prevPage": "Page précédente",
     "nextPage": "Page suivante",
@@ -102,8 +99,9 @@
     "related": "Projets similaires",
     "requestCta": "Demander un projet",
     "status": {
-      "completed": "Terminé",
-      "in_progress": "En cours"
+      "planned": "Projets à venir",
+      "completed": "Projets achevés",
+      "in_progress": "Projets en cours"
     }
   },
   "visits": {

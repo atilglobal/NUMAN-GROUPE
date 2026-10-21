@@ -27,8 +27,6 @@ export type ExpertiseView = {
 
 export type ProjectListFilters = {
   status?: ProjectStatus;
-  expertiseSlug?: string;
-  country?: string;
   page: number;
 };
 
@@ -37,8 +35,6 @@ export type ProjectListResult = {
   total: number;
   page: number;
   pageSize: number;
-  countries: { code: string }[];
-  expertises: { slug: string; name: string }[];
 };
 
 export type ProjectView = {
@@ -47,9 +43,6 @@ export type ProjectView = {
   title: string;
   summary: string | null;
   status: ProjectStatus;
-  expertiseName: string | null;
-  /** City and/or country name in the page language; null when neither was provided. */
-  place: string | null;
   image: ResolvedImage | null;
   isDemo: boolean;
 };
@@ -97,17 +90,6 @@ export type LocaleSlugs = Partial<Record<Locale, string>>;
 export type ProjectFacts = {
   kind: "project";
   status: ProjectStatus;
-  expertiseName: string | null;
-  expertiseSlug: string | null;
-  expertiseId: string | null;
-  place: string | null;
-  startedOn: string | null;
-  completedOn: string | null;
-  videoUrl: string | null;
-  /** Shown only when a verified figure was entered; never inferred from dates. */
-  progressPercent: number | null;
-  /** Only rows with both a label and a value. */
-  technicalDetails: TechnicalDetail[];
 };
 
 export type VisitFacts = {

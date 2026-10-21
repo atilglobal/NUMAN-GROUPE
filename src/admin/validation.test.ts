@@ -4,7 +4,6 @@ import {
   createUserSchema,
   expertiseTranslationSchema,
   fieldErrors,
-  progressPercentSchema,
   projectRootSchema,
   siteSettingsSchema,
   visitRootSchema,
@@ -83,38 +82,25 @@ describe("panel validation", () => {
     expect(siteSettingsSchema.safeParse({ companyName: "", contactEmail: "bad", contactPhone: "", postalAddress: "" }).success).toBe(false);
   });
 
-  it("keeps progress optional and never invents a percentage", () => {
-    expect(progressPercentSchema.parse("")).toBeNull();
-    expect(progressPercentSchema.parse("40")).toBe(40);
-    expect(progressPercentSchema.safeParse("101").success).toBe(false);
-    expect(progressPercentSchema.safeParse("-1").success).toBe(false);
-  });
-
-  it("accepts project facts without dates or a cover", () => {
+  it("accepts a project without country or expertise", () => {
     const parsed = projectRootSchema.parse({
-      status: "in_progress",
-      expertiseId: "",
-      countryCode: "sn",
-      startedOn: "",
-      completedOn: "",
-      videoUrl: "",
-      progressPercent: "",
+      status: "planned",
       sortOrder: "0",
       coverAssetId: "",
       gallery: [],
     });
     expect(parsed).toMatchObject({
-      status: "in_progress",
-      expertiseId: null,
-      countryCode: "SN",
-      startedOn: null,
-      completedOn: null,
-      videoUrl: null,
-      progressPercent: null,
+      status: "planned",
       isFeatured: false,
       coverAssetId: null,
       gallery: [],
     });
+    expect(projectRootSchema.parse({ status: "in_progress", sortOrder: 1, coverAssetId: "", gallery: [] }).status).toBe(
+      "in_progress",
+    );
+    expect(projectRootSchema.parse({ status: "completed", sortOrder: 1, coverAssetId: "", gallery: [] }).status).toBe(
+      "completed",
+    );
   });
 
   it("drops empty visit participants and treats featured as a checkbox", () => {
