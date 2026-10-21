@@ -4,7 +4,9 @@ import {
   createUserSchema,
   expertiseTranslationSchema,
   fieldErrors,
+  projectDraftTranslationSchema,
   projectRootSchema,
+  projectTranslationSchema,
   siteSettingsSchema,
   visitRootSchema,
 } from "./validation";
@@ -80,6 +82,21 @@ describe("panel validation", () => {
       socialLinks: [],
     });
     expect(siteSettingsSchema.safeParse({ companyName: "", contactEmail: "bad", contactPhone: "", postalAddress: "" }).success).toBe(false);
+  });
+
+  it("allows a draft project with title and status only", () => {
+    const draft = projectDraftTranslationSchema.parse({
+      title: "Stade d'été",
+      slug: "",
+      summary: "",
+      body: "",
+      seoTitle: "",
+      seoDescription: "",
+    });
+    expect(draft).toMatchObject({ title: "Stade d'été", slug: "", summary: null, body: null });
+    expect(projectDraftTranslationSchema.safeParse({ title: "", slug: "", summary: "", body: "" }).success).toBe(false);
+    expect(projectDraftTranslationSchema.safeParse({ title: "X", slug: "été", summary: "", body: "" }).success).toBe(false);
+    expect(projectTranslationSchema.safeParse({ title: "X", slug: "", summary: "", body: "" }).success).toBe(false);
   });
 
   it("accepts a project without country or expertise", () => {

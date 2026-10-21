@@ -3,10 +3,12 @@
 import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
 import {
+  LocalePublishError,
+  SlugTakenError,
+  assertProjectLocalePublishable,
   createProject,
   deleteProject,
   saveProjectTranslation,
-  SlugTakenError,
   updateProjectRoot,
 } from "@/admin/projects";
 import { localeLabels } from "@/admin/labels";
@@ -15,8 +17,8 @@ import {
   fieldErrors,
   idSchema,
   localeSchema,
+  projectDraftTranslationSchema,
   projectRootSchema,
-  projectTranslationSchema,
   type ProjectRootInput,
 } from "@/admin/validation";
 import { authorizeAction, type ActionState } from "@/auth/session";
@@ -27,19 +29,46 @@ import { MediaUploadError, requireImageIds, upsertMediaCopy } from "@/media/stor
 import type { Locale } from "@/i18n/config";
 
 const INVALID: ActionState = { ok: false, message: "Geçersiz istek." };
+const SAVE_FAILED: ActionState = {
+  ok: false,
+  message: "Kayıt başarısız oldu. Girdiğiniz metinler korundu; lütfen tekrar deneyin.",
+};
+
+function isRedirectError(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "digest" in error &&
+    typeof (error as { digest?: unknown }).digest === "string" &&
+    (error as { digest: string }).digest.startsWith("NEXT_REDIRECT")
+  );
+}
 
 function ruleError(error: unknown): ActionState {
-  if (error instanceof SlugTakenError) return { ok: false, fieldErrors: { slug: error.message } };
+  if (isRedirectError(error)) throw error;
+  if (error instanceof LocalePublishError) {
+    return { ok: false, message: error.message, fieldErrors: error.fieldErrors };
+  }
+  if (error instanceof SlugTakenError) return { ok: false, fieldErrors: { slug: error.message }, message: error.message };
   if (error instanceof AdminRuleError || error instanceof MediaUploadError) {
     return { ok: false, message: error.message };
   }
-  throw error;
+  console.error(error);
+  return SAVE_FAILED;
+}
+
+function invalidFields(errors: Record<string, string>): ActionState {
+  return {
+    ok: false,
+    message: "Kayıt tamamlanamadı. İşaretli alanları kontrol edin.",
+    fieldErrors: errors,
+  };
 }
 
 function translationFields(formData: FormData) {
-  return projectTranslationSchema.safeParse({
+  return projectDraftTranslationSchema.safeParse({
     title: formData.get("title"),
-    slug: formData.get("slug"),
+    slug: formData.get("slug") ?? "",
     summary: formData.get("summary") ?? "",
     body: formData.get("body") ?? "",
     seoTitle: formData.get("seoTitle") ?? "",
@@ -90,13 +119,10 @@ export async function createProjectAction(_previous: ActionState, formData: Form
   const translation = translationFields(formData);
   const root = rootFields(formData);
   if (!translation.success || !root.success) {
-    return {
-      ok: false,
-      fieldErrors: {
-        ...(translation.success ? {} : fieldErrors(translation.error)),
-        ...(root.success ? {} : fieldErrors(root.error)),
-      },
-    };
+    return invalidFields({
+      ...(translation.success ? {} : fieldErrors(translation.error)),
+      ...(root.success ? {} : fieldErrors(root.error)),
+    });
   }
 
   let id: string;
@@ -111,7 +137,7 @@ export async function createProjectAction(_previous: ActionState, formData: Form
     return ruleError(error);
   }
   refreshPublicContent("project");
-  redirect(`/admin/projeler/${id}`);
+  redirect(`/admin/projeler/${id}?bildirim=taslak`);
 }
 
 export async function updateProjectRootAction(
@@ -123,7 +149,7 @@ export async function updateProjectRootAction(
   if (!auth.ok) return auth.state;
   if (!idSchema.safeParse(id).success) return INVALID;
   const root = rootFields(formData);
-  if (!root.success) return { ok: false, fieldErrors: fieldErrors(root.error) };
+  if (!root.success) return invalidFields(fieldErrors(root.error));
   try {
     await persistMedia(root.data, formData);
     await updateProjectRoot(getDb(), auth.actor, id, root.data);
@@ -146,7 +172,7 @@ export async function saveProjectTranslationAction(
   const parsedLocale = localeSchema.safeParse(locale);
   if (!idSchema.safeParse(id).success || !parsedLocale.success) return INVALID;
   const translation = translationFields(formData);
-  if (!translation.success) return { ok: false, fieldErrors: fieldErrors(translation.error) };
+  if (!translation.success) return invalidFields(fieldErrors(translation.error));
   try {
     await saveProjectTranslation(getDb(), auth.actor, id, parsedLocale.data, translation.data);
   } catch (error) {
@@ -154,7 +180,7 @@ export async function saveProjectTranslationAction(
   }
   refreshPublicContent("project");
   refresh();
-  return { ok: true, message: `${localeLabels[parsedLocale.data]} içerik kaydedildi.` };
+  return { ok: true, message: `${localeLabels[parsedLocale.data]} taslak kaydedildi.` };
 }
 
 export async function setProjectStatusAction(id: string, locale: string, status: string): Promise<ActionState> {
@@ -164,6 +190,9 @@ export async function setProjectStatusAction(id: string, locale: string, status:
   if (!idSchema.safeParse(id).success || !parsedLocale.success) return INVALID;
   if (status !== "published" && status !== "draft") return INVALID;
   try {
+    if (status === "published") {
+      await assertProjectLocalePublishable(getDb(), id, parsedLocale.data);
+    }
     await setTranslationStatus(getDb(), {
       entity: "project",
       entityId: id,
@@ -176,7 +205,7 @@ export async function setProjectStatusAction(id: string, locale: string, status:
     if (error instanceof TranslationNotFoundError) {
       return { ok: false, message: "Önce bu dildeki içeriği kaydedin." };
     }
-    throw error;
+    return ruleError(error);
   }
   refreshPublicContent("project");
   refresh();

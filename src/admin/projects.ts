@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, ilike, inArray, or } from "drizzle-orm";
+import { and, asc, count, desc, eq, ilike, inArray, ne, or } from "drizzle-orm";
 import type { Database } from "../db/client";
 import {
   projectGallery,
@@ -10,9 +10,10 @@ import {
 import { rememberSlugChange } from "@/content/slug-redirects";
 import { locales, type Locale } from "../i18n/config";
 import { ADMIN_PAGE_SIZE, clampPage } from "../lib/pagination";
+import { nextSlugCandidate, slugFromTitle } from "../lib/slug";
 import { writeAudit } from "./audit";
 import { AdminRuleError } from "./users";
-import type { ProjectRootInput, ProjectTranslationInput } from "./validation";
+import type { ProjectDraftTranslationInput, ProjectRootInput, ProjectTranslationInput } from "./validation";
 
 type Actor = { id: string; ip?: string | null };
 
@@ -167,6 +168,82 @@ export async function getProjectForEditor(db: Database, id: string): Promise<Pro
   return { ...root, gallery: gallery.map((row) => row.assetId), translations };
 }
 
+async function slugTaken(
+  db: Database,
+  locale: Locale,
+  slug: string,
+  excludeProjectId?: string,
+): Promise<boolean> {
+  const [taken] = await db
+    .select({ id: projectTranslations.projectId })
+    .from(projectTranslations)
+    .where(
+      and(
+        eq(projectTranslations.locale, locale),
+        eq(projectTranslations.slug, slug),
+        excludeProjectId ? ne(projectTranslations.projectId, excludeProjectId) : undefined,
+      ),
+    )
+    .limit(1);
+  return Boolean(taken);
+}
+
+export async function uniqueProjectSlug(
+  db: Database,
+  locale: Locale,
+  title: string,
+  preferred: string,
+  excludeProjectId?: string,
+): Promise<string> {
+  if (preferred) {
+    if (await slugTaken(db, locale, preferred, excludeProjectId)) throw new SlugTakenError();
+    return preferred;
+  }
+  const base = slugFromTitle(title) || "projet";
+  for (let attempt = 1; attempt < 500; attempt += 1) {
+    const candidate = nextSlugCandidate(base, attempt);
+    if (!(await slugTaken(db, locale, candidate, excludeProjectId))) return candidate;
+  }
+  throw new AdminRuleError("Benzersiz bağlantı adı üretilemedi.");
+}
+
+export async function resolveProjectTranslation(
+  db: Database,
+  locale: Locale,
+  input: ProjectDraftTranslationInput,
+  excludeProjectId?: string,
+): Promise<ProjectTranslationInput> {
+  const slug = await uniqueProjectSlug(db, locale, input.title, input.slug, excludeProjectId);
+  return { ...input, slug };
+}
+
+export class LocalePublishError extends AdminRuleError {
+  readonly fieldErrors: Record<string, string>;
+
+  constructor(fieldErrors: Record<string, string>) {
+    super("Bu dil yayımlanmaya hazır değil. İşaretli alanları tamamlayın.");
+    this.name = "LocalePublishError";
+    this.fieldErrors = fieldErrors;
+  }
+}
+
+/** Publish checks only the requested locale; other languages stay as they are. */
+export async function assertProjectLocalePublishable(
+  db: Database,
+  projectId: string,
+  locale: Locale,
+): Promise<void> {
+  const [row] = await db
+    .select({ title: projectTranslations.title, slug: projectTranslations.slug })
+    .from(projectTranslations)
+    .where(and(eq(projectTranslations.projectId, projectId), eq(projectTranslations.locale, locale)));
+  if (!row) throw new AdminRuleError("Önce bu dildeki içeriği kaydedin.");
+  const errors: Record<string, string> = {};
+  if (!row.title.trim()) errors.title = "Yayımlamak için başlık zorunludur.";
+  if (!row.slug.trim()) errors.slug = "Yayımlamak için bağlantı adı zorunludur.";
+  if (Object.keys(errors).length > 0) throw new LocalePublishError(errors);
+}
+
 async function writeGallery(tx: Database, projectId: string, assetIds: string[]) {
   await tx.delete(projectGallery).where(eq(projectGallery.projectId, projectId));
   if (assetIds.length === 0) return;
@@ -176,10 +253,11 @@ async function writeGallery(tx: Database, projectId: string, assetIds: string[])
 export async function createProject(
   db: Database,
   actor: Actor,
-  input: { root: ProjectRootInput; locale: Locale; translation: ProjectTranslationInput },
+  input: { root: ProjectRootInput; locale: Locale; translation: ProjectDraftTranslationInput },
 ): Promise<string> {
   try {
     return await db.transaction(async (tx) => {
+      const translation = await resolveProjectTranslation(tx, input.locale, input.translation);
       const [row] = await tx
         .insert(projects)
         .values({
@@ -192,7 +270,7 @@ export async function createProject(
       await tx.insert(projectTranslations).values({
         projectId: row.id,
         locale: input.locale,
-        ...input.translation,
+        ...translation,
       });
       await writeGallery(tx, row.id, input.root.gallery);
       await writeAudit(tx, {
@@ -240,12 +318,13 @@ export async function saveProjectTranslation(
   actor: Actor,
   id: string,
   locale: Locale,
-  input: ProjectTranslationInput,
+  input: ProjectDraftTranslationInput,
 ): Promise<void> {
   try {
     await db.transaction(async (tx) => {
       const [root] = await tx.select({ id: projects.id }).from(projects).where(eq(projects.id, id));
       if (!root) throw new AdminRuleError("Kayıt bulunamadı.");
+      const translation = await resolveProjectTranslation(tx, locale, input, id);
       const [existing] = await tx
         .select({ id: projectTranslations.id, slug: projectTranslations.slug })
         .from(projectTranslations)
@@ -256,11 +335,11 @@ export async function saveProjectTranslation(
           section: "projects",
           entityId: id,
           previous: existing.slug,
-          next: input.slug,
+          next: translation.slug,
         });
-        await tx.update(projectTranslations).set(input).where(eq(projectTranslations.id, existing.id));
+        await tx.update(projectTranslations).set(translation).where(eq(projectTranslations.id, existing.id));
       } else {
-        await tx.insert(projectTranslations).values({ projectId: id, locale, ...input });
+        await tx.insert(projectTranslations).values({ projectId: id, locale, ...translation });
       }
       await writeAudit(tx, {
         actorUserId: actor.id,

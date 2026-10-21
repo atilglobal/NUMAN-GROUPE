@@ -77,16 +77,23 @@ export const sortOrderSchema = z.coerce
   .min(0, "Sıra 0 veya daha büyük olmalıdır.")
   .max(100000, "Sıra çok büyük.");
 
+const SLUG_MESSAGE = "Yalnızca küçük harf (a-z), rakam ve tire kullanın; örnek: stade-national.";
+
 export const slugSchema = z
   .string()
   .trim()
   .toLowerCase()
   .min(1, "Bağlantı adı zorunludur.")
   .max(160, "Bağlantı adı en fazla 160 karakter olabilir.")
-  .regex(
-    new RegExp(SLUG_PATTERN),
-    "Yalnızca küçük harf (a-z), rakam ve tire kullanın; örnek: stade-national.",
-  );
+  .regex(new RegExp(SLUG_PATTERN), SLUG_MESSAGE);
+
+/** Empty is allowed on draft save; a unique slug is generated afterwards. */
+export const optionalSlugSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .max(160, "Bağlantı adı en fazla 160 karakter olabilir.")
+  .refine((value) => value === "" || new RegExp(SLUG_PATTERN).test(value), SLUG_MESSAGE);
 
 export const seoTitleSchema = optional(70, "SEO başlığı");
 export const seoDescriptionSchema = optional(200, "SEO açıklaması");
@@ -144,15 +151,27 @@ export const projectRootSchema = z.object({
 
 export type ProjectRootInput = z.infer<typeof projectRootSchema>;
 
-export const projectTranslationSchema = z.object({
+const projectTranslationFields = {
   title: required(200, "Başlık"),
-  slug: slugSchema,
   summary: optional(500, "Kısa açıklama"),
   body: optional(20000, "Ayrıntılı içerik"),
   seoTitle: seoTitleSchema,
   seoDescription: seoDescriptionSchema,
+};
+
+/** Draft create/save: title + optional slug. Cover, gallery and SEO stay optional. */
+export const projectDraftTranslationSchema = z.object({
+  ...projectTranslationFields,
+  slug: optionalSlugSchema,
 });
 
+/** Publish: that locale must already have a title and a valid slug. */
+export const projectTranslationSchema = z.object({
+  ...projectTranslationFields,
+  slug: slugSchema,
+});
+
+export type ProjectDraftTranslationInput = z.infer<typeof projectDraftTranslationSchema>;
 export type ProjectTranslationInput = z.infer<typeof projectTranslationSchema>;
 
 export const mediaAltSchema = z.object({

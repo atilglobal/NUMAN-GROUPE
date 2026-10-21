@@ -27,9 +27,14 @@ const PROJECT_STATUS_TR = {
   completed: "Tamamlanan Projeler",
 } as const;
 
-export default async function EditProjectPage({ params }: PageProps<"/admin/projeler/[id]">) {
+export default async function EditProjectPage({
+  params,
+  searchParams,
+}: PageProps<"/admin/projeler/[id]">) {
   await requirePermission("content:write");
   const { id } = await params;
+  const query = await searchParams;
+  const justDrafted = query.bildirim === "taslak";
   if (!idSchema.safeParse(id).success) notFound();
   const db = getDb();
   const [entry, media] = await Promise.all([getProjectForEditor(db, id), listImagesForPicker(db)]);
@@ -98,6 +103,12 @@ export default async function EditProjectPage({ params }: PageProps<"/admin/proj
         }
       />
       <div className="grid gap-6">
+        {justDrafted ? (
+          <p role="status" className="rounded-md border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+            Taslak kaydedildi. Fransızca içerik bu projeye yazıldı; İngilizce ve Türkçe için “Taslak kaydet”,
+            yayımlamak için “Yayımla” kullanın.
+          </p>
+        ) : null}
         <Card title="İçerik">
           <LocaleTabs label="İçerik dili" tabs={tabs} />
         </Card>

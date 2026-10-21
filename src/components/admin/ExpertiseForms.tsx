@@ -85,7 +85,7 @@ export function PublishForm({ action, published }: { action: ServerAction; publi
     <ActionForm action={action} className="grid gap-2">
       <FormStatus />
       <div>
-        <SubmitButton variant={published ? "secondary" : "primary"} pendingLabel="İşleniyor…">
+        <SubmitButton variant={published ? "secondary" : "primary"} pendingLabel={published ? "Kaydediliyor…" : "Yayımlanıyor…"}>
           {published ? "Yayından kaldır" : "Yayımla"}
         </SubmitButton>
       </div>

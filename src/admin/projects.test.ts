@@ -5,7 +5,15 @@ import { setTranslationStatus } from "@/content/publishing";
 import type { Database } from "@/db/client";
 import { mediaAssets, projectGallery, projectTranslations } from "@/db/schema";
 import { createTestDb, truncateAll } from "@/db/testing";
-import { createProject, deleteProject, getProjectForEditor, saveProjectTranslation, updateProjectRoot } from "./projects";
+import {
+  SlugTakenError,
+  assertProjectLocalePublishable,
+  createProject,
+  deleteProject,
+  getProjectForEditor,
+  saveProjectTranslation,
+  updateProjectRoot,
+} from "./projects";
 import { createUserWithPassword } from "./users";
 
 vi.mock("next/cache", () => ({ updateTag: vi.fn() }));
@@ -111,6 +119,79 @@ describe("project editing", () => {
     const detail = await findDetail(db, "projects", "fr", "stade-national", { demo: false });
     expect(detail?.image?.assetId).toBe(a);
     expect(detail?.gallery.map((item) => item.assetId)).toEqual([b, a]);
+  });
+
+  it("creates a French draft from title only and generates a unique slug", async () => {
+    const first = await createProject(db, actor, {
+      root,
+      locale: "fr",
+      translation: { title: "Stade d'été", slug: "", summary: null, body: null, seoTitle: null, seoDescription: null },
+    });
+    const second = await createProject(db, actor, {
+      root,
+      locale: "fr",
+      translation: { title: "Stade d'été", slug: "", summary: null, body: null, seoTitle: null, seoDescription: null },
+    });
+
+    const firstEditor = await getProjectForEditor(db, first);
+    const secondEditor = await getProjectForEditor(db, second);
+    expect(firstEditor?.translations.fr).toMatchObject({ title: "Stade d'été", slug: "stade-d-ete", status: "draft" });
+    expect(secondEditor?.translations.fr).toMatchObject({ slug: "stade-d-ete-2", status: "draft" });
+    expect(firstEditor?.translations.en).toBeUndefined();
+    expect(firstEditor?.translations.tr).toBeUndefined();
+    expect(await listProjects(db, "fr", { demo: false })).toEqual([]);
+  });
+
+  it("saves EN and TR separately and publishes only the requested locale", async () => {
+    const id = await createProject(db, actor, {
+      root,
+      locale: "fr",
+      translation: { title: "Stade", slug: "", summary: null, body: null, seoTitle: null, seoDescription: null },
+    });
+    await saveProjectTranslation(db, actor, id, "en", {
+      title: "Stadium",
+      slug: "",
+      summary: null,
+      body: null,
+      seoTitle: null,
+      seoDescription: null,
+    });
+    await saveProjectTranslation(db, actor, id, "tr", {
+      title: "Stadyum",
+      slug: "",
+      summary: null,
+      body: null,
+      seoTitle: null,
+      seoDescription: null,
+    });
+
+    await publish(id, "fr");
+    expect((await listProjects(db, "fr", { demo: false })).map((item) => item.slug)).toEqual(["stade"]);
+    expect(await listProjects(db, "en", { demo: false })).toEqual([]);
+    expect(await listProjects(db, "tr", { demo: false })).toEqual([]);
+
+    await publish(id, "en");
+    expect((await listProjects(db, "en", { demo: false })).map((item) => item.slug)).toEqual(["stadium"]);
+    expect(await findDetail(db, "projects", "en", "stadium", { demo: false })).toMatchObject({ title: "Stadium" });
+    expect(await findDetail(db, "projects", "tr", "stadyum", { demo: false })).toBeNull();
+
+    const editor = await getProjectForEditor(db, id);
+    expect(editor?.translations.fr?.status).toBe("published");
+    expect(editor?.translations.en?.status).toBe("published");
+    expect(editor?.translations.tr?.status).toBe("draft");
+  });
+
+  it("rejects a taken slug and publish of a missing locale", async () => {
+    await createProject(db, actor, { root, locale: "fr", translation });
+    await expect(createProject(db, actor, { root, locale: "fr", translation })).rejects.toBeInstanceOf(SlugTakenError);
+
+    const other = await createProject(db, actor, {
+      root,
+      locale: "fr",
+      translation: { ...translation, slug: "autre-stade" },
+    });
+    await expect(assertProjectLocalePublishable(db, other, "en")).rejects.toThrow("Önce bu dildeki içeriği kaydedin.");
+    await expect(assertProjectLocalePublishable(db, other, "fr")).resolves.toBeUndefined();
   });
 
   it("does not overwrite another language when saving a translation", async () => {

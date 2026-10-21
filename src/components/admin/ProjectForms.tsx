@@ -17,7 +17,8 @@ export type ProjectTranslationDefaults = {
   seoDescription: string;
 };
 
-const SLUG_HINT = "Sayfa adresinin son bölümü. Yalnızca küçük harf (a-z), rakam ve tire.";
+const SLUG_HINT =
+  "Boş bırakılırsa başlıktan, kurallara uygun ve benzersiz bir bağlantı adı üretilir. Yalnızca küçük harf (a-z), rakam ve tire.";
 const BODY_HINT =
   "Biçimlendirme: ## Başlık, ### Alt başlık, - madde, 1. numaralı madde, **kalın**, *italik*, [bağlantı metni](https://…). HTML kullanılamaz.";
 
@@ -32,7 +33,7 @@ function TranslationFields({ defaults }: { defaults: ProjectTranslationDefaults 
     <>
       <div className="grid gap-4 sm:grid-cols-2">
         <TextField label="Başlık" name="title" defaultValue={defaults.title} required maxLength={200} />
-        <TextField label="Bağlantı adı (slug)" name="slug" defaultValue={defaults.slug} hint={SLUG_HINT} required maxLength={160} />
+        <TextField label="Bağlantı adı (slug)" name="slug" defaultValue={defaults.slug} hint={SLUG_HINT} maxLength={160} />
       </div>
       <TextAreaField label="Kısa açıklama" name="summary" defaultValue={defaults.summary} rows={3} maxLength={500} />
       <TextAreaField label="Ayrıntılı içerik" name="body" defaultValue={defaults.body} rows={10} maxLength={20000} hint={BODY_HINT} />
@@ -102,7 +103,8 @@ export function NewProjectForm({ action, media }: { action: ServerAction; media:
       <ActionForm action={action} className="grid gap-6">
         <FormStatus />
         <p className="text-sm text-muted">
-          Fransızca taslak olarak oluşturulur. Diğer diller sonraki ekranda eklenir.
+          Bir dilde başlık ve proje durumu yeterlidir. Kapak, galeri, SEO ve diğer diller taslağı engellemez.
+          Kayıttan sonra düzenleme ekranı açılır.
         </p>
         <TranslationFields defaults={emptyTranslation} />
         <ProjectRootFields
@@ -116,7 +118,7 @@ export function NewProjectForm({ action, media }: { action: ServerAction; media:
           media={media}
         />
         <div>
-          <SubmitButton pendingLabel="Oluşturuluyor…">Taslak olarak oluştur</SubmitButton>
+          <SubmitButton pendingLabel="Kaydediliyor…">Taslak kaydet</SubmitButton>
         </div>
       </ActionForm>
     </div>
@@ -136,13 +138,13 @@ export function ProjectTranslationForm({
     <ActionForm action={action} className="grid gap-4">
       {!exists ? (
         <p className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-          Bu dilde henüz içerik yok. Kaydedince taslak olur.
+          Bu dilde henüz içerik yok. “Taslak kaydet” yalnızca bu dili yazar; diğer diller değişmez.
         </p>
       ) : null}
       <FormStatus />
       <TranslationFields defaults={defaults} />
       <div>
-        <SubmitButton>Kaydet</SubmitButton>
+        <SubmitButton pendingLabel="Kaydediliyor…">Taslak kaydet</SubmitButton>
       </div>
     </ActionForm>
   );
@@ -164,7 +166,7 @@ export function ProjectRootForm({
         <FormStatus />
         <ProjectRootFields defaults={defaults} media={media} />
         <div>
-          <SubmitButton>Genel bilgileri kaydet</SubmitButton>
+          <SubmitButton pendingLabel="Kaydediliyor…">Genel bilgileri kaydet</SubmitButton>
         </div>
       </ActionForm>
     </div>

@@ -45,6 +45,11 @@ export function ActionForm({
 }) {
   const [state, formAction, pending] = useActionState(action, { ok: false });
   const formRef = useRef<HTMLFormElement>(null);
+  const locked = useRef(false);
+
+  useEffect(() => {
+    if (!pending) locked.current = false;
+  }, [pending]);
 
   useEffect(() => {
     if (!state.ok) return;
@@ -56,6 +61,8 @@ export function ActionForm({
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (pending || locked.current) return;
+    locked.current = true;
     const submitter = (event.nativeEvent as SubmitEvent).submitter;
     const formData = new FormData(event.currentTarget, submitter);
     startTransition(() => formAction(formData));
@@ -75,7 +82,13 @@ export function useFormState() {
 /** Announces the result of the last submission. */
 export function FormStatus() {
   const { state, pending } = useFormState();
-  if (pending || !state.message) return null;
+  if (pending) return null;
+  const fallback =
+    !state.ok && state.fieldErrors && Object.keys(state.fieldErrors).length > 0
+      ? "Kayıt tamamlanamadı. İşaretli alanları kontrol edin."
+      : null;
+  const message = state.message ?? fallback;
+  if (!message) return null;
   return (
     <p
       role={state.ok ? "status" : "alert"}
@@ -83,7 +96,7 @@ export function FormStatus() {
         state.ok ? "border-emerald-300 bg-emerald-50 text-emerald-900" : "border-red-300 bg-red-50 text-red-900"
       }`}
     >
-      {state.message}
+      {message}
     </p>
   );
 }
