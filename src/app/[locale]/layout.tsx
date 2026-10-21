@@ -3,6 +3,7 @@ import { Inter, Source_Serif_4 } from "next/font/google";
 import { isDemoContentEnabled } from "@/content/demo-policy";
 import { getFooterMenu, getHeaderMenu, getSiteChrome } from "@/content/service";
 import { locales } from "@/i18n/config";
+import { documentHtmlProps, googleNoTranslateMeta } from "@/i18n/document";
 import { getI18n } from "@/i18n/server";
 import { AlternatesProvider } from "@/components/i18n/alternates";
 import { DemoBanner } from "@/components/layout/DemoBanner";
@@ -38,6 +39,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description: chrome.copy?.seoDescription ?? dict.meta.description,
     icons: chrome.faviconSrc ? { icon: chrome.faviconSrc } : undefined,
     robots: isDemoContentEnabled() ? { index: false, follow: false } : undefined,
+    other: googleNoTranslateMeta,
     openGraph: {
       type: "website",
       siteName: dict.meta.siteName,
@@ -69,7 +71,7 @@ export default async function LocaleLayout({ children }: LayoutProps<"/[locale]"
   }));
 
   return (
-    <html lang={locale} className={`${inter.variable} ${display.variable} h-full`}>
+    <html {...documentHtmlProps(locale, `${inter.variable} ${display.variable} h-full`)}>
       <body className="flex min-h-full flex-col antialiased">
         <a
           href="#main"

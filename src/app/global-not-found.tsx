@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Source_Serif_4 } from "next/font/google";
 import { locales } from "@/i18n/config";
+import { documentHtmlProps, googleNoTranslateMeta } from "@/i18n/document";
 import { dictionaries } from "@/i18n/dictionaries";
 import { homePath } from "@/i18n/routes";
 import "./globals.css";
@@ -11,6 +12,7 @@ const display = Source_Serif_4({ subsets: ["latin", "latin-ext"], variable: "--f
 export const metadata: Metadata = {
   title: `${dictionaries.fr.notFound.title} | NUMAN GROUPE`,
   robots: { index: false, follow: false },
+  other: googleNoTranslateMeta,
 };
 
 /** Unmatched URLs outside any language prefix: offer every language's home. */
@@ -18,7 +20,7 @@ export default function GlobalNotFound() {
   const fr = dictionaries.fr;
 
   return (
-    <html lang="fr" className={`${inter.variable} ${display.variable}`}>
+    <html {...documentHtmlProps("fr", `${inter.variable} ${display.variable}`)}>
       <body className="grid min-h-svh place-items-center bg-paper px-5 antialiased">
         <main className="w-full max-w-2xl py-20">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-700">
