@@ -1,11 +1,14 @@
+/** Bump when a public reader’s result shape changes so stale Vercel data-cache entries are not reused. */
+export const PUBLIC_CONTENT_REV = 2;
+
 export const contentTags = {
   expertises: "content:expertises",
-  projects: "content:projects",
+  projects: "content:projects:v2",
   visits: "content:visits",
   team: "content:team",
   pages: "content:pages",
   settings: "content:settings",
-  media: "content:media",
+  media: "content:media:v2",
   ui: "content:ui",
   menus: "content:menus",
   cms: "content:cms",
@@ -35,7 +38,7 @@ export function tagsForEntity(entity: ContentEntity): ContentTag[] {
     case "expertise":
       return [contentTags.expertises, contentTags.projects];
     case "project":
-      return [contentTags.projects];
+      return [contentTags.projects, contentTags.media];
     case "visit":
       return [contentTags.visits];
     case "team_member":

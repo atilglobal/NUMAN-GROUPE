@@ -61,7 +61,8 @@ describe("setTranslationStatus", () => {
       metadata: { locale: "fr" },
     });
 
-    expect(updateTag).toHaveBeenCalledWith("content:projects");
+    expect(updateTag).toHaveBeenCalledWith("content:projects:v2");
+    expect(updateTag).toHaveBeenCalledWith("content:media:v2");
   });
 
   it("unpublishes back to draft and removes the entry from public reads", async () => {

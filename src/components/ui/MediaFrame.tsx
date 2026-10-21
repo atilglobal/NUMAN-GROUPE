@@ -2,7 +2,6 @@ import Image from "next/image";
 import type { ReactNode } from "react";
 import type { ResolvedImage } from "@/content/types";
 import { mediaProfiles, type MediaProfileId } from "@/media/profiles";
-import { derivedMediaPath } from "@/media/url";
 import { cn } from "./cn";
 
 type MediaFrameProps = {
@@ -28,16 +27,9 @@ export function MediaFrame({
   profile,
   children,
 }: MediaFrameProps) {
-  const src =
-    image && profile && image.assetId
-      ? derivedMediaPath(
-          image.assetId,
-          profile,
-          mediaProfiles[profile].widths.at(-1) ?? 800,
-          image.focalX ?? 0.5,
-          image.focalY ?? 0.5,
-        )
-      : image?.src;
+  // Stored upload URL, not a derivative. Missing locale alt or a failed Sharp
+  // variant must not hide a file that /media/uploads/... can already serve.
+  const src = image?.src ?? null;
   const fit = profile ? mediaProfiles[profile].fit : "cover";
   const objectClass = fit === "contain" ? "object-contain" : fit === "inside" ? "object-contain" : "object-cover";
 
