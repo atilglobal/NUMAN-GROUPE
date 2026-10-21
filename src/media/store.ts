@@ -165,9 +165,31 @@ export async function updateMediaCaptions(
   db: Database,
   items: { id: string; captions: Partial<Record<Locale, string>> }[],
 ): Promise<void> {
+  await upsertMediaCopy(
+    db,
+    items.map((item) => ({ id: item.id, alts: {}, captions: item.captions })),
+  );
+}
+
+/** Writes FR/EN/TR alt and caption without dropping other locales or existing files. */
+export async function upsertMediaCopy(
+  db: Database,
+  items: { id: string; alts: Partial<Record<Locale, string>>; captions: Partial<Record<Locale, string>> }[],
+): Promise<void> {
   for (const item of items) {
     for (const locale of locales) {
+      const alt = item.alts[locale]?.trim() ?? "";
       const caption = item.captions[locale]?.trim() || null;
+      if (alt) {
+        await db
+          .insert(mediaAssetTranslations)
+          .values({ assetId: item.id, locale, alt, caption })
+          .onConflictDoUpdate({
+            target: [mediaAssetTranslations.assetId, mediaAssetTranslations.locale],
+            set: { alt, caption },
+          });
+        continue;
+      }
       await db
         .update(mediaAssetTranslations)
         .set({ caption })

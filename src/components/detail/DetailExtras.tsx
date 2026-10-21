@@ -1,6 +1,7 @@
 import type { DetailEntry } from "@/content/types";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
+import { GalleryLightbox } from "@/components/detail/GalleryLightbox";
 import { DemoBadge } from "@/components/ui/Badges";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 
@@ -85,22 +86,18 @@ export function DetailExtras({ entry, locale, dict }: Props) {
           <h2 id="detail-gallery" className="font-serif text-2xl text-navy-950">
             {dict.detail.gallery}
           </h2>
-          <ul className="mt-4 grid gap-4 sm:grid-cols-2">
-            {entry.gallery.map((image) => (
-              <li key={image.src}>
-                <figure>
-                  <MediaFrame image={image} sizes="(min-width: 640px) 384px, 100vw" className="aspect-[4/3]">
-                    {image.isDemo ? (
-                      <DemoBadge label={dict.demo.imageBadge} className="absolute right-3 top-3" />
-                    ) : null}
-                  </MediaFrame>
-                  {image.caption ? (
-                    <figcaption className="mt-2 text-sm text-muted">{image.caption}</figcaption>
-                  ) : null}
-                </figure>
-              </li>
-            ))}
-          </ul>
+          <GalleryLightbox
+            images={entry.gallery}
+            labels={{
+              gallery: dict.detail.gallery,
+              open: dict.detail.galleryOpen,
+              close: dict.detail.galleryClose,
+              previous: dict.detail.galleryPrev,
+              next: dict.detail.galleryNext,
+              of: dict.detail.galleryOf,
+              demo: dict.demo.imageBadge,
+            }}
+          />
         </section>
       ) : null}
     </>

@@ -13,6 +13,7 @@ export function MediaPicker({
   galleryIds,
   allowGallery = true,
   withCaptions = false,
+  withCopy = false,
   coverName = "coverAssetId",
   coverLabel = "Kapak yap",
   coverSelectedLabel = "Kapak seçili",
@@ -22,6 +23,7 @@ export function MediaPicker({
   galleryIds: string[];
   allowGallery?: boolean;
   withCaptions?: boolean;
+  withCopy?: boolean;
   coverName?: string;
   coverLabel?: string;
   coverSelectedLabel?: string;
@@ -110,17 +112,26 @@ export function MediaPicker({
         )}
       </div>
 
-      {withCaptions && captionIds.length > 0 ? (
+      {(withCaptions || withCopy) && captionIds.length > 0 ? (
         <div className="grid gap-3">
-          <p className="text-sm font-medium text-navy-950">Fotoğraf açıklamaları</p>
+          <p className="text-sm font-medium text-navy-950">
+            {withCopy ? "Görsel alternatif metinleri ve açıklamaları" : "Fotoğraf açıklamaları"}
+          </p>
           <p className="text-xs text-muted">
-            Açıklama isteğe bağlıdır. Görsel o dilde yalnızca alternatif metin varsa gösterilir.
+            Görseller üç dilde ortaktır. Alternatif metin ve açıklama dile göredir; boş bırakılan dil mevcut metni silmez.
           </p>
           {captionIds.map((id) => {
             const item = items.find((entry) => entry.id === id);
             return (
               <fieldset key={id} className="grid gap-2 rounded-md border border-line p-3">
                 <legend className="text-xs text-muted">{item?.originalFilename ?? id}</legend>
+                {withCopy ? (
+                  <div className="grid gap-2 sm:grid-cols-3">
+                    <TextField label="Alt FR" name={`alt-${id}-fr`} defaultValue={item?.alts.fr ?? ""} maxLength={200} />
+                    <TextField label="Alt EN" name={`alt-${id}-en`} defaultValue={item?.alts.en ?? ""} maxLength={200} />
+                    <TextField label="Alt TR" name={`alt-${id}-tr`} defaultValue={item?.alts.tr ?? ""} maxLength={200} />
+                  </div>
+                ) : null}
                 <div className="grid gap-2 sm:grid-cols-3">
                   <TextField label="Açıklama FR" name={`caption-${id}-fr`} defaultValue={item?.captions.fr ?? ""} maxLength={240} />
                   <TextField label="Açıklama EN" name={`caption-${id}-en`} defaultValue={item?.captions.en ?? ""} maxLength={240} />
@@ -200,8 +211,8 @@ export function MediaUploadForm() {
         <TextField label="Açıklama (TR)" name="captionTr" maxLength={240} />
       </div>
       <p className="text-xs text-muted">
-        En az bir dilde alternatif metin zorunlu. Vercel’de kalıcı yükleme için nesne depolama (MEDIA_S3_*) gerekir;
-        aksi halde yükleme reddedilir, başarılı sayılmaz.
+        En az bir dilde alternatif metin önerilir. Dosya S3 yoksa PostgreSQL medya deposuna yazılır; yalnızca kayıt
+        adresi olması dosyanın okunabildiği anlamına gelmez.
       </p>
       <div>
         <SubmitButton pendingLabel="Yükleniyor…">Görseli yükle</SubmitButton>

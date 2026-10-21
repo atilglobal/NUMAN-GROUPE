@@ -23,7 +23,8 @@ import { authorizeAction, type ActionState } from "@/auth/session";
 import { setTranslationStatus, TranslationNotFoundError } from "@/content/publishing";
 import { refreshPublicContent } from "@/content/revalidate";
 import { getDb } from "@/db/client";
-import { MediaUploadError, requireImageIds } from "@/media/store";
+import { MediaUploadError, requireImageIds, upsertMediaCopy } from "@/media/store";
+import type { Locale } from "@/i18n/config";
 
 const INVALID: ActionState = { ok: false, message: "Geçersiz istek." };
 
@@ -60,9 +61,26 @@ function rootFields(formData: FormData) {
   });
 }
 
-async function assertMedia(root: ProjectRootInput) {
+function mediaCopyFrom(formData: FormData, assetIds: string[]) {
+  return assetIds.map((id) => ({
+    id,
+    alts: {
+      fr: String(formData.get(`alt-${id}-fr`) ?? ""),
+      en: String(formData.get(`alt-${id}-en`) ?? ""),
+      tr: String(formData.get(`alt-${id}-tr`) ?? ""),
+    } as Partial<Record<Locale, string>>,
+    captions: {
+      fr: String(formData.get(`caption-${id}-fr`) ?? ""),
+      en: String(formData.get(`caption-${id}-en`) ?? ""),
+      tr: String(formData.get(`caption-${id}-tr`) ?? ""),
+    } as Partial<Record<Locale, string>>,
+  }));
+}
+
+async function persistMedia(root: ProjectRootInput, formData: FormData) {
   const ids = [...root.gallery, root.coverAssetId].filter((id): id is string => Boolean(id));
   await requireImageIds(getDb(), ids);
+  await upsertMediaCopy(getDb(), mediaCopyFrom(formData, ids));
 }
 
 export async function createProjectAction(_previous: ActionState, formData: FormData): Promise<ActionState> {
@@ -83,7 +101,7 @@ export async function createProjectAction(_previous: ActionState, formData: Form
 
   let id: string;
   try {
-    await assertMedia(root.data);
+    await persistMedia(root.data, formData);
     id = await createProject(getDb(), auth.actor, {
       root: root.data,
       locale: "fr",
@@ -107,7 +125,7 @@ export async function updateProjectRootAction(
   const root = rootFields(formData);
   if (!root.success) return { ok: false, fieldErrors: fieldErrors(root.error) };
   try {
-    await assertMedia(root.data);
+    await persistMedia(root.data, formData);
     await updateProjectRoot(getDb(), auth.actor, id, root.data);
   } catch (error) {
     return ruleError(error);
@@ -160,6 +178,7 @@ export async function setProjectStatusAction(id: string, locale: string, status:
     }
     throw error;
   }
+  refreshPublicContent("project");
   refresh();
   const label = localeLabels[parsedLocale.data];
   return {

@@ -155,7 +155,7 @@ describe("per-language publication", () => {
     expect(published[0].slugs).toEqual({ fr: "logements-reels", tr: "gercek-lojman" });
   });
 
-  it("drops an image in a language that has no alt text for it", async () => {
+  it("keeps a shared cover on every language and prefers that language's alt", async () => {
     const [asset] = await db
       .insert(mediaAssets)
       .values({ storageKey: "projects/cover.jpg", mimeType: "image/jpeg", byteSize: 100 })
@@ -172,7 +172,8 @@ describe("per-language publication", () => {
     const [fr] = await listProjects(db, "fr", off);
     const [en] = await listProjects(db, "en", off);
     expect(fr.image?.alt).toBe("Façade");
-    expect(en.image).toBeNull();
+    expect(en.image?.src).toBe(fr.image?.src);
+    expect(en.image?.alt).toBe("Façade");
   });
 
   it("lists published projects even when they have no expertise or country", async () => {
@@ -243,8 +244,8 @@ describe("project detail", () => {
     const withAlt = await asset("g/1.jpg", { fr: "Tribune" });
     const withoutAlt = await asset("g/2.jpg", { en: "Stand" });
     await db.insert(projectGallery).values([
-      { projectId: id, assetId: withoutAlt, sortOrder: 1 },
-      { projectId: id, assetId: withAlt, sortOrder: 2 },
+      { projectId: id, assetId: withoutAlt, sortOrder: 0 },
+      { projectId: id, assetId: withAlt, sortOrder: 1 },
     ]);
 
     const entry = await findDetail(db, "projects", "fr", "stade-detail", off);
@@ -252,7 +253,8 @@ describe("project detail", () => {
       kind: "project",
       status: "completed",
     });
-    expect(entry?.gallery.map((image) => image.alt)).toEqual(["Tribune"]);
+    expect(entry?.gallery.map((image) => image.alt)).toEqual(["Stand", "Tribune"]);
+    expect(entry?.image).toBeNull();
   });
 
   it("orders featured projects first, then by sort order", async () => {

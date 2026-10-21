@@ -170,6 +170,11 @@
     "participants": "Participants",
     "technical": "Technical information",
     "gallery": "Gallery",
+    "galleryOpen": "Enlarge image",
+    "galleryClose": "Close",
+    "galleryPrev": "Previous image",
+    "galleryNext": "Next image",
+    "galleryOf": "{current} / {total}",
     "video": "Video",
     "watchVideo": "Watch the video",
     "progress": "Progress"

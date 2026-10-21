@@ -75,7 +75,13 @@ export function ProjectRootFields({
         <input type="checkbox" name="isFeatured" defaultChecked={defaults.isFeatured} />
         Ana sayfada öne çıkar
       </label>
-      <MediaPicker items={media} coverId={defaults.coverAssetId} galleryIds={defaults.gallery} />
+      <MediaPicker
+        key={`${defaults.coverAssetId ?? ""}:${defaults.gallery.join(",")}`}
+        items={media}
+        coverId={defaults.coverAssetId}
+        galleryIds={defaults.gallery}
+        withCopy
+      />
     </div>
   );
 }

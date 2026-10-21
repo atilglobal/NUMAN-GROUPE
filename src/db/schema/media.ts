@@ -61,7 +61,7 @@ export const mediaPlacements = pgTable(
   ],
 );
 
-/** Alt text is per language; an image without alt in a language is not shown there. */
+/** Alt and caption are per language; the file itself is shared across locales. */
 export const mediaAssetTranslations = pgTable(
   "media_asset_translations",
   {

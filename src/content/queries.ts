@@ -72,6 +72,19 @@ function visible(isDemo: AnyPgColumn, { demo }: ReadOptions): SQL | undefined {
   return demo ? undefined : eq(isDemo, false);
 }
 
+function pickLocaleCopy(
+  rows: { locale: Locale; alt: string; caption: string | null }[],
+  locale: Locale,
+  fallback: string,
+): { alt: string; caption: string | null } {
+  const exact = rows.find((row) => row.locale === locale);
+  const any = rows.find((row) => row.alt.trim());
+  return {
+    alt: exact?.alt.trim() || any?.alt.trim() || fallback,
+    caption: exact?.caption ?? null,
+  };
+}
+
 async function loadImages(
   db: Database,
   ids: (string | null)[],
@@ -81,43 +94,53 @@ async function loadImages(
   const wanted = [...new Set(ids.filter((id): id is string => Boolean(id)))];
   if (wanted.length === 0) return new Map();
 
-  const rows = await db
-    .select({
-      id: mediaAssets.id,
-      storageKey: mediaAssets.storageKey,
-      width: mediaAssets.width,
-      height: mediaAssets.height,
-      focalX: mediaAssets.focalX,
-      focalY: mediaAssets.focalY,
-      isDemo: mediaAssets.isDemo,
-      alt: mediaAssetTranslations.alt,
-      caption: mediaAssetTranslations.caption,
-    })
-    .from(mediaAssets)
-    .innerJoin(
-      mediaAssetTranslations,
-      and(
-        eq(mediaAssetTranslations.assetId, mediaAssets.id),
-        eq(mediaAssetTranslations.locale, locale),
-      ),
-    )
-    .where(and(inArray(mediaAssets.id, wanted), visible(mediaAssets.isDemo, options)));
+  const [assets, translations] = await Promise.all([
+    db
+      .select({
+        id: mediaAssets.id,
+        storageKey: mediaAssets.storageKey,
+        width: mediaAssets.width,
+        height: mediaAssets.height,
+        focalX: mediaAssets.focalX,
+        focalY: mediaAssets.focalY,
+        isDemo: mediaAssets.isDemo,
+        originalFilename: mediaAssets.originalFilename,
+      })
+      .from(mediaAssets)
+      .where(and(inArray(mediaAssets.id, wanted), visible(mediaAssets.isDemo, options))),
+    db
+      .select({
+        assetId: mediaAssetTranslations.assetId,
+        locale: mediaAssetTranslations.locale,
+        alt: mediaAssetTranslations.alt,
+        caption: mediaAssetTranslations.caption,
+      })
+      .from(mediaAssetTranslations)
+      .where(inArray(mediaAssetTranslations.assetId, wanted)),
+  ]);
 
   return new Map(
-    rows.map((row) => [
-      row.id,
-      {
-        src: mediaUrl(row.storageKey),
-        width: row.width,
-        height: row.height,
-        alt: row.alt,
-        caption: row.caption,
-        isDemo: row.isDemo,
-        assetId: row.id,
-        focalX: row.focalX,
-        focalY: row.focalY,
-      },
-    ]),
+    assets.map((asset) => {
+      const copy = pickLocaleCopy(
+        translations.filter((row) => row.assetId === asset.id),
+        locale,
+        asset.originalFilename?.trim() || asset.storageKey,
+      );
+      return [
+        asset.id,
+        {
+          src: mediaUrl(asset.storageKey),
+          width: asset.width,
+          height: asset.height,
+          alt: copy.alt,
+          caption: copy.caption,
+          isDemo: asset.isDemo,
+          assetId: asset.id,
+          focalX: asset.focalX,
+          focalY: asset.focalY,
+        },
+      ];
+    }),
   );
 }
 

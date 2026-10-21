@@ -106,6 +106,11 @@ describe("project editing", () => {
       { assetId: b, sortOrder: 0 },
       { assetId: a, sortOrder: 1 },
     ]);
+
+    await publish(id);
+    const detail = await findDetail(db, "projects", "fr", "stade-national", { demo: false });
+    expect(detail?.image?.assetId).toBe(a);
+    expect(detail?.gallery.map((item) => item.assetId)).toEqual([b, a]);
   });
 
   it("does not overwrite another language when saving a translation", async () => {

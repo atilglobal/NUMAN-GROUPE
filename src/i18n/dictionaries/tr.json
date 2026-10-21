@@ -170,6 +170,11 @@
     "participants": "Katılımcılar",
     "technical": "Teknik bilgiler",
     "gallery": "Galeri",
+    "galleryOpen": "Görseli büyüt",
+    "galleryClose": "Kapat",
+    "galleryPrev": "Önceki görsel",
+    "galleryNext": "Sonraki görsel",
+    "galleryOf": "{current} / {total}",
     "video": "Video",
     "watchVideo": "Videoyu izle",
     "progress": "İlerleme"

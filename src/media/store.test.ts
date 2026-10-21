@@ -5,7 +5,9 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import type { Database } from "@/db/client";
 import { expertises } from "@/db/schema";
 import { createTestDb, truncateAll } from "@/db/testing";
-import { deleteMediaAsset, MediaUploadError, saveUploadedImage } from "./store";
+import { deleteMediaAsset, MediaUploadError, saveUploadedImage, upsertMediaCopy } from "./store";
+import { mediaAssetTranslations } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import { listMediaUsage } from "./usage";
 
 vi.mock("next/cache", () => ({ updateTag: vi.fn() }));
@@ -58,6 +60,21 @@ describe("media library", () => {
     await expect(saveUploadedImage(db, { file: svg, alts: { fr: "Icone" }, actorUserId: null })).rejects.toBeInstanceOf(
       MediaUploadError,
     );
+  });
+
+  it("adds a missing locale alt without wiping the others", async () => {
+    const id = await saveUploadedImage(db, {
+      file: pngFile("cover.png"),
+      alts: { fr: "Couverture" },
+      actorUserId: null,
+    });
+    await upsertMediaCopy(db, [{ id, alts: { en: "Cover" }, captions: { fr: "Légende" } }]);
+    const rows = await db
+      .select()
+      .from(mediaAssetTranslations)
+      .where(eq(mediaAssetTranslations.assetId, id));
+    expect(rows.find((row) => row.locale === "fr")).toMatchObject({ alt: "Couverture", caption: "Légende" });
+    expect(rows.find((row) => row.locale === "en")).toMatchObject({ alt: "Cover" });
   });
 
   it("reports usage and allows a forced-style delete that clears the cover", async () => {
