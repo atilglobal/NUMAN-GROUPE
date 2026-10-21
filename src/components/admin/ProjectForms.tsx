@@ -3,7 +3,7 @@
 import type { ActionState } from "@/auth/session";
 import type { ProjectStatus } from "@/db/schema/projects";
 import type { MediaPickerItem } from "@/media/store";
-import { ActionForm, FormStatus, SelectField, SubmitButton, TextAreaField, TextField } from "./forms";
+import { ActionForm, CheckboxField, FormStatus, SelectField, SubmitButton, TextAreaField, TextField } from "./forms";
 import { MediaPicker, MediaUploadForm } from "./MediaPicker";
 
 type ServerAction = (previous: ActionState, formData: FormData) => Promise<ActionState>;
@@ -72,10 +72,9 @@ export function ProjectRootFields({
         />
         <TextField label="Sıra" name="sortOrder" type="number" min={0} defaultValue={defaults.sortOrder} />
       </div>
-      <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" name="isFeatured" defaultChecked={defaults.isFeatured} />
+      <CheckboxField name="isFeatured" defaultChecked={defaults.isFeatured}>
         Ana sayfada öne çıkar
-      </label>
+      </CheckboxField>
       <MediaPicker
         key={`${defaults.coverAssetId ?? ""}:${defaults.gallery.join(",")}`}
         items={media}

@@ -109,8 +109,12 @@ export const expertiseTranslationSchema = z.object({
 
 export type ExpertiseTranslationInput = z.infer<typeof expertiseTranslationSchema>;
 
+/**
+ * HTML checkbox: absent / null / "" when unchecked, "on" when checked.
+ * FormData.get() yields null for a missing name — Zod `.optional()` only allows undefined.
+ */
 export const featuredSchema = z
-  .union([z.literal("on"), z.literal("true"), z.literal("false")])
+  .union([z.literal("on"), z.literal("true"), z.literal("false"), z.literal(""), z.null()])
   .optional()
   .transform((value) => value === "on" || value === "true");
 
@@ -316,12 +320,49 @@ export const pageTranslationSchema = z.object({
 
 export type PageTranslationInput = z.infer<typeof pageTranslationSchema>;
 
+export const ADMIN_FIELD_LABELS: Record<string, string> = {
+  title: "Başlık",
+  slug: "Bağlantı adı",
+  summary: "Kısa açıklama",
+  body: "Ayrıntılı içerik",
+  seoTitle: "SEO başlığı",
+  seoDescription: "SEO açıklaması",
+  status: "Proje durumu",
+  sortOrder: "Sıra",
+  isFeatured: "Ana sayfada öne çıkar",
+  isVisible: "Görünürlük",
+  coverAssetId: "Kapak görseli",
+  gallery: "Galeri",
+  _form: "Form",
+};
+
+export function fieldLabel(name: string): string {
+  if (ADMIN_FIELD_LABELS[name]) return ADMIN_FIELD_LABELS[name];
+  const root = name.split(".")[0] ?? name;
+  if (ADMIN_FIELD_LABELS[root]) return ADMIN_FIELD_LABELS[root];
+  if (name.startsWith("alt-")) return "Alternatif metin";
+  if (name.startsWith("caption-")) return "Görsel açıklaması";
+  return name;
+}
+
 /** First message per field, for display next to inputs. */
 export function fieldErrors(error: z.ZodError): Record<string, string> {
   const result: Record<string, string> = {};
   for (const issue of error.issues) {
     const key = issue.path.join(".") || "_form";
     if (!result[key]) result[key] = issue.message;
+    const root = typeof issue.path[0] === "string" ? issue.path[0] : null;
+    if (root && !result[root]) result[root] = issue.message;
   }
   return result;
+}
+
+export function summarizeFieldErrors(errors: Record<string, string>): string {
+  const lines = Object.entries(errors)
+    .filter(([key], index, all) => {
+      const root = key.split(".")[0] ?? key;
+      return key === root || !all.some(([other]) => other === root);
+    })
+    .map(([key, message]) => `${fieldLabel(key)}: ${message}`);
+  return `Kayıt tamamlanamadı. ${lines.join(" ")}`;
 }

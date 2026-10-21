@@ -13,6 +13,7 @@ import {
   type ReactNode,
   type TextareaHTMLAttributes,
 } from "react";
+import { fieldLabel } from "@/admin/validation";
 import type { ActionState } from "@/auth/session";
 import { buttonClass, type ButtonVariant } from "./button-styles";
 
@@ -52,9 +53,20 @@ export function ActionForm({
   }, [pending]);
 
   useEffect(() => {
-    if (!state.ok) return;
-    if (resetOnSuccess) formRef.current?.reset();
-    onSuccess?.();
+    if (state.ok) {
+      if (resetOnSuccess) formRef.current?.reset();
+      onSuccess?.();
+      return;
+    }
+    const form = formRef.current;
+    if (!form || !state.fieldErrors) return;
+    const first = Object.keys(state.fieldErrors)[0];
+    if (!first) return;
+    const target =
+      form.querySelector<HTMLElement>(`[name="${CSS.escape(first)}"]`) ??
+      form.querySelector<HTMLElement>("[aria-invalid=true]");
+    target?.scrollIntoView({ block: "center", behavior: "smooth" });
+    target?.focus();
     // Runs once per returned state object.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
@@ -83,21 +95,31 @@ export function useFormState() {
 export function FormStatus() {
   const { state, pending } = useFormState();
   if (pending) return null;
-  const fallback =
-    !state.ok && state.fieldErrors && Object.keys(state.fieldErrors).length > 0
-      ? "Kayıt tamamlanamadı. İşaretli alanları kontrol edin."
-      : null;
-  const message = state.message ?? fallback;
-  if (!message) return null;
+  const entries = Object.entries(state.fieldErrors ?? {}).filter(([key], index, all) => {
+    const root = key.split(".")[0] ?? key;
+    return key === root || !all.some(([other]) => other === root);
+  });
+  if (state.ok ? !state.message : !state.message && entries.length === 0) return null;
+  if (state.ok) {
+    return (
+      <p role="status" className="rounded-md border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+        {state.message}
+      </p>
+    );
+  }
   return (
-    <p
-      role={state.ok ? "status" : "alert"}
-      className={`rounded-md border px-4 py-3 text-sm ${
-        state.ok ? "border-emerald-300 bg-emerald-50 text-emerald-900" : "border-red-300 bg-red-50 text-red-900"
-      }`}
-    >
-      {message}
-    </p>
+    <div role="alert" className="rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-900">
+      {state.message ? <p>{state.message}</p> : null}
+      {!state.message && entries.length > 0 ? (
+        <ul className="mt-2 list-disc pl-5">
+          {entries.map(([key, reason]) => (
+            <li key={key}>
+              {fieldLabel(key)}: {reason}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </div>
   );
 }
 
@@ -194,6 +216,40 @@ export function TextAreaField({ label, name, hint, ...props }: FieldProps & Text
         />
       )}
     </FieldShell>
+  );
+}
+
+export function CheckboxField({
+  name,
+  children,
+  defaultChecked,
+}: {
+  name: string;
+  children: ReactNode;
+  defaultChecked?: boolean;
+}) {
+  const id = useId();
+  const { state } = useFormState();
+  const error = state.fieldErrors?.[name];
+  return (
+    <div className="grid gap-1.5">
+      <label className="flex items-center gap-2 text-sm" htmlFor={id}>
+        <input
+          id={id}
+          type="checkbox"
+          name={name}
+          defaultChecked={defaultChecked}
+          className="size-4"
+          aria-invalid={error ? true : undefined}
+        />
+        {children}
+      </label>
+      {error ? (
+        <p className="text-sm text-red-700" id={`${id}-error`}>
+          {error}
+        </p>
+      ) : null}
+    </div>
   );
 }
 

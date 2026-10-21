@@ -5,7 +5,7 @@ import { uploadImageAction } from "@/admin/actions/media";
 import { buttonClass } from "./button-styles";
 import type { Locale } from "@/i18n/config";
 import type { MediaPickerItem } from "@/media/store";
-import { ActionForm, FormStatus, SubmitButton, TextField } from "./forms";
+import { ActionForm, FormStatus, SubmitButton, TextField, useFormState } from "./forms";
 
 export function MediaPicker({
   items,
@@ -40,6 +40,9 @@ export function MediaPicker({
     setGallery((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
   }
 
+  const formState = useFormState();
+  const coverError = formState.state.fieldErrors?.coverAssetId;
+  const galleryError = formState.state.fieldErrors?.gallery;
   const captionIds = [...new Set([cover, ...gallery].filter(Boolean))];
 
   function move(id: string, direction: -1 | 1) {
@@ -62,6 +65,8 @@ export function MediaPicker({
 
       <div>
         <p className="text-sm font-medium text-navy-950">Mevcut görseller</p>
+        {coverError ? <p className="mt-1 text-sm text-red-700">{coverError}</p> : null}
+        {galleryError ? <p className="mt-1 text-sm text-red-700">{galleryError}</p> : null}
         <p className="mt-1 text-xs text-muted">
           Bir dilde alternatif metni olmayan görsel o dilde sitede gösterilmez.
         </p>

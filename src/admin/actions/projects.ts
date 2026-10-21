@@ -13,14 +13,8 @@ import {
 } from "@/admin/projects";
 import { localeLabels } from "@/admin/labels";
 import { AdminRuleError } from "@/admin/users";
-import {
-  fieldErrors,
-  idSchema,
-  localeSchema,
-  projectDraftTranslationSchema,
-  projectRootSchema,
-  type ProjectRootInput,
-} from "@/admin/validation";
+import { parseProjectForm, parseProjectRootForm, parseProjectTranslationForm } from "@/admin/project-form";
+import { fieldErrors, idSchema, localeSchema, summarizeFieldErrors, type ProjectRootInput } from "@/admin/validation";
 import { authorizeAction, type ActionState } from "@/auth/session";
 import { setTranslationStatus, TranslationNotFoundError } from "@/content/publishing";
 import { refreshPublicContent } from "@/content/revalidate";
@@ -53,41 +47,22 @@ function ruleError(error: unknown): ActionState {
   if (error instanceof AdminRuleError || error instanceof MediaUploadError) {
     return { ok: false, message: error.message };
   }
-  console.error(error);
+  const name = error instanceof Error ? error.name : typeof error;
+  const detail = error instanceof Error ? error.message : String(error);
+  console.error("[project.action] unexpected failure", { name, detail: detail.slice(0, 400) });
   return SAVE_FAILED;
 }
 
 function invalidFields(errors: Record<string, string>): ActionState {
   return {
     ok: false,
-    message: "Kayıt tamamlanamadı. İşaretli alanları kontrol edin.",
+    message: summarizeFieldErrors(errors),
     fieldErrors: errors,
   };
 }
 
-function translationFields(formData: FormData) {
-  return projectDraftTranslationSchema.safeParse({
-    title: formData.get("title"),
-    slug: formData.get("slug") ?? "",
-    summary: formData.get("summary") ?? "",
-    body: formData.get("body") ?? "",
-    seoTitle: formData.get("seoTitle") ?? "",
-    seoDescription: formData.get("seoDescription") ?? "",
-  });
-}
-
-function rootFields(formData: FormData) {
-  const gallery = formData
-    .getAll("gallery")
-    .map((value) => String(value))
-    .filter(Boolean);
-  return projectRootSchema.safeParse({
-    status: formData.get("status"),
-    isFeatured: formData.get("isFeatured"),
-    sortOrder: formData.get("sortOrder") || 0,
-    coverAssetId: formData.get("coverAssetId") ?? "",
-    gallery,
-  });
+function logValidation(scope: string, errors: Record<string, string>) {
+  console.error(`[${scope}] validation failed`, { fields: Object.keys(errors), reasons: errors });
 }
 
 function mediaCopyFrom(formData: FormData, assetIds: string[]) {
@@ -116,22 +91,19 @@ export async function createProjectAction(_previous: ActionState, formData: Form
   const auth = await authorizeAction("content:write");
   if (!auth.ok) return auth.state;
 
-  const translation = translationFields(formData);
-  const root = rootFields(formData);
-  if (!translation.success || !root.success) {
-    return invalidFields({
-      ...(translation.success ? {} : fieldErrors(translation.error)),
-      ...(root.success ? {} : fieldErrors(root.error)),
-    });
+  const parsed = parseProjectForm(formData);
+  if (!parsed.ok) {
+    logValidation("project.create", parsed.fieldErrors);
+    return { ok: false, message: parsed.message, fieldErrors: parsed.fieldErrors };
   }
 
   let id: string;
   try {
-    await persistMedia(root.data, formData);
+    await persistMedia(parsed.root, formData);
     id = await createProject(getDb(), auth.actor, {
-      root: root.data,
+      root: parsed.root,
       locale: "fr",
-      translation: translation.data,
+      translation: parsed.translation,
     });
   } catch (error) {
     return ruleError(error);
@@ -148,8 +120,12 @@ export async function updateProjectRootAction(
   const auth = await authorizeAction("content:write");
   if (!auth.ok) return auth.state;
   if (!idSchema.safeParse(id).success) return INVALID;
-  const root = rootFields(formData);
-  if (!root.success) return invalidFields(fieldErrors(root.error));
+  const root = parseProjectRootForm(formData);
+  if (!root.success) {
+    const errors = fieldErrors(root.error);
+    logValidation("project.root", errors);
+    return invalidFields(errors);
+  }
   try {
     await persistMedia(root.data, formData);
     await updateProjectRoot(getDb(), auth.actor, id, root.data);
@@ -171,8 +147,12 @@ export async function saveProjectTranslationAction(
   if (!auth.ok) return auth.state;
   const parsedLocale = localeSchema.safeParse(locale);
   if (!idSchema.safeParse(id).success || !parsedLocale.success) return INVALID;
-  const translation = translationFields(formData);
-  if (!translation.success) return invalidFields(fieldErrors(translation.error));
+  const translation = parseProjectTranslationForm(formData);
+  if (!translation.success) {
+    const errors = fieldErrors(translation.error);
+    logValidation("project.translation", errors);
+    return invalidFields(errors);
+  }
   try {
     await saveProjectTranslation(getDb(), auth.actor, id, parsedLocale.data, translation.data);
   } catch (error) {

@@ -2,7 +2,7 @@
 
 import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 
-export type LocaleTab = { id: string; label: string; status: ReactNode; content: ReactNode };
+export type LocaleTab = { id: string; label: string; status: ReactNode; content: ReactNode; hasError?: boolean };
 
 /**
  * Accessible FR / EN / TR tabs (arrow keys, Home, End). Every panel stays
@@ -55,6 +55,7 @@ export function LocaleTabs({ tabs, label }: { tabs: LocaleTab[]; label: string }
             >
               {tab.label}
               {tab.status}
+              {tab.hasError ? <span className="text-xs font-medium text-red-700">Hata</span> : null}
             </button>
           );
         })}
