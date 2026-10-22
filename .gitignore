@@ -40,6 +40,11 @@ yarn-error.log*
 .env*
 !.env.example
 
+# Word extract (originals stay local; import copies bytes into media_blobs)
+/docs/backups/alfa-visits/unzipped/
+/docs/backups/alfa-visits/source.docx
+/docs/backups/alfa-visits/source.zip
+
 # vercel
 .vercel
 

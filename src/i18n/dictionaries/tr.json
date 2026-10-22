@@ -343,6 +343,10 @@
     "galleryPrev": "Önceki görsel",
     "galleryNext": "Sonraki görsel",
     "galleryOf": "{current} / {total}",
+    "zoomIn": "Yakınlaştır",
+    "zoomOut": "Uzaklaştır",
+    "showAllPhotos": "{count} fotoğrafın tümünü göster",
+    "showLessPhotos": "Galeriyi daralt",
     "video": "Video",
     "watchVideo": "Videoyu izle",
     "progress": "İlerleme"

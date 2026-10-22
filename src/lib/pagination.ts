@@ -1,4 +1,5 @@
 export const PUBLIC_PAGE_SIZE = 12;
+export const VISIT_PAGE_SIZE = 6;
 export const ADMIN_PAGE_SIZE = 20;
 
 export function pageCount(total: number, pageSize: number): number {

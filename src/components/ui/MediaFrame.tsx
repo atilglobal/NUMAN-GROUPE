@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { ResolvedImage } from "@/content/types";
-import { mediaProfiles, type MediaProfileId } from "@/media/profiles";
+import { mediaProfiles, type MediaFit, type MediaProfileId } from "@/media/profiles";
 import { cn } from "./cn";
 import { SafeMediaImage } from "./SafeMediaImage";
 
@@ -11,6 +11,7 @@ type MediaFrameProps = {
   imageClassName?: string;
   preload?: boolean;
   profile?: MediaProfileId;
+  fit?: MediaFit;
   children?: ReactNode;
 };
 
@@ -25,13 +26,14 @@ export function MediaFrame({
   imageClassName,
   preload,
   profile,
+  fit,
   children,
 }: MediaFrameProps) {
   // Stored upload URL, not a derivative. Missing locale alt or a failed Sharp
   // variant must not hide a file that /media/uploads/... can already serve.
   const src = image?.src ?? null;
-  const fit = profile ? mediaProfiles[profile].fit : "cover";
-  const objectClass = fit === "contain" ? "object-contain" : fit === "inside" ? "object-contain" : "object-cover";
+  const applied = fit ?? (profile ? mediaProfiles[profile].fit : "cover");
+  const objectClass = applied === "cover" ? "object-cover" : "object-contain";
 
   return (
     <div className={cn("relative overflow-hidden bg-navy-800", className)}>

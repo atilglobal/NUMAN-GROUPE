@@ -30,10 +30,10 @@ export function VisitList({
         breadcrumbs={[{ label: dict.nav.home, href: homePath(locale) }, { label }]}
         breadcrumbsLabel={dict.a11y.breadcrumbs}
         eyebrow={dict.visits.eyebrow}
-        title={label}
+        title={dict.visits.title}
         lead={dict.visits.description}
       />
-      <Container className="pb-16 lg:pb-20">
+      <Container className="pb-16 lg:pb-24">
         <p className="max-w-[42rem] text-sm leading-relaxed text-muted">{dict.visits.disclaimer}</p>
 
         <form method="get" className="mt-8 grid gap-3 border border-line bg-white p-4 sm:grid-cols-3">
@@ -84,9 +84,9 @@ export function VisitList({
             </EmptyState>
           </div>
         ) : (
-          <ul className="mt-10 grid gap-6">
+          <ul className="mt-12 grid gap-12">
             {listing.items.map((visit) => (
-              <li key={visit.id}>
+              <li key={visit.id} className="border-t border-line pt-10 first:border-t-0 first:pt-0">
                 <VisitCard
                   visit={visit}
                   href={detailPath(locale, "visits", visit.slug)}
@@ -101,7 +101,7 @@ export function VisitList({
         )}
 
         {last > 1 ? (
-          <nav aria-label={dict.visits.pagination} className="mt-10 flex flex-wrap items-center gap-3">
+          <nav aria-label={dict.visits.pagination} className="mt-12 flex flex-wrap items-center gap-3">
             {listing.page > 1 ? (
               <a
                 href={visitListHref(locale, { ...filters, page: listing.page - 1 })}

@@ -3,7 +3,7 @@ import { tryGetDb } from "@/db/client";
 import type { PageKey } from "@/db/schema";
 import type { Locale } from "@/i18n/config";
 import type { DetailSection } from "@/i18n/routes";
-import { PUBLIC_PAGE_SIZE } from "@/lib/pagination";
+import { PUBLIC_PAGE_SIZE, VISIT_PAGE_SIZE } from "@/lib/pagination";
 import { contentTags, PUBLIC_CONTENT_REV } from "./cache-tags";
 import { isDemoContentEnabled } from "./demo-policy";
 import { DEFAULT_GROUP_LAYOUT } from "./group-layout";
@@ -136,7 +136,7 @@ export async function getVisitListing(locale: Locale, filters: VisitListFilters)
   const db = tryGetDb();
   return db
     ? queries.listVisitsPage(db, locale, options(), filters)
-    : { items: [], total: 0, page: filters.page, pageSize: PUBLIC_PAGE_SIZE, countries: [], years: [] };
+    : { items: [], total: 0, page: filters.page, pageSize: VISIT_PAGE_SIZE, countries: [], years: [] };
 }
 
 export async function getRelatedVisits(locale: Locale, visitId: string, countryCode: string | null) {

@@ -5,6 +5,7 @@ import type { ActionState } from "@/auth/session";
 import type { Locale } from "@/i18n/config";
 import type { MediaPickerItem } from "@/media/store";
 import { ActionForm, FormStatus, SelectField, SubmitButton, TextAreaField, TextField } from "./forms";
+import { resolutionWarning } from "@/media/profiles";
 import { MediaPicker, MediaUploadForm } from "./MediaPicker";
 
 type ServerAction = (previous: ActionState, formData: FormData) => Promise<ActionState>;
@@ -111,7 +112,13 @@ function VisitRootFields({
   return (
     <div className="grid gap-4">
       <div className="grid gap-4 sm:grid-cols-2">
-        <TextField label="Tarih" name="visitedOn" type="date" defaultValue={defaults.visitedOn ?? ""} />
+        <TextField
+          label="Tarih"
+          name="visitedOn"
+          type="date"
+          defaultValue={defaults.visitedOn ?? ""}
+          hint="Belgede yoksa boş bırakın. Uydurma tarih yazmayın; sitede tarih alanı görünmez."
+        />
         <SelectField
           label="Ülke"
           name="countryCode"
@@ -125,6 +132,13 @@ function VisitRootFields({
       </label>
       <ParticipantFields initial={defaults.participants} />
       <MediaPicker items={media} coverId={defaults.coverAssetId} galleryIds={defaults.gallery} withCaptions />
+      {defaults.coverAssetId
+        ? (() => {
+            const cover = media.find((item) => item.id === defaults.coverAssetId);
+            const warning = cover ? resolutionWarning(cover.width, cover.height, "visitPhoto") : null;
+            return warning ? <p className="text-sm text-amber-800">{warning}</p> : null;
+          })()
+        : null}
     </div>
   );
 }

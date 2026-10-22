@@ -109,9 +109,14 @@ export function MediaPicker({
               return (
                 <li key={item.id} className="overflow-hidden rounded-md border border-line bg-white">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={item.src} alt="" className="aspect-[4/3] w-full object-cover" />
+                  <img src={item.src} alt="" className="aspect-[4/3] w-full bg-navy-950 object-contain" />
                   <div className="grid gap-1 p-2 text-xs">
                     <p className="truncate text-muted">{item.originalFilename ?? item.id}</p>
+                    {item.width && item.height ? (
+                      <p className="text-muted">
+                        {item.width}×{item.height} px
+                      </p>
+                    ) : null}
                     <p className="text-muted">Alt: {altSummary(item.alts)}</p>
                     <button
                       type="button"

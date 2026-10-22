@@ -343,6 +343,10 @@
     "galleryPrev": "Image précédente",
     "galleryNext": "Image suivante",
     "galleryOf": "{current} / {total}",
+    "zoomIn": "Agrandir",
+    "zoomOut": "Réduire",
+    "showAllPhotos": "Afficher les {count} photographies",
+    "showLessPhotos": "Réduire la galerie",
     "video": "Vidéo",
     "watchVideo": "Voir la vidéo",
     "progress": "Avancement"

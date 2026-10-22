@@ -343,6 +343,10 @@
     "galleryPrev": "Previous image",
     "galleryNext": "Next image",
     "galleryOf": "{current} / {total}",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "showAllPhotos": "Show all {count} photographs",
+    "showLessPhotos": "Show fewer photographs",
     "video": "Video",
     "watchVideo": "Watch the video",
     "progress": "Progress"

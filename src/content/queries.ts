@@ -38,7 +38,7 @@ import { formatPlace } from "@/lib/place";
 import { normalizeGroupLayout } from "./group-layout";
 import { normalizeHomeLayout } from "./home-layout";
 import { mediaUrl } from "@/media/url";
-import { clampPage, PUBLIC_PAGE_SIZE } from "@/lib/pagination";
+import { clampPage, PUBLIC_PAGE_SIZE, VISIT_PAGE_SIZE } from "@/lib/pagination";
 import type {
   DetailEntry,
   ExpertiseView,
@@ -426,14 +426,14 @@ export async function listVisitsPage(
     )
     .where(where);
   const total = Number(totalRow?.value ?? 0);
-  const page = clampPage(filters.page, total, PUBLIC_PAGE_SIZE);
+  const page = clampPage(filters.page, total, VISIT_PAGE_SIZE);
 
   const [rows, countryRows, yearRows] = await Promise.all([
     visitJoins(db, locale)
       .where(where)
       .orderBy(sql`${officialVisits.visitedOn} desc nulls last`, desc(officialVisits.createdAt))
-      .limit(PUBLIC_PAGE_SIZE)
-      .offset((page - 1) * PUBLIC_PAGE_SIZE),
+      .limit(VISIT_PAGE_SIZE)
+      .offset((page - 1) * VISIT_PAGE_SIZE),
     db
       .selectDistinct({ code: officialVisits.countryCode })
       .from(officialVisits)
@@ -466,7 +466,7 @@ export async function listVisitsPage(
     items: await hydrateVisits(db, locale, options, rows),
     total,
     page,
-    pageSize: PUBLIC_PAGE_SIZE,
+    pageSize: VISIT_PAGE_SIZE,
     countries: countryRows.filter((row): row is { code: string } => Boolean(row.code)),
     years: yearRows.map((row) => Number(row.year)).filter((year) => Number.isFinite(year)),
   };
