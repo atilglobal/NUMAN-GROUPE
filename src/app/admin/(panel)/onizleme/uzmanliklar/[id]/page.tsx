@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { idSchema, localeSchema } from "@/admin/validation";
 import { requirePermission } from "@/auth/session";
-import { findPreviewDetail, listProjectsForExpertise } from "@/content/queries";
+import { findPreviewDetail, listExpertises, listProjectsForExpertise } from "@/content/queries";
 import { getDb } from "@/db/client";
 import { locales } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
@@ -33,7 +33,10 @@ export default async function ExpertisePreviewPage({
       </div>
     );
   }
-  const related = await listProjectsForExpertise(db, locale, { demo: true }, id);
+  const [related, expertises] = await Promise.all([
+    listProjectsForExpertise(db, locale, { demo: true }, id),
+    listExpertises(db, locale, { demo: true }),
+  ]);
   const dict = getDictionary(locale);
 
   return (
@@ -50,7 +53,14 @@ export default async function ExpertisePreviewPage({
         </Link>
       </div>
       <div lang={locale}>
-        <ExpertiseDetail locale={locale} dict={dict} entry={entry} related={related} preview />
+        <ExpertiseDetail
+          locale={locale}
+          dict={dict}
+          entry={entry}
+          related={related}
+          others={expertises.filter((item) => item.id !== entry.id)}
+          preview
+        />
       </div>
     </div>
   );

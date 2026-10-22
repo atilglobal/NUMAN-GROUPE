@@ -77,7 +77,8 @@
     "contactCta": "Talk about your project",
     "scopePending": "The detail of this expertise will be completed soon.",
     "noProjects": "No published project is linked to this expertise yet.",
-    "scopeTitle": "Scope"
+    "scopeTitle": "Scope",
+    "otherExpertises": "Other fields of expertise"
   },
   "projects": {
     "eyebrow": "Our projects",

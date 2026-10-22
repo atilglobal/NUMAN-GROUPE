@@ -77,7 +77,8 @@
     "contactCta": "Parler de votre projet",
     "scopePending": "Le détail de cette expertise sera complété prochainement.",
     "noProjects": "Aucun projet publié n'est encore associé à cette expertise.",
-    "scopeTitle": "Périmètre"
+    "scopeTitle": "Périmètre",
+    "otherExpertises": "Autres expertises"
   },
   "projects": {
     "eyebrow": "Nos projets",

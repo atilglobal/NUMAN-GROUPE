@@ -77,7 +77,8 @@
     "contactCta": "Projenizi konuşalım",
     "scopePending": "Bu uzmanlık alanının ayrıntısı yakında tamamlanacak.",
     "noProjects": "Bu uzmanlık alanına bağlı yayımlanmış proje henüz yok.",
-    "scopeTitle": "Kapsam"
+    "scopeTitle": "Kapsam",
+    "otherExpertises": "Diğer uzmanlık alanları"
   },
   "projects": {
     "eyebrow": "Projelerimiz",

@@ -48,6 +48,7 @@ yarn-error.log*
 /docs/backups/kadro-team/source.docx
 /docs/backups/kadro-team/source.zip
 /docs/backups/kadro-team-*.json
+/docs/backups/expertise-copy-*.json
 
 # vercel
 .vercel

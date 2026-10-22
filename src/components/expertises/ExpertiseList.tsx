@@ -21,13 +21,14 @@ export function ExpertiseList({
   return (
     <>
       <PageHero
+        maxWidthClass="max-w-[1200px]"
         breadcrumbs={[{ label: dict.nav.home, href: homePath(locale) }, { label }]}
         breadcrumbsLabel={dict.a11y.breadcrumbs}
         eyebrow={dict.expertises.eyebrow}
         title={label}
         lead={dict.expertises.description}
       />
-      <Container className="pb-14 lg:pb-16">
+      <Container maxWidthClass="max-w-[1200px]" className="pb-14 lg:pb-16">
         {expertises.length === 0 ? (
           <EmptyState>{dict.expertises.empty}</EmptyState>
         ) : (
@@ -46,6 +47,7 @@ export function ExpertiseList({
         )}
       </Container>
       <PageCta
+        maxWidthClass="max-w-[1200px]"
         title={dict.callToAction.title}
         description={dict.callToAction.description}
         href={sectionPath(locale, "contact")}

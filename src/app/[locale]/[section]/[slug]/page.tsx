@@ -3,6 +3,7 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { locale as localeParam } from "next/root-params";
 import {
   findDetail,
+  getExpertises,
   getProjectsForExpertise,
   getPublishedEntries,
   getRelatedProjects,
@@ -99,11 +100,20 @@ export default async function DetailPage({ params }: PageProps<"/[locale]/[secti
   }
 
   if (section === "expertises") {
-    const related = await getProjectsForExpertise(locale, entry.id);
+    const [related, expertises] = await Promise.all([
+      getProjectsForExpertise(locale, entry.id),
+      getExpertises(locale),
+    ]);
     return (
       <>
         <PageAlternates alternates={alternates} />
-        <ExpertiseDetail locale={locale} dict={dict} entry={entry} related={related} />
+        <ExpertiseDetail
+          locale={locale}
+          dict={dict}
+          entry={entry}
+          related={related}
+          others={expertises.filter((item) => item.id !== entry.id)}
+        />
       </>
     );
   }
