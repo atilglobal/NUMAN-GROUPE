@@ -6,6 +6,7 @@ import { TeamCard } from "@/components/cards/TeamCard";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { teamCardGridClass } from "@/components/team/layout";
 import { EmptyState } from "./EmptyState";
 
 type Props = { locale: Locale; dict: Dictionary; team: TeamMemberView[] };
@@ -25,7 +26,7 @@ export function TeamSection({ locale, dict, team }: Props) {
         />
         <div className="mt-12">
           {shown.length > 0 ? (
-            <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className={teamCardGridClass}>
               {shown.map((member) => (
                 <li key={member.id}>
                   <TeamCard

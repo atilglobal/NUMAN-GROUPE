@@ -5,11 +5,12 @@ type ContainerProps = {
   as?: ElementType;
   className?: string;
   children: ReactNode;
+  maxWidthClass?: string;
 };
 
-export function Container({ as: Tag = "div", className, children }: ContainerProps) {
+export function Container({ as: Tag = "div", className, children, maxWidthClass = "max-w-site" }: ContainerProps) {
   return (
-    <Tag className={cn("mx-auto w-full max-w-site px-5 sm:px-8 lg:px-10", className)}>
+    <Tag className={cn("mx-auto w-full px-5 sm:px-8 lg:px-10", maxWidthClass, className)}>
       {children}
     </Tag>
   );

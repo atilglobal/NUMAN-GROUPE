@@ -7,6 +7,7 @@ import { EmptyState } from "@/components/home/EmptyState";
 import { PageCta } from "@/components/page/PageCta";
 import { PageHero } from "@/components/page/PageHero";
 import { Container } from "@/components/ui/Container";
+import { TEAM_PAGE_MAX_WIDTH, teamCardGridClass } from "./layout";
 
 const GROUPS: TeamPresentationGroup[] = ["international", "technical", "legal", "finance"];
 
@@ -37,6 +38,7 @@ export function TeamList({
   return (
     <>
       <PageHero
+        maxWidthClass={TEAM_PAGE_MAX_WIDTH}
         className="pt-8 pb-6 lg:pt-10 lg:pb-6"
         breadcrumbs={[{ label: dict.nav.home, href: homePath(locale) }, { label: dict.nav.team }]}
         breadcrumbsLabel={dict.a11y.breadcrumbs}
@@ -44,19 +46,19 @@ export function TeamList({
         title={dict.team.pageTitle}
         lead={dict.team.description}
       />
-      <Container className="pb-16 lg:pb-20">
+      <Container maxWidthClass={TEAM_PAGE_MAX_WIDTH} className="pb-16 lg:pb-20">
         {team.length === 0 ? (
           <EmptyState>{dict.team.empty}</EmptyState>
         ) : (
-          <div className="grid gap-16">
+          <div className="grid gap-12 md:gap-14 lg:gap-[4.5rem]">
             {featured.length > 0 ? (
               <section aria-labelledby="team-leadership">
                 <h2 id="team-leadership" className="font-serif text-2xl text-navy-950">
                   {dict.team.groups.leadership}
                 </h2>
-                <ul className={`mt-6 grid gap-6 ${featured.length === 1 ? "" : "lg:grid-cols-2"}`}>
+                <ul className="mt-6 grid grid-cols-1 justify-items-center gap-6 md:grid-cols-2 md:justify-items-stretch lg:gap-7">
                   {featured.map((member) => (
-                    <li key={member.id}>
+                    <li key={member.id} className="flex h-full w-full justify-center md:justify-start">
                       <TeamMemberCard member={member} labels={labels} featured />
                     </li>
                   ))}
@@ -67,15 +69,14 @@ export function TeamList({
             {GROUPS.map((group) => {
               const members = remainder.filter((member) => member.presentationGroup === group);
               if (members.length === 0) return null;
-              const columns = members.length === 1 ? "" : members.length === 2 ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3";
               return (
                 <section key={group} aria-labelledby={`team-${group}`}>
                   <h2 id={`team-${group}`} className="font-serif text-2xl text-navy-950">
                     {groupLabel(dict, group)}
                   </h2>
-                  <ul className={`mt-6 grid gap-6 ${columns}`}>
+                  <ul className={`mt-6 ${teamCardGridClass}`}>
                     {members.map((member) => (
-                      <li key={member.id}>
+                      <li key={member.id} className="flex h-full w-full max-w-[21.25rem]">
                         <TeamMemberCard member={member} labels={labels} />
                       </li>
                     ))}
@@ -89,11 +90,11 @@ export function TeamList({
                 <h2 id="team-other" className="font-serif text-2xl text-navy-950">
                   {dict.team.groups.other}
                 </h2>
-                <ul className="mt-6 grid gap-6 sm:grid-cols-2">
+                <ul className={`mt-6 ${teamCardGridClass}`}>
                   {remainder
                     .filter((member) => !member.presentationGroup)
                     .map((member) => (
-                      <li key={member.id}>
+                      <li key={member.id} className="flex h-full w-full max-w-[21.25rem]">
                         <TeamMemberCard member={member} labels={labels} />
                       </li>
                     ))}
@@ -104,6 +105,7 @@ export function TeamList({
         )}
       </Container>
       <PageCta
+        maxWidthClass={TEAM_PAGE_MAX_WIDTH}
         title={dict.callToAction.title}
         description={dict.callToAction.description}
         href={sectionPath(locale, "contact")}

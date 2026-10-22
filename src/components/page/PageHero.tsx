@@ -14,6 +14,7 @@ type PageHeroProps = {
   actions?: ReactNode;
   children?: ReactNode;
   className?: string;
+  maxWidthClass?: string;
 };
 
 export function PageHero({
@@ -26,9 +27,10 @@ export function PageHero({
   actions,
   children,
   className,
+  maxWidthClass,
 }: PageHeroProps) {
   return (
-    <Container className={cn("pt-10 pb-8 lg:pt-14 lg:pb-10", className)}>
+    <Container maxWidthClass={maxWidthClass} className={cn("pt-10 pb-8 lg:pt-14 lg:pb-10", className)}>
       <Breadcrumbs items={breadcrumbs} label={breadcrumbsLabel} />
       <header className="mt-8 grid gap-6 border-b border-line pb-8 lg:mt-10 lg:grid-cols-12 lg:items-end lg:gap-10 lg:pb-10">
         <div className="lg:col-span-7">

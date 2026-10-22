@@ -14,6 +14,7 @@ import { Prose } from "@/components/page/Prose";
 import { Container } from "@/components/ui/Container";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { teamCardGridClass } from "@/components/team/layout";
 
 export async function CmsPageView({
   locale,
@@ -174,7 +175,7 @@ export async function CmsPageView({
           return (
             <Container key={block.id} className="py-10">
               <SectionHeading eyebrow={dict.team.eyebrow} title={copy.title || dict.team.title} />
-              <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <ul className={`mt-8 ${teamCardGridClass}`}>
                 {team.map((item) => (
                   <li key={item.id}>
                     <TeamCard

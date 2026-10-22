@@ -1,5 +1,4 @@
 import type { ResolvedImage } from "@/content/types";
-import { MediaFrame } from "@/components/ui/MediaFrame";
 import { cn } from "@/components/ui/cn";
 
 function initials(fullName: string): string {
@@ -9,41 +8,59 @@ function initials(fullName: string): string {
   return (first + last).toUpperCase();
 }
 
+/** Cover when the file is close to 4:5; otherwise contain so faces are not cropped. */
+export function teamPortraitFit(photo: ResolvedImage): "cover" | "contain" {
+  if (!photo.width || !photo.height) return "contain";
+  const ratio = photo.width / photo.height;
+  if (ratio > 0.92 || ratio < 0.68) return "contain";
+  return "cover";
+}
+
 export function TeamPortrait({
   name,
   photo,
   sizes,
-  compact = false,
   className,
 }: {
   name: string;
   photo: ResolvedImage | null;
   sizes: string;
-  compact?: boolean;
   className?: string;
 }) {
-  if (photo) {
+  if (!photo) {
     return (
-      <MediaFrame
-        image={photo}
-        profile="teamPortrait"
-        fit="contain"
-        sizes={sizes}
-        className={cn("aspect-[4/5] bg-navy-950", className)}
-      />
+      <div
+        className={cn("grid aspect-[4/5] w-full place-items-center bg-paper-2 text-gold-700", className)}
+        aria-hidden="true"
+      >
+        <span className="font-serif text-2xl tracking-wide">{initials(name)}</span>
+      </div>
     );
   }
 
+  const fit = teamPortraitFit(photo);
+  const ratio = photo.width && photo.height ? photo.width / photo.height : 0.8;
+  const position =
+    photo.focalX != null && photo.focalY != null
+      ? `${photo.focalX * 100}% ${photo.focalY * 100}%`
+      : fit === "cover" && ratio < 0.78
+        ? "50% 18%"
+        : "50% 50%";
+
   return (
-    <div
-      className={cn(
-        "grid place-items-center bg-navy-950 text-gold-400",
-        compact ? "size-16 rounded-full" : "aspect-[4/5] w-full",
-        className,
-      )}
-      aria-hidden="true"
-    >
-      <span className={cn("font-serif tracking-wide", compact ? "text-lg" : "text-3xl")}>{initials(name)}</span>
+    <div className={cn("relative aspect-[4/5] w-full overflow-hidden bg-paper-2", className)}>
+      {/* native img: original bytes; frame ratio is CSS, not the file’s intrinsic size. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={photo.src}
+        alt={photo.alt}
+        width={photo.width ?? 640}
+        height={photo.height ?? 800}
+        sizes={sizes}
+        decoding="async"
+        className={cn("absolute inset-0 block size-full", fit === "cover" ? "object-cover" : "object-contain")}
+        style={{ objectPosition: position }}
+      />
     </div>
   );
 }
