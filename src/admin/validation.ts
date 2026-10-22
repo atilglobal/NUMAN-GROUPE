@@ -309,8 +309,12 @@ export const homeCopySchema = z.object({
 
 export type HomeCopyInput = z.infer<typeof homeCopySchema>;
 
+export const teamPresentationGroups = ["leadership", "international", "technical", "legal", "finance"] as const;
+export type TeamPresentationGroup = (typeof teamPresentationGroups)[number];
+
 export const teamTranslationSchema = z.object({
   roleTitle: required(160, "Görev / unvan"),
+  summary: optional(500, "Kısa tanıtım"),
   bio: optional(4000, "Biyografi"),
 });
 
@@ -320,6 +324,11 @@ export const teamRootSchema = z.object({
   fullName: required(160, "Ad soyad"),
   sortOrder: sortOrderSchema,
   isVisible: featuredSchema,
+  presentationGroup: z
+    .string()
+    .trim()
+    .transform((value) => (value === "" ? null : value))
+    .pipe(z.enum(teamPresentationGroups).nullable()),
   photoAssetId: optionalUuid,
   linkLabel: optional(80, "Profil etiketi"),
   linkUrl: httpsOptional,

@@ -502,8 +502,10 @@ export async function listTeam(
       id: teamMembers.id,
       fullName: teamMembers.fullName,
       photoAssetId: teamMembers.photoAssetId,
+      presentationGroup: teamMembers.presentationGroup,
       isDemo: teamMembers.isDemo,
       roleTitle: teamMemberTranslations.roleTitle,
+      summary: teamMemberTranslations.summary,
       bio: teamMemberTranslations.bio,
     })
     .from(teamMembers)
@@ -534,8 +536,16 @@ export async function listTeam(
       .orderBy(asc(teamMemberLinks.sortOrder)),
   ]);
 
-  return rows.map(({ photoAssetId, ...row }) => ({
+  return rows.map(({ photoAssetId, presentationGroup, ...row }) => ({
     ...row,
+    presentationGroup:
+      presentationGroup === "leadership" ||
+      presentationGroup === "international" ||
+      presentationGroup === "technical" ||
+      presentationGroup === "legal" ||
+      presentationGroup === "finance"
+        ? presentationGroup
+        : null,
     photo: (photoAssetId && images.get(photoAssetId)) || null,
     links: links
       .filter((link) => link.memberId === row.id && link.url.startsWith("https://") && link.label.trim())

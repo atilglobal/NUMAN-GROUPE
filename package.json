@@ -19,6 +19,7 @@
     "db:seed": "tsx scripts/db-seed.ts",
     "content:group": "tsx scripts/import-group-copy.ts",
     "content:visits": "tsx scripts/import-alfa-visits.ts",
+    "content:kadro": "tsx scripts/import-kadro-team.ts",
     "db:seed:demo": "tsx scripts/db-seed-demo.ts",
     "db:demo:clear": "tsx scripts/db-seed-demo.ts --clear",
     "admin:create": "tsx scripts/admin-create.ts",

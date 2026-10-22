@@ -80,6 +80,7 @@ export type TeamEditor = {
   sortOrder: number;
   isVisible: boolean;
   isDemo: boolean;
+  presentationGroup: string | null;
   photoAssetId: string | null;
   link: { label: string; url: string } | null;
   translations: Partial<
@@ -106,6 +107,7 @@ export async function getTeamMemberForEditor(db: Database, id: string): Promise<
     translations[row.locale] = {
       locale: row.locale,
       roleTitle: row.roleTitle,
+      summary: row.summary,
       bio: row.bio,
       status: row.status,
       publishedAt: row.publishedAt,
@@ -139,6 +141,7 @@ export async function createTeamMember(
         fullName: input.root.fullName,
         sortOrder: input.root.sortOrder,
         isVisible: input.root.isVisible,
+        presentationGroup: input.root.presentationGroup,
         photoAssetId: input.root.photoAssetId,
       })
       .returning({ id: teamMembers.id });
@@ -168,6 +171,7 @@ export async function updateTeamRoot(db: Database, actor: Actor, id: string, inp
         fullName: input.fullName,
         sortOrder: input.sortOrder,
         isVisible: input.isVisible,
+        presentationGroup: input.presentationGroup,
         photoAssetId: input.photoAssetId,
       })
       .where(eq(teamMembers.id, id))

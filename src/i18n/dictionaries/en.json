@@ -137,13 +137,24 @@
   },
   "team": {
     "eyebrow": "Our team",
+    "pageTitle": "Our team",
     "title": "Skills brought together around a shared ambition.",
-    "description": "The management and the teams behind our projects.",
+    "description": "The leadership and teams who carry Numan Groupe International’s projects.",
     "viewAll": "Meet the team",
     "empty": "The team presentation will be published soon.",
     "portraitPending": "Portrait coming soon",
     "bioToggle": "Biography",
-    "contactCta": "Contact the team"
+    "viewProfile": "View profile",
+    "closeProfile": "Close",
+    "contactCta": "Contact the team",
+    "groups": {
+      "leadership": "Leadership",
+      "international": "International development",
+      "technical": "Technical team",
+      "legal": "Legal",
+      "finance": "Finance",
+      "other": "Team"
+    }
   },
   "pages": {
     "exploreExpertises": "See our expertise",

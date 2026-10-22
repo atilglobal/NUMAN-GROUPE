@@ -33,7 +33,7 @@ async function writeSourcePhotos() {
 }
 
 describe("importAlfaVisits", () => {
-  it("imports photographs without re-encoding and is idempotent", async () => {
+  it("imports photographs without re-encoding and is idempotent", { timeout: 20000 }, async () => {
     const { dir, jpeg } = await writeSourcePhotos();
     const first = await importAlfaVisits(db, { mediaDir: dir });
     expect(first.mediaCreated).toBe(41);

@@ -137,13 +137,24 @@
   },
   "team": {
     "eyebrow": "Kadromuz",
+    "pageTitle": "Kadromuz",
     "title": "Ortak bir hedef etrafında buluşan yetkinlikler.",
-    "description": "Projelerimizi yürüten yönetim ve ekipler.",
+    "description": "Numan Groupe International projelerini yürüten yönetim ve ekipler.",
     "viewAll": "Kadromuzu tanıyın",
     "empty": "Kadro tanıtımı yakında yayımlanacak.",
     "portraitPending": "Fotoğraf yakında",
     "bioToggle": "Biyografi",
-    "contactCta": "Ekiple iletişime geçin"
+    "viewProfile": "Profili incele",
+    "closeProfile": "Kapat",
+    "contactCta": "Ekiple iletişime geçin",
+    "groups": {
+      "leadership": "Yönetim",
+      "international": "Uluslararası gelişim",
+      "technical": "Teknik ekip",
+      "legal": "Hukuk",
+      "finance": "Finans",
+      "other": "Kadro"
+    }
   },
   "pages": {
     "exploreExpertises": "Uzmanlık alanlarını görün",

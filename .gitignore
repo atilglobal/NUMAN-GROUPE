@@ -44,6 +44,10 @@ yarn-error.log*
 /docs/backups/alfa-visits/unzipped/
 /docs/backups/alfa-visits/source.docx
 /docs/backups/alfa-visits/source.zip
+/docs/backups/kadro-team/unzipped/
+/docs/backups/kadro-team/source.docx
+/docs/backups/kadro-team/source.zip
+/docs/backups/kadro-team-*.json
 
 # vercel
 .vercel

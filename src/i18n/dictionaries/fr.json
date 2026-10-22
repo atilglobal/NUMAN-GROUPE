@@ -137,13 +137,24 @@
   },
   "team": {
     "eyebrow": "Notre équipe",
+    "pageTitle": "Notre équipe",
     "title": "Des compétences réunies autour d'une même ambition.",
-    "description": "La direction et les équipes qui portent nos projets.",
+    "description": "La direction et les équipes qui portent les projets de Numan Groupe International.",
     "viewAll": "Découvrir l'équipe",
     "empty": "La présentation de l'équipe sera publiée prochainement.",
     "portraitPending": "Portrait à venir",
     "bioToggle": "Biographie",
-    "contactCta": "Contacter l'équipe"
+    "viewProfile": "Voir le profil",
+    "closeProfile": "Fermer",
+    "contactCta": "Contacter l'équipe",
+    "groups": {
+      "leadership": "Direction",
+      "international": "Développement international",
+      "technical": "Équipe technique",
+      "legal": "Juridique",
+      "finance": "Finance",
+      "other": "Équipe"
+    }
   },
   "pages": {
     "exploreExpertises": "Voir nos expertises",

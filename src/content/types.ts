@@ -75,12 +75,16 @@ export type VisitView = {
   isDemo: boolean;
 };
 
+export type TeamPresentationGroup = "leadership" | "international" | "technical" | "legal" | "finance";
+
 export type TeamMemberView = {
   id: string;
   fullName: string;
   roleTitle: string;
+  summary: string | null;
   bio: string | null;
   photo: ResolvedImage | null;
+  presentationGroup: TeamPresentationGroup | null;
   links: { label: string; url: string }[];
   isDemo: boolean;
 };

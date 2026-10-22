@@ -181,6 +181,8 @@ export async function CmsPageView({
                       member={item}
                       demoLabel={dict.demo.badge}
                       portraitPendingLabel={dict.team.portraitPending}
+                      viewProfileLabel={dict.team.viewProfile}
+                      closeLabel={dict.team.closeProfile}
                     />
                   </li>
                 ))}

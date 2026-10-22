@@ -1,5 +1,7 @@
+import { sql } from "drizzle-orm";
 import {
   boolean,
+  check,
   index,
   integer,
   pgTable,
@@ -23,6 +25,7 @@ export const teamMembers = pgTable(
     id: id(),
     fullName: text("full_name").notNull(),
     photoAssetId: uuid("photo_asset_id").references(() => mediaAssets.id, { onDelete: "set null" }),
+    presentationGroup: text("presentation_group"),
     sortOrder: integer("sort_order").default(0).notNull(),
     isVisible: boolean("is_visible").default(true).notNull(),
     isDemo: boolean("is_demo").default(false).notNull(),
@@ -31,6 +34,10 @@ export const teamMembers = pgTable(
   (t) => [
     index("team_members_listing").on(t.isVisible, t.sortOrder),
     notBlank("team_members_full_name", t.fullName),
+    check(
+      "team_members_presentation_group",
+      sql`${t.presentationGroup} is null or ${t.presentationGroup} in ('leadership', 'international', 'technical', 'legal', 'finance')`,
+    ),
   ],
 );
 
@@ -42,6 +49,7 @@ export const teamMemberTranslations = pgTable(
       .notNull()
       .references(() => teamMembers.id, { onDelete: "cascade" }),
     roleTitle: text("role_title").notNull(),
+    summary: text("summary"),
     bio: text("bio"),
     ...publication(),
     ...timestamps(),

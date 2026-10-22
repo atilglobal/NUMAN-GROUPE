@@ -65,7 +65,6 @@ async function upsertPhoto(db: Database, photo: AlfaPhoto, bytes: Buffer): Promi
     return { id: existing.id, created: false };
   }
 
-  console.log(`Alfa visits import: storing ${photo.file} (${bytes.length} bytes)`);
   const sniffed = sniffImage(bytes);
   if (!sniffed) throw new Error(`Geçersiz görsel: ${photo.file}`);
   const inspected = await inspectImage(bytes);
@@ -198,7 +197,6 @@ export async function importAlfaVisits(
     missingFiles,
   };
 
-  console.log(`Alfa visits import: loaded ${buffers.size} files`);
   const hq = await upsertPhoto(db, ALFA_HQ_PHOTO, buffers.get(ALFA_HQ_PHOTO.file)!);
   result.hqImported = true;
   if (hq.created) result.mediaCreated += 1;
@@ -219,7 +217,6 @@ export async function importAlfaVisits(
     }
 
     const outcome = await createVisitRecord(db, visit, assetIds);
-    console.log(`Alfa visits import: ${visit.key} ${outcome} (${assetIds.length} photos)`);
     if (outcome === "created") {
       result.visitsCreated += 1;
       result.translationsCreated += locales.length;

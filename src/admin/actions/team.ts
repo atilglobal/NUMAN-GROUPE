@@ -26,6 +26,7 @@ function rootFields(formData: FormData) {
     fullName: formData.get("fullName"),
     sortOrder: formData.get("sortOrder") || 0,
     isVisible: formData.get("isVisible"),
+    presentationGroup: formData.get("presentationGroup") ?? "",
     photoAssetId: formData.get("coverAssetId") ?? "",
     linkLabel: formData.get("linkLabel") ?? "",
     linkUrl: formData.get("linkUrl") ?? "",
@@ -37,6 +38,7 @@ export async function createTeamMemberAction(_previous: ActionState, formData: F
   if (!auth.ok) return auth.state;
   const translation = teamTranslationSchema.safeParse({
     roleTitle: formData.get("roleTitle"),
+    summary: formData.get("summary") ?? "",
     bio: formData.get("bio") ?? "",
   });
   const root = rootFields(formData);
@@ -97,6 +99,7 @@ export async function saveTeamTranslationAction(
   if (!idSchema.safeParse(id).success || !parsedLocale.success) return INVALID;
   const translation = teamTranslationSchema.safeParse({
     roleTitle: formData.get("roleTitle"),
+    summary: formData.get("summary") ?? "",
     bio: formData.get("bio") ?? "",
   });
   if (!translation.success) return { ok: false, fieldErrors: fieldErrors(translation.error) };

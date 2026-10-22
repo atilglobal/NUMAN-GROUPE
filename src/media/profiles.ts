@@ -78,10 +78,10 @@ export const mediaProfiles: Record<MediaProfileId, MediaProfile> = {
   },
   teamPortrait: {
     id: "teamPortrait",
-    aspect: 3 / 4,
-    widths: [320, 640],
-    fit: "cover",
-    minShortSide: 400,
+    aspect: 4 / 5,
+    widths: [320, 640, 960],
+    fit: "contain",
+    minShortSide: 240,
     sizes: "(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw",
   },
   galleryThumb: {

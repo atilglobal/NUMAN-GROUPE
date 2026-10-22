@@ -32,7 +32,8 @@ export function TeamSection({ locale, dict, team }: Props) {
                     member={member}
                     demoLabel={dict.demo.badge}
                     portraitPendingLabel={dict.team.portraitPending}
-                    bioToggleLabel={dict.team.bioToggle}
+                    viewProfileLabel={dict.team.viewProfile}
+                    closeLabel={dict.team.closeProfile}
                   />
                 </li>
               ))}

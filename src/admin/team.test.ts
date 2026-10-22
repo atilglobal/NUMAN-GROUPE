@@ -33,12 +33,13 @@ describe("team editing", () => {
         fullName: "Personne A",
         sortOrder: 1,
         isVisible: true,
+        presentationGroup: "leadership",
         photoAssetId: null,
         linkLabel: "Profil",
         linkUrl: "https://example.org/a",
       },
       locale: "fr",
-      translation: { roleTitle: "Direction", bio: "Texte" },
+      translation: { roleTitle: "Direction", summary: "Présentation courte.", bio: "Texte" },
     });
     expect(await listTeam(db, "fr", { demo: false })).toEqual([]);
 
@@ -51,7 +52,7 @@ describe("team editing", () => {
     });
     expect((await listTeam(db, "fr", { demo: false })).map((row) => row.fullName)).toEqual(["Personne A"]);
 
-    await saveTeamTranslation(db, actor, id, "en", { roleTitle: "Leadership", bio: null });
+    await saveTeamTranslation(db, actor, id, "en", { roleTitle: "Leadership", summary: null, bio: null });
     await setTranslationStatus(db, {
       entity: "team_member",
       entityId: id,
@@ -69,6 +70,7 @@ describe("team editing", () => {
       fullName: "Personne A",
       sortOrder: 1,
       isVisible: false,
+      presentationGroup: "leadership",
       photoAssetId: null,
       linkLabel: null,
       linkUrl: null,

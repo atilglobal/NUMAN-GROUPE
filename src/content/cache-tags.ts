@@ -1,5 +1,5 @@
 /** Bump when a public reader’s result shape changes so stale Vercel data-cache entries are not reused. */
-export const PUBLIC_CONTENT_REV = 4;
+export const PUBLIC_CONTENT_REV = 5;
 
 export const contentTags = {
   expertises: "content:expertises",

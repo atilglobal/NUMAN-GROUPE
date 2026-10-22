@@ -41,7 +41,11 @@ export default async function EditTeamPage({ params }: { params: Promise<{ id: s
           <TeamTranslationForm
             action={saveTeamTranslationAction.bind(null, id, locale)}
             exists={Boolean(translation)}
-            defaults={{ roleTitle: translation?.roleTitle ?? "", bio: translation?.bio ?? "" }}
+            defaults={{
+              roleTitle: translation?.roleTitle ?? "",
+              summary: translation?.summary ?? "",
+              bio: translation?.bio ?? "",
+            }}
           />
           <aside className="grid content-start gap-3 rounded-md border border-line bg-paper/50 p-4 text-sm">
             <p className="font-medium text-navy-950">Yayın durumu</p>
@@ -87,6 +91,7 @@ export default async function EditTeamPage({ params }: { params: Promise<{ id: s
               fullName: entry.fullName,
               sortOrder: entry.sortOrder,
               isVisible: entry.isVisible,
+              presentationGroup: entry.presentationGroup,
               photoAssetId: entry.photoAssetId,
               linkLabel: entry.link?.label ?? "",
               linkUrl: entry.link?.url ?? "",
