@@ -78,7 +78,20 @@
     "scopePending": "Le détail de cette expertise sera complété prochainement.",
     "noProjects": "Aucun projet publié n'est encore associé à cette expertise.",
     "scopeTitle": "Périmètre",
-    "otherExpertises": "Autres expertises"
+    "otherExpertises": "Autres expertises",
+    "discussCta": "Discutons de votre projet",
+    "aboutEyebrow": "Présentation",
+    "aboutTitle": "Un travail cadré par le besoin et le contrat",
+    "focusesTitle": "Axes de travail",
+    "scopeEyebrow": "Périmètre",
+    "scopeByProject": "Périmètre de travail selon le projet",
+    "prioritiesEyebrow": "Priorités",
+    "prioritiesFallback": "Priorités de conception et de planification",
+    "processEyebrow": "Méthode",
+    "processFallback": "Approche de travail",
+    "browseProjects": "Découvrir nos projets",
+    "closingTitle": "{title} : discutons de votre projet",
+    "closingLead": "Présentez-nous le programme, le site et le cadre contractuel envisagé. Nous revenons vers vous pour préciser si un échange est possible."
   },
   "projects": {
     "eyebrow": "Nos projets",

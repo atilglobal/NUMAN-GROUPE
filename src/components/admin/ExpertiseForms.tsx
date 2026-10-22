@@ -18,7 +18,7 @@ export type TranslationDefaults = {
 
 const SLUG_HINT = "Sayfa adresinin son bölümü, örn. stades. Yalnızca küçük harf (a-z), rakam ve tire.";
 const BODY_HINT =
-  "Biçimlendirme: ## Başlık, ### Alt başlık, - madde, 1. numaralı madde, **kalın**, *italik*, [bağlantı metni](https://…). HTML kullanılamaz.";
+  "Biçimlendirme: ## Başlık, ### Alt başlık, - madde, 1. numaralı madde, **kalın**, *italik*, [bağlantı metni](https://…). İlk madde listesi çalışma kapsamı ızgarası, sonraki liste öncelikler, numaralı liste çalışma adımları olarak gösterilir. HTML kullanılamaz.";
 
 function TranslationFields({ defaults }: { defaults: TranslationDefaults }) {
   return (

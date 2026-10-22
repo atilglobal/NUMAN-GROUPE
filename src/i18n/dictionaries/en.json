@@ -78,7 +78,20 @@
     "scopePending": "The detail of this expertise will be completed soon.",
     "noProjects": "No published project is linked to this expertise yet.",
     "scopeTitle": "Scope",
-    "otherExpertises": "Other fields of expertise"
+    "otherExpertises": "Other fields of expertise",
+    "discussCta": "Discuss your project",
+    "aboutEyebrow": "Overview",
+    "aboutTitle": "Work framed by the brief and the contract",
+    "focusesTitle": "Areas of focus",
+    "scopeEyebrow": "Scope",
+    "scopeByProject": "Scope of work according to the project",
+    "prioritiesEyebrow": "Priorities",
+    "prioritiesFallback": "Design and planning priorities",
+    "processEyebrow": "Method",
+    "processFallback": "Working approach",
+    "browseProjects": "Browse our projects",
+    "closingTitle": "{title}: let’s discuss your project",
+    "closingLead": "Tell us about the brief, the site and the intended contractual frame. We will come back to you to see whether a discussion is possible."
   },
   "projects": {
     "eyebrow": "Our projects",

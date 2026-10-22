@@ -78,7 +78,20 @@
     "scopePending": "Bu uzmanlık alanının ayrıntısı yakında tamamlanacak.",
     "noProjects": "Bu uzmanlık alanına bağlı yayımlanmış proje henüz yok.",
     "scopeTitle": "Kapsam",
-    "otherExpertises": "Diğer uzmanlık alanları"
+    "otherExpertises": "Diğer uzmanlık alanları",
+    "discussCta": "Projenizi görüşelim",
+    "aboutEyebrow": "Tanıtım",
+    "aboutTitle": "İhtiyaç ve sözleşmeye göre çerçevelenen çalışma",
+    "focusesTitle": "Çalışma odakları",
+    "scopeEyebrow": "Kapsam",
+    "scopeByProject": "Projeye göre çalışma kapsamı",
+    "prioritiesEyebrow": "Öncelikler",
+    "prioritiesFallback": "Tasarım ve planlama öncelikleri",
+    "processEyebrow": "Yöntem",
+    "processFallback": "Çalışma yaklaşımı",
+    "browseProjects": "Projelerimizi inceleyin",
+    "closingTitle": "{title}: projenizi görüşelim",
+    "closingLead": "Programı, yeri ve öngörülen sözleşme çerçevesini bize iletin. Görüşmenin mümkün olup olmadığını netleştirmek için dönüş yaparız."
   },
   "projects": {
     "eyebrow": "Projelerimiz",
